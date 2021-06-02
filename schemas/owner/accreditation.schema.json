@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/owner/accreditation.schema.json",
+  "title": "Accreditation",
+  "description": "Accreditation on an asset owner",
+  "type": "object",
+  "definitions": {
+    "infoItem": {
+      "type": "object",
+      "properties": {
+        "type":           { "enum": ["text"] },
+        "name":           { "type": "string" },
+        "value":          { "type": "string" }
+      },
+      "required": ["type", "name", "value"]
+    }
+  },
+  "properties": {
+    "name": {
+      "description": "The name associated with this certification",
+      "type": "string"
+    },
+    "country": {
+      "description": "The country where the certificate was issued",
+      "type": "string"
+    },
+    "info": {
+      "description": "information about for the certificate",
+      "type": "array",
+      "items": { "$ref": "#/definitions/infoItem" },
+      "minItems": 1
+    }
+  },
+  "required": [ "name", "country", "info" ]
+}
