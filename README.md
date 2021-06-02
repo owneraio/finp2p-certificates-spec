@@ -1,9 +1,10 @@
-# FInP2P Certificates specifications
+# FinP2P Certificates specifications
 ## Overview
 This specification intended to provide a standardized definition for finp2p certificate object structures.
 Certificates are properties of a FinP2P profile (a user or asset), which are “given” to the profile by a trusted third party.
 The certificate is bounded for a specific time period, by which it will have to be renewed.
 This specification defines the types of certificates with the data structure for each type.
+The certificate data structure is a JSON object, and the specification below include a JSON schema for each type of certificate.
 
 ## Type of Certificates
 There are two major use cases for Certificates:
