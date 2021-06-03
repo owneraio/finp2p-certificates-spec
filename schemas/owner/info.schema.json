@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/owner/info.schema.json",
+  "title": "Owner Info",
+  "description": "Information about an asset owner",
+  "type": "object",
+  "properties": {
+    "email": {
+      "description": "The email address of the owner",
+      "type": "string"
+    },
+    "name": {
+      "description": "The name of the owner",
+      "type": "string"
+    },
+    "type": {
+      "description": "The type of owner",
+      "enum": ["individual" ,"company", "issuer"]
+    }
+  },
+  "required": [ "email", "name", "type" ]
+}
