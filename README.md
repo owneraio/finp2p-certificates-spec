@@ -70,6 +70,7 @@ Sample data structure:
 
 KYA describes the asset and the exact ownership rights of token holders (such as what happens in the event of an exit, or eligibility to receive dividends).
 According to the FinP2P model, only the primary node of each asset (or entities approved on its behalf) are allowed to update the object and add documents on the KYA certificate. This means potential owners who wish to invest can always know what they are buying, and exactly who verified that information (i.e. a regulated financial node).
+The KYA includes informative information about the asset in the `info` structure, ownership rights can be added as documents attached to the certificate.
 
 `type: "KYA"`
 
