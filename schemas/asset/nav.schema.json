@@ -15,16 +15,17 @@
           "navValue": {
             "type": "number",
             "description": "Net Asset Value on the given date"
+          },
+          "description": {
+            "type": "string",
+            "description": "description of the evaluation"
           }
         },
         "required": ["date", "navValue"]
     }
   },
   "properties": {
-    "currentNAV": {
-      "type": "number",
-      "description": "Current Net Asset Value of the asset"
-    },
+    "currentNAV": {"$ref": "#/definitions/navItem" },
     "history": {
       "type": "array",
       "description": "Historical Net Asset Values",
