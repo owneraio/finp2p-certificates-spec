@@ -98,9 +98,9 @@ The NAV is a financial measure used to determine the value of assets, NAV per sh
 Sample data structure:
 ```json
 { 
-  "currentNAV": 50000000,
+  "currentNAV": { "date": 1684217201, "navValue": 50000000, "description": "some description"}
   "history" : [
-  { "date": 1684217201, "navValue": 50000000 },
+  { "date": 1684217201, "navValue": 50000000, "description": "some description" },
   { "date": 1681625201, "navValue": 45000000 },
   { "date": 1678946801, "navValue": 42000000 }  
   ]
