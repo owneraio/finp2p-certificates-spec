@@ -107,9 +107,29 @@ Sample data structure:
         ]
 }
 ```
+#### NAV 
+
+The NAV is a financial measure used to determine the value of assets, NAV per share is calculated as the total value of the asset's holdings minus its liabilities devided by the number of ourstanding shares. 
+
+`type: "NAV"`
+
+[NAV Schema][spec_nav]
+
+Sample data structure:
+```json
+{ 
+  "currentNAV": { "date": 1684217201, "navValue": 50000000, "description": "some description"}
+  "history" : [
+  { "date": 1684217201, "navValue": 50000000, "description": "some description" },
+  { "date": 1681625201, "navValue": 45000000 },
+  { "date": 1678946801, "navValue": 42000000 }  
+  ]
+}
+```
 
 [spec_kyc]: ./schemas/owner/kyc.schema.json
 [spec_info]: ./schemas/owner/info.schema.json
+[spec_nominee]: ./schemas/owner/nominee.schema.json
 [spec_accreditation]: ./schemas/owner/accreditation.schema.json
 [spec_kya]: ./schemas/asset/kya.schema.json
-[spec_nominee]: ./schemas/owner/nominee.schema.json
+[spec_nav]: ./schemas/asset/nav.schema.json
