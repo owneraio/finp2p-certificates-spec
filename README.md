@@ -12,8 +12,9 @@ There are two major use cases for Certificates:
 2. Enable the KYA (Know your Asset) model on an Asset, KYA is a set of documents that describe the asset and the exact ownership rights of token holders (such as what happens in the event of an exit, or eligibility to receive dividends).
 
 ### Owner certificates
-#### Owner Info
+#### Owner Holding Details
 Information about the Owner of the investment account or, when the ownership is split among several owners, the primary owner is the one giving its address and account details for the registration.
+This certificate is interchangable with the Nominee Info certificate, which is used to acknowledge the owner being a nominee owner.
 
 `type: "ownerInfo"`
 
@@ -27,6 +28,24 @@ Sample data structure:
   "type": "company"
 }
 ```
+
+#### Nominee Account
+Acknowledgement of the owner is registered under a nominee account.
+The nominee account linked by the nomineeId field, it maintains it's own certificates such as ownerInfo, KYC etc... and can be used to verify the registered owner's information and documents.
+
+`type: "nomineeInfo"`
+
+[Nominee Schema][spec_nominee]
+
+Sample data structure:
+```json
+ {
+    "nomineeId": "123",
+    "info": [
+      { "type": "text", "name": "Certificate ID", "value": "123" }
+    ]
+}
+ ```
 
 #### KYC/AML
 Acknowledgement of the owner KYC and AML verification
@@ -46,6 +65,7 @@ Sample data structure:
     ]
 }
  ```
+
 #### Accreditation
 Acknowledgement of the owner being an accredited investor
 
@@ -109,6 +129,7 @@ Sample data structure:
 
 [spec_kyc]: ./schemas/owner/kyc.schema.json
 [spec_info]: ./schemas/owner/info.schema.json
+[spec_nominee]: ./schemas/owner/nominee.schema.json
 [spec_accreditation]: ./schemas/owner/accreditation.schema.json
 [spec_kya]: ./schemas/asset/kya.schema.json
 [spec_nav]: ./schemas/asset/nav.schema.json
