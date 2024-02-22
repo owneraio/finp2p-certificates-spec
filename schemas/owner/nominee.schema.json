@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/owner/nominee.schema.json",
+  "title": "Nominee Account",
+  "description": "Acknowledgement of the owner is registered under a nominee account",
+  "type": "object",
+  "definitions": {
+    "infoItem": {
+      "type": "object",
+      "properties": {
+        "type":           { "enum": ["text"] },
+        "name":           { "type": "string" },
+        "value":          { "type": "string" }
+      },
+      "required": ["type", "name", "value"]
+    }
+  },
+  "properties": {
+    "nomineeId": {
+      "description": "The nominee account linked by the nomineeId field",
+      "type": "string"
+    },
+    "info": {
+      "description": "information about for the certificate",
+      "type": "array",
+      "items": { "$ref": "#/definitions/infoItem" },
+      "minItems": 1
+    }
+  },
+  "required": [ "nomineeId", "info" ]
+}
