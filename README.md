@@ -127,9 +127,9 @@ Sample data structure:
 }
 ```
 
-[spec_kyc]: ./schemas/owner/kyc.schema.json
-[spec_info]: ./schemas/owner/info.schema.json
-[spec_nominee]: ./schemas/owner/nominee.schema.json
-[spec_accreditation]: ./schemas/owner/accreditation.schema.json
-[spec_kya]: ./schemas/asset/kya.schema.json
-[spec_nav]: ./schemas/asset/nav.schema.json
+[spec_kyc]: ./schemas/owner/kyc.schema_v1.0.json
+[spec_info]: ./schemas/owner/info.schema_v1.0.json
+[spec_nominee]: ./schemas/owner/nominee.schema_v1.0.json
+[spec_accreditation]: ./schemas/owner/accreditation.schema_v1.0.json
+[spec_kya]: ./schemas/asset/kya.schema_v1.0.json
+[spec_nav]: ./schemas/asset/nav.schema_v1.0.json
