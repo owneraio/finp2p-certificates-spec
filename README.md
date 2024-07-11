@@ -15,18 +15,87 @@ There are two major use cases for Certificates:
 #### Owner Holding Details
 Information about the Owner of the investment account or, when the ownership is split among several owners, the primary owner is the one giving its address and account details for the registration.
 This certificate is interchangable with the Nominee Info certificate, which is used to acknowledge the owner being a nominee owner.
+There are two types of owners: individuals and companies. Each type has a corresponding  certificate schema.
 
-`type: "ownerInfo"`
+#### Individual Owner
 
-[Owner Info Schema][spec_info]
+`type: "individualInfo"`
+
+[Individual Owner Info Schema][spec_individual_info]
 
 Sample data structure:
 ```json
-{ 
-  "email" : "owner1@example.com", 
-  "name" : "Owner 1", 
-  "type": "company"
+{
+  "name": "John Doe",
+  "id": {
+    "idType": "Passport",
+    "idNumber": "123456789"
+  },
+  "dateOfBirth": "1980-01-01",
+  "nationality": "American",
+  "email": "johndoe@example.com",
+  "address": {
+    "line1": "123 Main St",
+    "line2": "Apt 4B",
+    "buildingNumber": "10",
+    "city": "New York",
+    "postalCode": "10001",
+    "country": "US",
+    "state": "NY"
+  }
 }
+```
+
+#### Company Owner
+
+`type: "companyInfo"`
+
+[Company Owner Info Schema][spec_company_info]
+Sample data structure:
+```json
+{
+  "legalBusinessName": "Tech Solutions Inc",
+  "businessName": "Tech Solutions",
+  "businessRegisteredCountry": "US",
+  "registeredBusinessAddress": {
+    "line1": "456 Technology Ave",
+    "line2": "Suite 800",
+    "buildingNumber": "200",
+    "city": "San Francisco",
+    "postalCode": "94105",
+    "country": "US",
+    "state": "CA"
+  },                                  
+  "registrationNumberIncorporation": "12345678",
+  "companiesHouseRegistrationNumber": "12345678",
+  "employerIdentificationNumber": "12-3456789",
+  "beneficialOwners": [
+    {
+      "name": "Jane Smith",
+      "id": {
+        "idType": "Passport",
+        "idNumber": "A12345678"
+      },
+      "dateOfBirth": "1975-05-15",
+      "nationality": "American",
+      "email": "jane.smith@example.com",
+      "address": {
+        "line1": "123 Elm St",
+        "line2": "Apt 4",
+        "buildingNumber": "10",
+        "city": "New York",
+        "postalCode": "11111",
+        "country": "US",
+        "state": "NY"
+      }
+    }
+  ],
+  "industryCode": "5732",
+  "vatNumber": "US123456789",
+  "businessWebsite": "https://www.techsolutions.com",
+  "statementDescriptor": "Tech Solutions Payment"
+}
+
 ```
 
 #### Nominee Account
@@ -128,7 +197,8 @@ Sample data structure:
 ```
 
 [spec_kyc]: ./schemas/owner/kyc.schema.json
-[spec_info]: ./schemas/owner/info.schema.json
+[spec_company_info]: ./schemas/owner/company_info.schema_v1.0.json
+[spec_individual_info]: ./schemas/owner/individual_info.schema_v1.0.json
 [spec_nominee]: ./schemas/owner/nominee.schema.json
 [spec_accreditation]: ./schemas/owner/accreditation.schema.json
 [spec_kya]: ./schemas/asset/kya.schema.json

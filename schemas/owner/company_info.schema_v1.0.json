@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/owner/kyc.schema.json",
+  "title": "Company Owner Info",
+  "description": "Information about an owner from type company",
+  "type": "object",
+  "definitions": {
+    "country": {
+      "type": "string",
+      "enum": ["AD", "AE", "AF", "AG", "AI", "AL", "AM", "AO", "AQ", "AR", "AS", "AT", "AU", "AW", "AX", "AZ", "BA", "BB", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BL", "BM", "BN", "BO", "BQ", "BR", "BS", "BT", "BV", "BW", "BY", "BZ", "CA", "CC", "CD", "CF", "CG", "CH", "CI", "CK", "CL", "CM", "CN", "CO", "CR", "CU", "CV", "CW", "CX", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO", "DZ", "EC", "EE", "EG", "EH", "ER", "ES", "ET", "FI", "FJ", "FK", "FM", "FO", "FR", "GA", "GB", "GD", "GE", "GF", "GG", "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GS", "GT", "GU", "GW", "GY", "HK", "HM", "HN", "HR", "HT", "HU", "ID", "IE", "IL", "IM", "IN", "IO", "IQ", "IR", "IS", "IT", "JE", "JM", "JO", "JP", "KE", "KG", "KH", "KI", "KM", "KN", "KP", "KR", "KW", "KY", "KZ", "LA", "LB", "LC", "LI", "LK", "LR", "LS", "LT", "LU", "LV", "LY", "MA", "MC", "MD", "ME", "MF", "MG", "MH", "MK", "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV", "MW", "MX", "MY", "MZ", "NA", "NC", "NE", "NF", "NG", "NI", "NL", "NO", "NP", "NR", "NU", "NZ", "OM", "PA", "PE", "PF", "PG", "PH", "PK", "PL", "PM", "PN", "PR", "PS", "PT", "PW", "PY", "QA", "RE", "RO", "RS", "RU", "RW", "SA", "SB", "SC", "SD", "SE", "SG", "SH", "SI", "SJ", "SK", "SL", "SM", "SN", "SO", "SR", "SS", "ST", "SV", "SX", "SY", "SZ", "TC", "TD", "TF", "TG", "TH", "TJ", "TK", "TL", "TM", "TN", "TO", "TR", "TT", "TV", "TW", "TZ", "UA", "UG", "UM", "US", "UY", "UZ", "VA", "VC", "VE", "VG", "VI", "VN", "VU", "WF", "WS", "YE", "YT", "ZA", "ZM", "ZW"]
+    },
+    "address": {
+      "type": "object",
+      "properties": {
+        "line1": { "type": "string", "maxLength": 33 },
+        "line2": { "type": "string", "maxLength": 33 },
+        "buildingNumber": { "type": "string", "maxLength": 15 },
+        "city": { "type": "string", "maxLength": 60 },
+        "postalCode": { "type": "string", "maxLength": 10 },
+        "country": { "$ref": "#/definitions/country" },
+        "state": { "type": "string", "maxLength": 90 }
+      },
+      "required": ["line1", "buildingNumber", "city", "postalCode", "country"]
+    },
+    "id": {
+      "type": "object",
+      "properties": {
+        "idType": { "enum": ["Passport", "Id", "SSN", "last 4 digits SSN", "Other"] },
+        "idNumber": { "type": "string", "maxLength": 20 }
+      },
+      "required": ["idType", "idNumber"]
+    },
+    "beneficialOwner": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "id": { "$ref": "#/definitions/id" },
+        "dateOfBirth": { "type": "string", "format": "date" },
+        "nationality": { "$ref": "#/definitions/nationalities" },
+        "email": { "type": "string", "format": "email" },
+        "address": { "$ref": "#/definitions/address" }
+      },
+      "required": ["name", "id", "dateOfBirth"]
+    },
+    "nationalities": {
+      "type": "string",
+      "enum": [
+        "Afghan", "Albanian", "Algerian", "American", "Andorran", "Angolan", "Anguillan",
+        "Citizen of Antigua and Barbuda", "Argentine", "Armenian", "Australian", "Austrian",
+        "Azerbaijani", "Bahamian", "Bahraini", "Bangladeshi", "Barbadian", "Belarusian",
+        "Belgian", "Belizean", "Beninese", "Bermudian", "Bhutanese", "Bolivian",
+        "Citizen of Bosnia and Herzegovina", "Botswanan", "Brazilian", "British",
+        "British Virgin Islander", "Bruneian", "Bulgarian", "Burkinan", "Burmese",
+        "Burundian", "Cambodian", "Cameroonian", "Canadian", "Cape Verdean", "Cayman Islander",
+        "Central African", "Chadian", "Chilean", "Chinese", "Colombian", "Comoran",
+        "Congolese (Congo)", "Congolese (DRC)", "Cook Islander", "Costa Rican", "Croatian",
+        "Cuban", "Cymraes", "Cymro", "Cypriot", "Czech", "Danish", "Djiboutian", "Dominican",
+        "Citizen of the Dominican Republic", "Dutch", "East Timorese", "Ecuadorean", "Egyptian",
+        "Emirati", "English", "Equatorial Guinean", "Eritrean", "Estonian", "Ethiopian",
+        "Faroese", "Fijian", "Filipino", "Finnish", "French", "Gabonese", "Gambian",
+        "Georgian", "German", "Ghanaian", "Gibraltarian", "Greek", "Greenlandic",
+        "Grenadian", "Guamanian", "Guatemalan", "Citizen of Guinea-Bissau", "Guinean",
+        "Guyanese", "Haitian", "Honduran", "Hong Konger", "Hungarian", "Icelandic", "Indian",
+        "Indonesian", "Iranian", "Iraqi", "Irish", "Israeli", "Italian", "Ivorian",
+        "Jamaican", "Japanese", "Jordanian", "Kazakh", "Kenyan", "Kittitian",
+        "Citizen of Kiribati", "Kosovan", "Kuwaiti", "Kyrgyz", "Lao", "Latvian", "Lebanese",
+        "Liberian", "Libyan", "Liechtenstein citizen", "Lithuanian", "Luxembourger", "Macanese",
+        "Macedonian", "Malagasy", "Malawian", "Malaysian", "Maldivian", "Malian", "Maltese",
+        "Marshallese", "Martiniquais", "Mauritanian", "Mauritian", "Mexican", "Micronesian",
+        "Moldovan", "Monegasque", "Mongolian", "Montenegrin", "Montserratian", "Moroccan",
+        "Mosotho", "Mozambican", "Namibian", "Nauruan", "Nepalese", "New Zealander",
+        "Nicaraguan", "Nigerian", "Nigerien", "Niuean", "North Korean", "Northern Irish",
+        "Norwegian", "Omani", "Pakistani", "Palauan", "Palestinian", "Panamanian",
+        "Papua New Guinean", "Paraguayan", "Peruvian", "Pitcairn Islander", "Polish",
+        "Portuguese", "Prydeinig", "Puerto Rican", "Qatari", "Romanian", "Russian", "Rwandan",
+        "Salvadorean", "Sammarinese", "Samoan", "Sao Tomean", "Saudi Arabian", "Scottish",
+        "Senegalese", "Serbian", "Citizen of Seychelles", "Sierra Leonean", "Singaporean",
+        "Slovak", "Slovenian", "Solomon Islander", "Somali", "South African", "South Korean",
+        "South Sudanese", "Spanish", "Sri Lankan", "St Helenian", "St Lucian", "Stateless",
+        "Sudanese", "Surinamese", "Swazi", "Swedish", "Swiss", "Syrian", "Taiwanese", "Tajik",
+        "Tanzanian", "Thai", "Togolese", "Tongan", "Trinidadian", "Tristanian", "Tunisian",
+        "Turkish", "Turkmen", "Turks and Caicos Islander", "Tuvaluan", "Ugandan", "Ukrainian",
+        "Uruguayan", "Uzbek", "Vatican citizen", "Citizen of Vanuatu", "Venezuelan", "Vietnamese",
+        "Vincentian", "Wallisian", "Welsh", "Yemeni", "Zambian", "Zimbabwean"
+      ]
+    }
+  },
+  "properties": {
+    "legalBusinessName": {
+      "description": "Legal business name",
+      "type": "string",
+      "maxLength": 120,
+      "pattern": "^[a-zA-Z0-9 ]*$"
+    },
+    "businessName": {
+      "description": "Business name- company's operating name if it's different than the legal business name",
+      "type": "string",
+      "maxLength": 120,
+      "pattern": "^[a-zA-Z0-9 ]*$"
+    },
+    "businessRegisteredCountry": {
+      "description": "The country where the business is registered",
+      "type": "string",
+      "$ref": "#/definitions/country"
+    },
+    "registeredBusinessAddress": {
+      "$ref": "#/definitions/address",
+      "description": "Address of the company's registered office"
+    },
+    "registrationNumberIncorporation": {
+      "description": "Registration number of incorporation",
+      "type": "string",
+      "maxLength": 30
+    },
+    "companiesHouseRegistrationNumber": {
+      "description": "Companies House Registration Number (CRN) for UK country only",
+      "type": "string",
+      "maxLength": 8
+    },
+    "employerIdentificationNumber": {
+      "description": "Employer Identification Number (EIN) for US country only",
+      "type": "string",
+      "maxLength": 10
+    },
+    "beneficialOwners": {
+      "description": "List of beneficial owners",
+      "type": "array",
+      "items": { "$ref": "#/definitions/beneficialOwner" },
+      "minItems": 1
+    },
+    "industryCode": {
+      "description": "Merchant category codes (MCC)",
+      "type": "string",
+      "maxLength": 4,
+      "pattern": "^[0-9]{4}$"
+    },
+    "vatNumber": {
+      "description": "VAT number",
+      "type": "string",
+      "maxLength": 15
+    },
+    "businessWebsite": {
+      "description": "Business website",
+      "type": "string",
+      "maxLength": 100,
+      "format": "uri"
+    },
+    "statementDescriptor": {
+      "description": "Statement descriptor explains charges or payments on customer's bank statements",
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 22,
+      "pattern": "^[^<>, '\"*]*$"
+    }
+  },
+  "required": [
+    "name",
+    "legalBusinessName",
+    "businessRegisteredCountry",
+    "registeredBusinessAddress",
+    "registrationNumberIncorporation",
+    "beneficialOwners"
+  ]
+}
