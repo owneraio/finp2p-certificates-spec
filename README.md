@@ -196,10 +196,10 @@ Sample data structure:
 }
 ```
 
-[spec_kyc]: ./schemas/owner/kyc.schema.json
-[spec_company_info]: ./schemas/owner/company_info.schema_v1.0.json
-[spec_individual_info]: ./schemas/owner/individual_info.schema_v1.0.json
-[spec_nominee]: ./schemas/owner/nominee.schema.json
-[spec_accreditation]: ./schemas/owner/accreditation.schema.json
+[spec_kyc]: schemas/user/kyc.schema.json
+[spec_company_info]: schemas/user/company_info.schema_v1.0.json
+[spec_individual_info]: schemas/user/individual_info.schema_v1.0.json
+[spec_nominee]: schemas/user/nominee.schema.json
+[spec_accreditation]: schemas/user/accreditation.schema.json
 [spec_kya]: ./schemas/asset/kya.schema.json
 [spec_nav]: ./schemas/asset/nav.schema.json
