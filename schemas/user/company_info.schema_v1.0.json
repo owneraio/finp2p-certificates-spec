@@ -154,7 +154,6 @@
     }
   },
   "required": [
-    "name",
     "legalBusinessName",
     "businessRegisteredCountry",
     "registeredBusinessAddress",
