@@ -53,21 +53,20 @@ Sample data structure:
 [Company Owner Info Schema][spec_company_info]
 Sample data structure:
 ```json
-{
-  "legalBusinessName": "Tech Solutions Inc",
-  "businessName": "Tech Solutions",
-  "businessRegisteredCountry": "US",
+  {
+  "legalBusinessName": "Acme Corporation",
+  "businessName": "Acme Corp",
+  "businessRegisteredCountry": "USA",
   "registeredBusinessAddress": {
-    "line1": "456 Technology Ave",
-    "line2": "Suite 800",
-    "buildingNumber": "200",
-    "city": "San Francisco",
-    "postalCode": "94105",
-    "country": "US",
-    "state": "CA"
-  },                                  
-  "registrationNumberIncorporation": "12345678",
-  "companiesHouseRegistrationNumber": "12345678",
+    "line1": "123 Main Street",
+    "line2": "Suite 400",
+    "city": "Springfield",
+    "postalCode": "01101",
+    "country": "USA",
+    "state": "IL"
+  },
+  "registrationNumberIncorporation": "123456789",
+  "companiesHouseRegistrationNumber": "987654321",
   "employerIdentificationNumber": "12-3456789",
   "beneficialOwners": [
     {
@@ -76,26 +75,24 @@ Sample data structure:
         "idType": "Passport",
         "idNumber": "A12345678"
       },
-      "dateOfBirth": "1975-05-15",
+      "dateOfBirth": "1980-01-15",
       "nationality": "American",
-      "email": "jane.smith@example.com",
+      "email": "jane.smith@acmecorp.com",
       "address": {
-        "line1": "123 Elm St",
-        "line2": "Apt 4",
-        "buildingNumber": "10",
-        "city": "New York",
-        "postalCode": "11111",
-        "country": "US",
-        "state": "NY"
+        "line1": "123 Main Street",
+        "line2": "Suite 400",
+        "city": "Springfield",
+        "postalCode": "01101",
+        "country": "USA",
+        "state": "IL"
       }
     }
   ],
-  "industryCode": "5732",
+  "industryCode": "1234",
   "vatNumber": "US123456789",
-  "businessWebsite": "https://www.techsolutions.com",
-  "statementDescriptor": "Tech Solutions Payment"
+  "businessWebsite": "www.acmecorp.com",
+  "statementDescriptor": "ACME CORP"
 }
-
 ```
 
 #### Nominee Account
@@ -187,7 +184,7 @@ The NAV is a financial measure used to determine the value of assets, NAV per sh
 Sample data structure:
 ```json
 { 
-  "currentNAV": { "date": 1684217201, "navValue": 50000000, "description": "some description"}
+  "currentNAV": { "date": 1684217201, "navValue": 50000000, "description": "some description"},
   "history" : [
   { "date": 1684217201, "navValue": 50000000, "description": "some description" },
   { "date": 1681625201, "navValue": 45000000 },
