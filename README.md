@@ -15,7 +15,7 @@ There are two major use cases for Certificates:
 #### Owner Holding Details
 Information about the Owner of the investment account or, when the ownership is split among several owners, the primary owner is the one giving its address and account details for the registration.
 This certificate is interchangable with the Nominee Info certificate, which is used to acknowledge the owner being a nominee owner.
-There are two types of owners: individuals and companies. Each type has a corresponding  certificate schema.
+There are two types of owners: individuals and companies. Each type has a corresponding certificate schema.
 
 #### Individual Owner
 
