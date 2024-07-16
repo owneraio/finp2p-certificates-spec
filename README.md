@@ -15,17 +15,83 @@ There are two major use cases for Certificates:
 #### Owner Holding Details
 Information about the Owner of the investment account or, when the ownership is split among several owners, the primary owner is the one giving its address and account details for the registration.
 This certificate is interchangable with the Nominee Info certificate, which is used to acknowledge the owner being a nominee owner.
+There are two types of owners: individuals and companies. Each type has a corresponding certificate schema.
 
-`type: "ownerInfo"`
+#### Individual Owner
 
-[Owner Info Schema][spec_info]
+`type: "individualInfo"`
+
+[Individual Owner Info Schema][spec_individual_info]
 
 Sample data structure:
 ```json
-{ 
-  "email" : "owner1@example.com", 
-  "name" : "Owner 1", 
-  "type": "company"
+{
+  "name": "John Doe",
+  "id": {
+    "idType": "Passport",
+    "idNumber": "123456789"
+  },
+  "dateOfBirth": "1980-01-01",
+  "nationality": "American",
+  "email": "johndoe@example.com",
+  "address": {
+    "line1": "123 Main St",
+    "line2": "Apt 4B",
+    "buildingNumber": "10",
+    "city": "New York",
+    "postalCode": "10001",
+    "country": "US",
+    "state": "NY"
+  }
+}
+```
+
+#### Company Owner
+
+`type: "companyInfo"`
+
+[Company Owner Info Schema][spec_company_info]
+Sample data structure:
+```json
+  {
+  "legalBusinessName": "Acme Corporation",
+  "businessName": "Acme Corp",
+  "businessRegisteredCountry": "USA",
+  "registeredBusinessAddress": {
+    "line1": "123 Main Street",
+    "line2": "Suite 400",
+    "city": "Springfield",
+    "postalCode": "01101",
+    "country": "USA",
+    "state": "IL"
+  },
+  "registrationNumberIncorporation": "123456789",
+  "companiesHouseRegistrationNumber": "987654321",
+  "employerIdentificationNumber": "12-3456789",
+  "beneficialOwners": [
+    {
+      "name": "Jane Smith",
+      "id": {
+        "idType": "Passport",
+        "idNumber": "A12345678"
+      },
+      "dateOfBirth": "1980-01-15",
+      "nationality": "American",
+      "email": "jane.smith@acmecorp.com",
+      "address": {
+        "line1": "123 Main Street",
+        "line2": "Suite 400",
+        "city": "Springfield",
+        "postalCode": "01101",
+        "country": "USA",
+        "state": "IL"
+      }
+    }
+  ],
+  "industryCode": "1234",
+  "vatNumber": "US123456789",
+  "businessWebsite": "www.acmecorp.com",
+  "statementDescriptor": "ACME CORP"
 }
 ```
 
@@ -118,7 +184,7 @@ The NAV is a financial measure used to determine the value of assets, NAV per sh
 Sample data structure:
 ```json
 { 
-  "currentNAV": { "date": 1684217201, "navValue": 50000000, "description": "some description"}
+  "currentNAV": { "date": 1684217201, "navValue": 50000000, "description": "some description"},
   "history" : [
   { "date": 1684217201, "navValue": 50000000, "description": "some description" },
   { "date": 1681625201, "navValue": 45000000 },
@@ -127,9 +193,10 @@ Sample data structure:
 }
 ```
 
-[spec_kyc]: ./schemas/owner/kyc.schema.json
-[spec_info]: ./schemas/owner/info.schema.json
-[spec_nominee]: ./schemas/owner/nominee.schema.json
-[spec_accreditation]: ./schemas/owner/accreditation.schema.json
-[spec_kya]: ./schemas/asset/kya.schema.json
-[spec_nav]: ./schemas/asset/nav.schema.json
+[spec_kyc]: schemas/user/kyc.schema_v1.0.json
+[spec_company_info]: schemas/user/company_info.schema_v1.0.json
+[spec_individual_info]: schemas/user/individual_info.schema_v1.0.json
+[spec_nominee]: schemas/user/nominee.schema_v1.0.json
+[spec_accreditation]: schemas/user/accreditation.schema_v1.0.json
+[spec_kya]: ./schemas/asset/kya.schema_v1.0.json
+[spec_nav]: ./schemas/asset/nav.schema_v1.0.json
