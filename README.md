@@ -53,21 +53,22 @@ Sample data structure:
 [Company Owner Info Schema][spec_company_info]
 Sample data structure:
 ```json
-  {
+{
   "legalBusinessName": "Acme Corporation",
   "businessName": "Acme Corp",
-  "businessRegisteredCountry": "USA",
+  "businessRegisteredCountry": "US",
   "registeredBusinessAddress": {
     "line1": "123 Main Street",
-    "line2": "Suite 400",
+    "buildingNumber": "400",
     "city": "Springfield",
     "postalCode": "01101",
-    "country": "USA",
+    "country": "US",
     "state": "IL"
   },
-  "registrationNumberIncorporation": "123456789",
-  "companiesHouseRegistrationNumber": "987654321",
-  "employerIdentificationNumber": "12-3456789",
+  "businessRegistrationId": {
+    "idType": "Company registration id",
+    "idNumber": "123456789"
+  },
   "beneficialOwners": [
     {
       "name": "Jane Smith",
@@ -80,19 +81,20 @@ Sample data structure:
       "email": "jane.smith@acmecorp.com",
       "address": {
         "line1": "123 Main Street",
-        "line2": "Suite 400",
+        "buildingNumber": "400",
         "city": "Springfield",
         "postalCode": "01101",
-        "country": "USA",
+        "country": "US",
         "state": "IL"
       }
     }
   ],
   "industryCode": "1234",
   "vatNumber": "US123456789",
-  "businessWebsite": "www.acmecorp.com",
+  "businessWebsite": "http://www.acmecorp.com",
   "statementDescriptor": "ACME CORP"
 }
+
 ```
 
 #### Nominee Account
