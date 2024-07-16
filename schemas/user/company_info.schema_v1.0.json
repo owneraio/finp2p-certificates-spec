@@ -83,6 +83,46 @@
         "Uruguayan", "Uzbek", "Vatican citizen", "Citizen of Vanuatu", "Venezuelan", "Vietnamese",
         "Vincentian", "Wallisian", "Welsh", "Yemeni", "Zambian", "Zimbabwean"
       ]
+    },
+    "businessRegistrationId": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "idType": { "const": "Company registration id" },
+            "idNumber": { "type": "string", "maxLength": 30 }
+          },
+          "required": ["idType", "idNumber"],
+          "description": "Company registration number"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "idType": { "const": "CRN" },
+            "idNumber": { "type": "string", "maxLength": 8 }
+          },
+          "required": ["idType", "idNumber"],
+          "description": "Companies House Registration Number - CRN for UK country only"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "idType": { "const": "EIN" },
+            "idNumber": { "type": "string", "maxLength": 10 }
+          },
+          "required": ["idType", "idNumber"],
+          "description": "Employer Identification Number - EIN for US country only"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "idType": { "const": "Other" },
+            "idNumber": { "type": "string", "maxLength": 30 }
+          },
+          "required": ["idType", "idNumber"],
+          "description": "Id number that associated with your company"
+        }
+      ]
     }
   },
   "properties": {
@@ -107,20 +147,8 @@
       "$ref": "#/definitions/address",
       "description": "Address of the company's registered office"
     },
-    "registrationNumberIncorporation": {
-      "description": "Registration number of incorporation",
-      "type": "string",
-      "maxLength": 30
-    },
-    "companiesHouseRegistrationNumber": {
-      "description": "Companies House Registration Number (CRN) for UK country only",
-      "type": "string",
-      "maxLength": 8
-    },
-    "employerIdentificationNumber": {
-      "description": "Employer Identification Number (EIN) for US country only",
-      "type": "string",
-      "maxLength": 10
+    "businessRegistrationId": {
+      "$ref": "#/definitions/businessRegistrationId"
     },
     "beneficialOwners": {
       "description": "List of beneficial owners",
