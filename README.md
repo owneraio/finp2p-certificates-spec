@@ -19,7 +19,7 @@ There are two types of owners: individuals and companies. Each type has a corres
 
 #### Individual Owner
 
-`type: "individualInfo"`
+`type: "individual_info"`
 
 [Individual Owner Info Schema][spec_individual_info]
 
@@ -48,7 +48,7 @@ Sample data structure:
 
 #### Company Owner
 
-`type: "companyInfo"`
+`type: "company_info"`
 
 [Company Owner Info Schema][spec_company_info]
 Sample data structure:
@@ -195,10 +195,10 @@ Sample data structure:
 }
 ```
 
-[spec_kyc]: schemas/user/kyc.schema_v1.0.json
-[spec_company_info]: schemas/user/company_info.schema_v1.0.json
-[spec_individual_info]: schemas/user/individual_info.schema_v1.0.json
-[spec_nominee]: schemas/user/nominee.schema_v1.0.json
-[spec_accreditation]: schemas/user/accreditation.schema_v1.0.json
-[spec_kya]: ./schemas/asset/kya.schema_v1.0.json
-[spec_nav]: ./schemas/asset/nav.schema_v1.0.json
+[spec_kyc]: schemas/user/kyc.schema.json
+[spec_company_info]: schemas/user/company_info.schema.json
+[spec_individual_info]: schemas/user/individual_info.schema.json
+[spec_nominee]: schemas/user/nominee.schema.json
+[spec_accreditation]: schemas/user/accreditation.schema.json
+[spec_kya]: ./schemas/asset/kya.schema.json
+[spec_nav]: ./schemas/asset/nav.schema.json
