@@ -19,7 +19,7 @@ There are two types of owners: individuals and companies. Each type has a corres
 
 #### Individual Owner
 
-`type: "individualInfo"`
+`type: "individual_info"`
 
 [Individual Owner Info Schema][spec_individual_info]
 
@@ -48,7 +48,7 @@ Sample data structure:
 
 #### Company Owner
 
-`type: "companyInfo"`
+`type: "company_info"`
 
 [Company Owner Info Schema][spec_company_info]
 Sample data structure:
