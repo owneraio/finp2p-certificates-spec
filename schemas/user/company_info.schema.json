@@ -12,13 +12,13 @@
     "address": {
       "type": "object",
       "properties": {
-        "line1": { "type": "string", "maxLength": 33 },
-        "line2": { "type": "string", "maxLength": 33 },
-        "buildingNumber": { "type": "string", "maxLength": 15 },
-        "city": { "type": "string", "maxLength": 60 },
-        "postalCode": { "type": "string", "maxLength": 10 },
+        "line1": { "type": "string", "maxLength": 33, "minLength": 1 },
+        "line2": { "type": "string", "maxLength": 33, "minLength": 1 },
+        "buildingNumber": { "type": "string", "maxLength": 15, "minLength": 1 },
+        "city": { "type": "string", "maxLength": 60, "minLength": 1 },
+        "postalCode": { "type": "string", "maxLength": 10, "minLength": 1 },
         "country": { "$ref": "#/definitions/country" },
-        "state": { "type": "string", "maxLength": 90 }
+        "state": { "type": "string", "maxLength": 90, "minLength": 1 }
       },
       "required": ["line1", "buildingNumber", "city", "postalCode", "country"]
     },
@@ -26,14 +26,14 @@
       "type": "object",
       "properties": {
         "idType": { "enum": ["Passport", "Id", "SSN", "last 4 digits SSN", "Other"] },
-        "idNumber": { "type": "string", "maxLength": 20 }
+        "idNumber": { "type": "string", "maxLength": 20, "minLength": 1 }
       },
       "required": ["idType", "idNumber"]
     },
     "beneficialOwner": {
       "type": "object",
       "properties": {
-        "name": { "type": "string" },
+        "name": { "type": "string", "minLength": 1 },
         "id": { "$ref": "#/definitions/id" },
         "dateOfBirth": { "type": "string", "format": "date" },
         "nationality": { "$ref": "#/definitions/nationalities" },
@@ -90,7 +90,7 @@
           "type": "object",
           "properties": {
             "idType": { "const": "Company registration id" },
-            "idNumber": { "type": "string", "maxLength": 30 }
+            "idNumber": { "type": "string", "maxLength": 30, "minLength": 1 }
           },
           "required": ["idType", "idNumber"],
           "description": "Company registration number"
@@ -99,7 +99,7 @@
           "type": "object",
           "properties": {
             "idType": { "const": "CRN" },
-            "idNumber": { "type": "string", "maxLength": 8 }
+            "idNumber": { "type": "string", "maxLength": 8, "minLength": 1 }
           },
           "required": ["idType", "idNumber"],
           "description": "Companies House Registration Number - CRN for UK country only"
@@ -108,7 +108,7 @@
           "type": "object",
           "properties": {
             "idType": { "const": "EIN" },
-            "idNumber": { "type": "string", "maxLength": 10 }
+            "idNumber": { "type": "string", "maxLength": 10, "minLength": 1 }
           },
           "required": ["idType", "idNumber"],
           "description": "Employer Identification Number - EIN for US country only"
@@ -117,7 +117,7 @@
           "type": "object",
           "properties": {
             "idType": { "const": "Other" },
-            "idNumber": { "type": "string", "maxLength": 30 }
+            "idNumber": { "type": "string", "maxLength": 30, "minLength": 1 }
           },
           "required": ["idType", "idNumber"],
           "description": "Id number that associated with your company"
@@ -130,12 +130,14 @@
       "description": "Legal business name",
       "type": "string",
       "maxLength": 120,
+      "minLength": 1,
       "pattern": "^[a-zA-Z0-9 ]*$"
     },
     "businessName": {
       "description": "Business name- company's operating name if it's different than the legal business name",
       "type": "string",
       "maxLength": 120,
+      "minLength": 1,
       "pattern": "^[a-zA-Z0-9 ]*$"
     },
     "businessRegisteredCountry": {
@@ -153,8 +155,7 @@
     "beneficialOwners": {
       "description": "List of beneficial owners",
       "type": "array",
-      "items": { "$ref": "#/definitions/beneficialOwner" },
-      "minItems": 1
+      "items": { "$ref": "#/definitions/beneficialOwner" }
     },
     "industryCode": {
       "description": "Merchant category codes (MCC)",
@@ -165,12 +166,14 @@
     "vatNumber": {
       "description": "VAT number",
       "type": "string",
-      "maxLength": 15
+      "maxLength": 15,
+      "minLength": 1
     },
     "businessWebsite": {
       "description": "Business website",
       "type": "string",
       "maxLength": 100,
+      "minLength": 1,
       "format": "uri"
     },
     "statementDescriptor": {

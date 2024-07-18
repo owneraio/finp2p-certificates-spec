@@ -12,13 +12,13 @@
     "address": {
       "type": "object",
       "properties": {
-        "line1": { "type": "string", "maxLength": 33 },
-        "line2": { "type": "string", "maxLength": 33 },
-        "buildingNumber": { "type": "string", "maxLength": 15 },
-        "city": { "type": "string", "maxLength": 60 },
-        "postalCode": { "type": "string", "maxLength": 10 },
+        "line1": { "type": "string", "maxLength": 33, "minLength": 1 },
+        "line2": { "type": "string", "maxLength": 33, "minLength": 1 },
+        "buildingNumber": { "type": "string", "maxLength": 15, "minLength": 1 },
+        "city": { "type": "string", "maxLength": 60, "minLength": 1 },
+        "postalCode": { "type": "string", "maxLength": 10, "minLength": 1 },
         "country": { "$ref": "#/definitions/country" },
-        "state": { "type": "string", "maxLength": 90 }
+        "state": { "type": "string", "maxLength": 90, "minLength": 1 }
       },
       "required": ["line1", "buildingNumber", "city", "postalCode", "country"]
     },
@@ -26,7 +26,7 @@
       "type": "object",
       "properties": {
         "idType": { "type": "string", "enum": ["Passport", "Id", "SSN", "last 4 digits SSN", "Other"] },
-        "idNumber": { "type": "string", "maxLength": 20 }
+        "idNumber": { "type": "string", "maxLength": 20, "minLength": 1 }
       },
       "required": ["idType", "idNumber"]
     },
@@ -76,7 +76,8 @@
   "properties": {
     "name": {
       "description": "Owner's full name",
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     },
     "id": { "$ref": "#/definitions/id" },
     "dateOfBirth": {
