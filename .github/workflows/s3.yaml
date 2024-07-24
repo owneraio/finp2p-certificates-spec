@@ -39,6 +39,6 @@ jobs:
           export AWS_SESSION_TOKEN=$(echo $AWS_CREDENTIALS | jq -r .SessionToken)
           
           echo -e "\n##### Syncing schemas to S3 #####\n"
-          aws s3 sync ./schemas s3://${S3_BUCKET_NAME}/schemas
+          aws s3 sync ./schemas s3://${S3_BUCKET_NAME}/schemas --acl public-read
           
           echo -e "\n##### Done #####\n"
