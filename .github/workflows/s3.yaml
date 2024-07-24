@@ -1,0 +1,44 @@
+name: Sync to S3
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  main:
+    name: main
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-west-2
+          role-to-assume: arn:aws:iam::749635473648:role/github
+          role-session-name: SessionName
+
+      - name: Sync schemas to S3
+        run: |
+          set -euo pipefail
+          
+          S3_BUCKET_NAME="ownera-finp2p-certificates-spec"
+          IAM_ROLE_ARN="arn:aws:iam::080891919429:role/github"
+          
+          echo -e "\n##### Setting AWS credentials #####\n"
+          AWS_CREDENTIALS=$(aws sts assume-role --role-arn $IAM_ROLE_ARN --role-session-name SessionName | jq .Credentials)
+          export AWS_ACCESS_KEY_ID=$(echo $AWS_CREDENTIALS | jq -r .AccessKeyId)
+          export AWS_SECRET_ACCESS_KEY=$(echo $AWS_CREDENTIALS | jq -r .SecretAccessKey)
+          export AWS_SESSION_TOKEN=$(echo $AWS_CREDENTIALS | jq -r .SessionToken)
+          
+          echo -e "\n##### Syncing schemas to S3 #####\n"
+          aws s3 sync ./schemas s3://${S3_BUCKET_NAME}/schemas --acl public-read
+          
+          echo -e "\n##### Done #####\n"
