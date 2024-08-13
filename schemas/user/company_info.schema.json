@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ownera.io/certificates/owner/kyc.schema.json",
+  "$id": "https://ownera.io/certificates/owner/company_info.schema.json",
   "title": "Company Owner Info",
   "description": "Information about an owner from type company",
   "type": "object",
