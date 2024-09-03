@@ -188,7 +188,7 @@
     "legalBusinessName",
     "businessRegisteredCountry",
     "registeredBusinessAddress",
-    "registrationNumberIncorporation",
+    "businessRegistrationId",
     "beneficialOwners"
   ]
 }
