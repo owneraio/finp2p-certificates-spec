@@ -19,8 +19,7 @@
     "info": {
       "description": "information about for the certificate",
       "type": "array",
-      "items": { "$ref": "#/definitions/infoItem" },
-      "minItems": 0
+      "items": { "$ref": "#/definitions/infoItem" }
     }
   },
   "required": [ "info" ]
