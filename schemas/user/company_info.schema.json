@@ -181,7 +181,7 @@
       "type": "string",
       "minLength": 5,
       "maxLength": 22,
-      "pattern": "^[^<>, '\"*]*$"
+      "pattern": "^[^<>,'\"*]*$"
     }
   },
   "required": [
