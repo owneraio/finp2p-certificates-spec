@@ -19,16 +19,14 @@
         "postalCode": { "type": "string", "maxLength": 10, "minLength": 1 },
         "country": { "$ref": "#/definitions/country" },
         "state": { "type": "string", "maxLength": 90, "minLength": 1 }
-      },
-      "required": ["line1", "buildingNumber", "city", "postalCode", "country"]
+      }
     },
     "id": {
       "type": "object",
       "properties": {
         "idType": { "enum": ["Passport", "Id", "SSN", "last 4 digits SSN", "Other"] },
         "idNumber": { "type": "string", "maxLength": 20, "minLength": 1 }
-      },
-      "required": ["idType", "idNumber"]
+      }
     },
     "beneficialOwner": {
       "type": "object",

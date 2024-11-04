@@ -27,8 +27,7 @@
       "properties": {
         "idType": { "type": "string", "enum": ["Passport", "Id", "SSN", "last 4 digits SSN", "Other"] },
         "idNumber": { "type": "string", "maxLength": 20, "minLength": 1 }
-      },
-      "required": ["idType", "idNumber"]
+      }
     },
     "nationalities": {
       "type": "string",
