@@ -133,8 +133,7 @@
       "description": "Business website",
       "type": "string",
       "maxLength": 100,
-      "minLength": 1,
-      "format": "uri"
+      "minLength": 1
     },
     "statementDescriptor": {
       "description": "Statement descriptor explains charges or payments on customer's bank statements",
