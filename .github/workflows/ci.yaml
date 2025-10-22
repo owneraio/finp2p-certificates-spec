@@ -10,7 +10,10 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # all history needed to detect changed files
       - run: |
           set -euox pipefail
           shopt -s globstar
-          for x in **/*.json; do npx -y jsonlint "$x"; done
+          changed_files="$(comm -12 <(ls **/*.json | sort) <(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | sort))"
+          for x in "$changed_files"; do npx -y jsonlint "$x"; done
