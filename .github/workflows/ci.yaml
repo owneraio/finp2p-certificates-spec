@@ -16,4 +16,8 @@ jobs:
           set -euox pipefail
           shopt -s globstar
           changed_files="$(comm -12 <(ls **/*.json | sort) <(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | sort))"
-          for x in "$changed_files"; do npx -y jsonlint "$x"; done
+          for file in "$changed_files"; do
+            if [ "x$file" != "x" ]; then
+              npx -y jsonlint "$file"
+            fi
+          done
