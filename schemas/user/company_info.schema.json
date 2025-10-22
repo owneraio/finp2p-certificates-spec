@@ -91,7 +91,7 @@
       "type": "string",
       "maxLength": 120,
       "minLength": 1,
-      "pattern": "^[a-zA-Z0-9 \-]*$"
+      "pattern": "^[a-zA-Z0-9 ]*$"
     },
     "businessName": {
       "description": "Business name- company's operating name if it's different than the legal business name",
