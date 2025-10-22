@@ -1,0 +1,16 @@
+name: CI
+
+on:
+  push:
+
+jobs:
+  validate-json:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          set -euox pipefail
+          shopt -s globstar
+          for x in **/*.json; do npx -y jsonlint "$x"; done
