@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  pull_request:
+
+jobs:
+  validate-json:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # all history needed to detect changed files
+      - run: |
+          set -euox pipefail
+          shopt -s globstar
+          changed_files="$(comm -12 <(ls **/*.json | sort) <(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | sort))"
+          for file in "$changed_files"; do
+            if [[ ! "x${file}" = "x" ]]; then
+              npx -y jsonlint "$file"
+            fi
+          done
