@@ -8,7 +8,7 @@
     "infoItem": {
       "type": "object",
       "properties": {
-        "type":           { "enum": ["text"] },
+        "type":           { "enum": ["text\"] },
         "name":           { "type": "string" },
         "value":          { "type": "string" }
       },
