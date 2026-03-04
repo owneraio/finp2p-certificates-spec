@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/data/referenceData.schema.json",
+  "title": "Reference Data",
+  "description": "Issuance and reference information about an asset, including issuer details and offering metadata",
+  "type": "object",
+  "properties": {
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when the reference data was created"
+    },
+    "issuerName": {
+      "type": "string",
+      "description": "Legal name of the asset issuer"
+    },
+    "offeringPageUrl": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to the offering page for the asset"
+    },
+    "issuancePlatform": {
+      "type": "string",
+      "description": "Platform used for issuance (e.g. Securitize, Tokeny)"
+    },
+    "issuanceJurisdiction": {
+      "type": "string",
+      "description": "Jurisdiction where the asset was issued"
+    }
+  },
+  "required": ["createdAt", "issuerName", "issuancePlatform", "issuanceJurisdiction"]
+}

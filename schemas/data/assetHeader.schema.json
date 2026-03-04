@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/data/assetHeader.schema.json",
+  "title": "Asset Header",
+  "description": "Core asset catalog/header data describing an asset's identity, category, and available data types",
+  "type": "object",
+  "definitions": {
+    "caip19": {
+      "type": "object",
+      "description": "CAIP-19 blockchain asset identifier",
+      "properties": {
+        "chainId": {
+          "type": "string",
+          "description": "CAIP-2 chain identifier (e.g. \"eip155:42161\")"
+        },
+        "assetNamespace": {
+          "type": "string",
+          "description": "Asset namespace (e.g. \"erc20\")"
+        },
+        "assetReference": {
+          "type": "string",
+          "description": "Asset reference (e.g. contract address)"
+        },
+        "itemId": {
+          "type": ["string", "null"],
+          "description": "Token ID for NFTs"
+        }
+      },
+      "required": ["chainId", "assetNamespace", "assetReference"]
+    },
+    "representation": {
+      "type": "object",
+      "description": "Blockchain representation of the asset",
+      "properties": {
+        "caip19": { "$ref": "#/definitions/caip19" },
+        "issuanceMode": {
+          "type": "string",
+          "description": "How the asset is represented on-chain (e.g. \"native\", \"wrapped\")"
+        }
+      },
+      "required": ["caip19", "issuanceMode"]
+    },
+    "additionalIdentifier": {
+      "type": "object",
+      "description": "Non-primary asset identifier",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Identifier type (e.g. \"DTI\", \"CUSIP\", \"SEDOL\")"
+        },
+        "value": {
+          "type": "string",
+          "description": "Identifier value"
+        }
+      },
+      "required": ["type", "value"]
+    }
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Asset display name"
+    },
+    "ticker": {
+      "type": "string",
+      "description": "Ticker symbol"
+    },
+    "category": {
+      "type": "string",
+      "description": "Asset category (e.g. MMF, equity, bond)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of the asset"
+    },
+    "availableDataTypes": {
+      "type": "array",
+      "description": "Data types available for this asset",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "icon": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to asset icon image"
+    },
+    "representations": {
+      "type": "array",
+      "description": "Blockchain representations (CAIP-19)",
+      "items": { "$ref": "#/definitions/representation" }
+    },
+    "additionalIdentifiers": {
+      "type": "array",
+      "description": "Additional identifiers (DTI, CUSIP, etc.)",
+      "items": { "$ref": "#/definitions/additionalIdentifier" }
+    }
+  },
+  "required": ["name", "ticker", "category", "description", "availableDataTypes"]
+}
