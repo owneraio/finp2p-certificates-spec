@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/data/assetHeader.schema.json",
   "title": "Asset Header",
-  "description": "Core asset catalog/header data describing an asset's identity, category, and available data types",
+  "description": "Core asset catalog/header data describing an asset's identity and on-chain representations. Designed to apply across asset classes (securities, funds, stablecoins, digital commodities, tokenised RWAs).",
   "type": "object",
   "definitions": {
     "caip19": {
@@ -15,11 +15,11 @@
         },
         "assetNamespace": {
           "type": "string",
-          "description": "Asset namespace (e.g. \"erc20\")"
+          "description": "Asset namespace (e.g. \"erc20\", \"slip44\", \"spl\")"
         },
         "assetReference": {
           "type": "string",
-          "description": "Asset reference (e.g. contract address)"
+          "description": "Asset reference (e.g. contract address, slip44 coin type)"
         },
         "itemId": {
           "type": ["string", "null"],
@@ -35,18 +35,20 @@
         "caip19": { "$ref": "#/definitions/caip19" },
         "issuanceMode": {
           "type": "string",
-          "description": "How the asset is represented on-chain (e.g. \"native\", \"wrapped\")"
+          "enum": ["native", "wrapped", "twin"],
+          "description": "How the asset is represented on this chain. \"native\": the token is the asset itself, primary issuance on this chain (e.g. BTC on Bitcoin, USDC on Ethereum, BUIDL where the on-chain token is the legal share record). \"wrapped\": represents the same asset that lives natively on another blockchain, with custody held on-chain in a bridge contract or vault (e.g. WBTC, USDC.e). \"twin\": represents an off-chain real-world asset with custody held off-chain by a depository or transfer agent (e.g. tokenised AAPL shares, tokenised T-bills)."
         }
       },
       "required": ["caip19", "issuanceMode"]
     },
     "additionalIdentifier": {
       "type": "object",
-      "description": "Non-primary asset identifier",
+      "description": "Non-primary asset identifier. Industry-standard identifier types are enumerated to keep downstream consumers consistent.",
       "properties": {
         "type": {
           "type": "string",
-          "description": "Identifier type (e.g. \"DTI\", \"CUSIP\", \"SEDOL\")"
+          "enum": ["ISIN", "CUSIP", "SEDOL", "FIGI", "DTI", "RIC", "BBGID", "WKN", "VALOR"],
+          "description": "Asset-level identifier type. ISIN (ISO 6166), CUSIP, SEDOL, FIGI (OpenFIGI), DTI (ISO 24165), RIC (Refinitiv), BBGID (Bloomberg), WKN (German), VALOR (Swiss). LEI is issuer-level (see referenceData.issuerLEI); CFI/FISN are top-level fields on this header."
         },
         "value": {
           "type": "string",
@@ -63,26 +65,30 @@
     },
     "ticker": {
       "type": "string",
-      "description": "Ticker symbol"
+      "description": "Ticker or trading symbol. Optional — many asset classes (private funds, bonds, pre-issuance tokens) have no ticker."
     },
     "category": {
       "type": "string",
-      "description": "Asset category (e.g. MMF, equity, bond)"
+      "description": "Asset category. Free-form for now; expected vocabulary includes \"Equity\", \"Bond\", \"Fund\", \"MMF\", \"Stablecoin\", \"Digital Commodity\", \"Token\", \"Derivative\", \"Commodity\", \"RealEstate\". For formal classification use the optional `cfi` field (ISO 10962)."
     },
     "description": {
       "type": "string",
       "description": "Human-readable description of the asset"
     },
-    "availableDataTypes": {
-      "type": "array",
-      "description": "Data types available for this asset",
-      "items": { "type": "string" },
-      "minItems": 1
-    },
     "icon": {
       "type": "string",
       "format": "uri",
       "description": "URL to asset icon image"
+    },
+    "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$",
+      "description": "Denomination currency (ISO 4217). Optional."
+    },
+    "cfi": {
+      "type": "string",
+      "pattern": "^[A-Z]{6}$",
+      "description": "Classification of Financial Instruments code (ISO 10962). Optional structured counterpart to `category`."
     },
     "representations": {
       "type": "array",
@@ -91,9 +97,9 @@
     },
     "additionalIdentifiers": {
       "type": "array",
-      "description": "Additional identifiers (DTI, CUSIP, etc.)",
+      "description": "Identifiers other than the primary one carried in the ingest envelope (ISIN, CUSIP, FIGI, DTI, LEI, etc.)",
       "items": { "$ref": "#/definitions/additionalIdentifier" }
     }
   },
-  "required": ["name", "ticker", "category", "description", "availableDataTypes"]
+  "required": ["name", "category"]
 }
