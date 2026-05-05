@@ -37,10 +37,6 @@
     "signature": {
       "type": "string",
       "description": "Optional. DER-encoded signature over the observation, when the producer is a signing oracle. Passed through verbatim for downstream verification."
-    },
-    "attested": {
-      "type": "boolean",
-      "description": "Optional. True if the valuation has been attested on a ledger (e.g. Canton via PullOracle.PublishSignedData). Defaults to false."
     }
   }
 }
