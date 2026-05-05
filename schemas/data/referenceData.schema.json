@@ -2,31 +2,54 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/data/referenceData.schema.json",
   "title": "Reference Data",
-  "description": "Issuance and reference information about an asset, including issuer details and offering metadata",
+  "description": "Issuance and reference information about an asset. All fields are optional because reference data is heterogeneous across asset classes — for example, native digital commodities (BTC, ETH) have no issuer, jurisdiction, or issuance platform. Producers should populate whatever they can; consumers must handle absence.",
   "type": "object",
   "properties": {
-    "createdAt": {
-      "type": "string",
-      "format": "date-time",
-      "description": "Timestamp when the reference data was created"
-    },
     "issuerName": {
       "type": "string",
-      "description": "Legal name of the asset issuer"
+      "description": "Legal name of the asset issuer. Absent for native digital commodities."
+    },
+    "issuerLEI": {
+      "type": "string",
+      "pattern": "^[A-Z0-9]{18}[0-9]{2}$",
+      "description": "Legal Entity Identifier (ISO 17442). Preferred over issuerName when available."
+    },
+    "issuanceDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date the asset was issued."
+    },
+    "maturityDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Maturity date (for fixed-income instruments)."
+    },
+    "country": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$",
+      "description": "Country of issuance (ISO 3166-1 alpha-2)."
+    },
+    "issuanceJurisdiction": {
+      "type": "string",
+      "description": "Free-form jurisdiction label, when ISO 3166 country code is not sufficient (e.g. \"British Virgin Islands\", \"Cayman Islands\")."
+    },
+    "issuancePlatform": {
+      "type": "string",
+      "description": "Issuance technology platform, when applicable (e.g. \"Securitize\", \"Tokeny\", \"Circle\"). Not applicable for native digital commodities or traditional securities."
     },
     "offeringPageUrl": {
       "type": "string",
       "format": "uri",
-      "description": "URL to the offering page for the asset"
+      "description": "URL to the offering or product page."
     },
-    "issuancePlatform": {
+    "prospectusUrl": {
       "type": "string",
-      "description": "Platform used for issuance (e.g. Securitize, Tokeny)"
+      "format": "uri",
+      "description": "URL to the prospectus or offering memorandum."
     },
-    "issuanceJurisdiction": {
+    "regulatoryStatus": {
       "type": "string",
-      "description": "Jurisdiction where the asset was issued"
+      "description": "Regulatory status (e.g. \"Reg D\", \"Reg S\", \"UCITS\", \"unregistered\")."
     }
-  },
-  "required": ["createdAt", "issuerName", "issuancePlatform", "issuanceJurisdiction"]
+  }
 }
