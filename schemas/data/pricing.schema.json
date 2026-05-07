@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/data/pricing.schema.json",
+  "title": "Pricing",
+  "description": "A snapshot of pricing observations for a single asset from a single producer. The platform aggregates data items by (asset, dataType=pricing, source); each subsequent record from the same source overwrites the producer's previous snapshot. Multi-producer aggregation falls out naturally — different producers contribute distinct (asset, dataType=pricing, source) rows. Producers carrying multiple pricing aspects (e.g. bid + ask + last, or NAV + oracle price) ship them all in one snapshot via the `values` map keyed by semantic price name. Per-value timestamp and signature are preserved.",
+  "type": "object",
+  "required": ["currency", "timestamp", "values"],
+  "properties": {
+    "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$",
+      "description": "Denomination currency for the snapshot (ISO 4217)."
+    },
+    "timestamp": {
+      "type": "integer",
+      "description": "Producer timestamp at which the snapshot was emitted, epoch milliseconds. Used as the default for any value entry that omits its own `timestamp`."
+    },
+    "values": {
+      "type": "object",
+      "minProperties": 1,
+      "description": "Map of valueType → observation. Keys are semantic price names so consumers can look up a known type across producers. Expected vocabulary: \"nav\", \"fairValue\", \"oraclePrice\", \"peg\", \"indicative\" (declared values); \"last\", \"bid\", \"ask\", \"mid\", \"vwap\" (market quotes); \"open\", \"high\", \"low\", \"close\", \"previousClose\" (session marks); \"settlement\", \"markPrice\" (derivatives); \"cleanPrice\", \"dirtyPrice\", \"ytm\", \"ytw\", \"duration\" (bond analytics). New keys may be added as use cases arise; consumers should ignore unrecognised keys.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["value", "decimal"],
+        "properties": {
+          "value": {
+            "type": ["number", "string"],
+            "description": "Raw value, scaled by `decimal`. Strings are permitted to preserve precision for uint64-sized values that overflow IEEE 754 (~2^53)."
+          },
+          "decimal": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 30,
+            "description": "Scale factor — human-readable value = value / 10^decimal. 0 for integer values."
+          },
+          "timestamp": {
+            "type": "integer",
+            "description": "Optional. Per-value timestamp in epoch milliseconds. Falls back to the snapshot's top-level `timestamp` if absent."
+          },
+          "signature": {
+            "type": "string",
+            "description": "Optional. DER-encoded signature over the observation, when the producer is a signing oracle. Passed through verbatim for downstream verification."
+          }
+        }
+      }
+    }
+  }
+}
