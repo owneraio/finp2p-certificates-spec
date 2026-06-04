@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/data/rating.schema.json",
+  "title": "Rating",
+  "description": "A snapshot of credit / fund ratings for a single asset from a single producer (rating agency). The platform aggregates data items by (asset, dataType=rating, source); each subsequent record from the same source overwrites the producer's previous snapshot. Multi-agency aggregation falls out naturally — different agencies contribute distinct (asset, dataType=rating, source) rows. Producers carrying multiple rating aspects (e.g. long-term issuer + short-term issuer + outlook) ship them all in one snapshot via the `values` map keyed by semantic rating type. Per-value timestamp, lifecycle action, and signature are preserved.",
+  "type": "object",
+  "required": ["scale", "timestamp", "values"],
+  "properties": {
+    "scale": {
+      "type": "string",
+      "description": "Rating scale used by this producer (e.g. \"moodys\", \"sp\", \"fitch\", \"kroll\", \"dbrs\", \"moodys-fund\"). Used to disambiguate rating notations across agencies (Aaa vs AAA, Baa2 vs BBB)."
+    },
+    "timestamp": {
+      "type": "integer",
+      "description": "Producer timestamp at which the snapshot was emitted, epoch milliseconds. Used as the default for any value entry that omits its own `timestamp`."
+    },
+    "values": {
+      "type": "object",
+      "minProperties": 1,
+      "description": "Map of ratingType → observation. Keys are semantic rating names so consumers can look up a known type across producers. Expected vocabulary: \"longTermIssuer\", \"shortTermIssuer\" (issuer-level credit ratings); \"longTermSenior\", \"longTermSubordinate\", \"shortTermDebt\" (debt-instrument ratings); \"fundRating\", \"moneyMarketFundRating\" (fund ratings, e.g. Aaa-mf); \"outlook\" (\"Positive\" / \"Stable\" / \"Negative\" / \"Developing\"); \"watchStatus\" (\"On Watch — Positive\" / \"On Watch — Negative\" / \"Under Review\" / null). New keys may be added as use cases arise; consumers should ignore unrecognised keys.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["value"],
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Rating notation, expressed in this producer's `scale` (e.g. \"Aaa\", \"AA+\", \"Baa2\", \"Aaa-mf\", \"Stable\", \"On Watch — Negative\"). String type because ratings are categorical, not numeric."
+          },
+          "action": {
+            "type": "string",
+            "enum": ["Initial", "Affirmation", "Upgrade", "Downgrade", "Withdrawn"],
+            "description": "Optional. The rating action this observation represents."
+          },
+          "effectiveDate": {
+            "type": "integer",
+            "description": "Optional. When this rating took effect, epoch milliseconds. Distinct from `timestamp`, which is when the producer emitted the snapshot."
+          },
+          "lastReviewDate": {
+            "type": "integer",
+            "description": "Optional. When the producer last reviewed or affirmed this rating, epoch milliseconds."
+          },
+          "timestamp": {
+            "type": "integer",
+            "description": "Optional. Per-value timestamp in epoch milliseconds. Falls back to the snapshot's top-level `timestamp` if absent."
+          },
+          "signature": {
+            "type": "string",
+            "description": "Optional. DER-encoded signature over the observation, when the producer is a signing oracle. Passed through verbatim for downstream verification."
+          }
+        }
+      }
+    }
+  }
+}
