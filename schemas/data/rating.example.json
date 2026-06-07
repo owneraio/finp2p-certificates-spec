@@ -1,0 +1,26 @@
+{
+  "timestamp": 1779000000000,
+  "values": {
+    "mmf": {
+      "grade": "Aaa-mf",
+      "scale": "moodys-mmf",
+      "timestamp": 1779000000000
+    },
+    "longTerm": {
+      "grade": "Aaa",
+      "scale": "moodys-long-term"
+    },
+    "outlook": {
+      "grade": "Stable",
+      "scale": "moodys-outlook"
+    }
+  },
+  "classification": {
+    "securityClass": "Mutual Fund (MMK)",
+    "instrumentType": "Money Market Fund",
+    "privatePlacement": "Not Applicable",
+    "enhancements": "Acme Asset Management LLC",
+    "equityEvents": "Inception 2015-03-12",
+    "fundName": "XYZ US Dollar Liquidity Fund"
+  }
+}
