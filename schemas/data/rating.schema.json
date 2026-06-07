@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/data/rating.schema.json",
+  "title": "Rating",
+  "description": "A snapshot of credit-rating observations for a single asset from a single rating agency. The platform aggregates data items by (asset, dataType=rating, source); each subsequent record from the same source overwrites the agency's previous snapshot. Multi-agency aggregation falls out naturally — different agencies (moodys, sp, fitch, dbrs, …) contribute distinct (asset, dataType=rating, source) rows. Agencies that publish multiple ratings for the same asset (e.g. long-term + short-term + outlook) ship them all in one snapshot via the `values` map keyed by semantic rating type. Classification metadata describing the rated instrument is carried at snapshot level since it applies to the asset, not to individual rating dimensions.",
+  "type": "object",
+  "required": ["timestamp", "values"],
+  "properties": {
+    "timestamp": {
+      "type": "integer",
+      "description": "Producer timestamp at which the snapshot was emitted, epoch milliseconds. Used as the default for any value entry that omits its own `timestamp`."
+    },
+    "values": {
+      "type": "object",
+      "minProperties": 1,
+      "description": "Map of ratingType → observation. Keys are semantic rating names so consumers can look up a known rating dimension across agencies. Expected vocabulary: \"longTerm\", \"shortTerm\", \"mmf\" (money-market-fund rating), \"fundCredit\", \"issuer\", \"issue\" (rated instrument vs rated entity), \"counterparty\"; \"outlook\" (Stable/Positive/Negative/Developing); \"watch\" (Negative/Positive/Evolving). Grade values are preserved verbatim from each agency — no cross-agency normalization on our side. New keys may be added as use cases arise; consumers should ignore unrecognised keys.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["grade"],
+        "properties": {
+          "grade": {
+            "type": "string",
+            "description": "Raw rating value as published by the agency. Moody's long-term: Aaa…C; S&P/Fitch/DBRS long-term: AAA…D; short-term scales and outlook/watch values use each agency's own vocabulary."
+          },
+          "scale": {
+            "type": "string",
+            "description": "Optional. Identifier of the agency's rating scale used for `grade` (e.g. \"moodys-long-term\", \"sp-short-term\", \"fitch-issuer-default\"). Useful when an agency publishes multiple scales under the same rating type."
+          },
+          "timestamp": {
+            "type": "integer",
+            "description": "Optional. Per-value timestamp in epoch milliseconds. Falls back to the snapshot's top-level `timestamp` if absent."
+          },
+          "signature": {
+            "type": "string",
+            "description": "Optional. DER-encoded signature over the observation, when the producer is a signing oracle. Passed through verbatim for downstream verification."
+          }
+        }
+      }
+    },
+    "classification": {
+      "type": "object",
+      "description": "Optional metadata describing the rated instrument. Carried at snapshot level since these attributes describe the asset, not individual rating dimensions. Fields mirror the Moody's classification taxonomy and are reused by other agencies where applicable.",
+      "properties": {
+        "securityClass": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Security class (e.g. \"Mutual Fund (MMK)\")."
+        },
+        "instrumentType": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Instrument type (e.g. \"Money Market Fund\", \"Bond Fund\")."
+        },
+        "privatePlacement": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Private placement indicator (e.g. \"Yes\", \"Not Applicable\")."
+        },
+        "enhancements": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "Credit enhancements or advisor name."
+        },
+        "equityEvents": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "Equity-related events (e.g. fund inception date)."
+        },
+        "fundName": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "Fund or instrument name as registered with the agency."
+        }
+      }
+    }
+  }
+}
