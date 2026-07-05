@@ -56,6 +56,43 @@
         }
       },
       "required": ["type", "value"]
+    },
+    "document": {
+      "type": "object",
+      "description": "A document attached to the asset (prospectus, term sheet, factsheet, KID/KIID, certificate, etc.), uploaded to the router's file storage via the data-documents endpoint and retrievable by its URI. Distinct from referenceData's *Url fields, which are external web links rather than stored, hash-verified artifacts.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["prospectus", "termSheet", "factsheet", "kid", "kiid", "annualReport", "offeringMemorandum", "certificate", "other"],
+          "description": "Semantic document type so consumers can label/route it. Use \"other\" when none fit; free-text intent goes in `title`."
+        },
+        "title": {
+          "type": "string",
+          "description": "Human-readable label for the document (e.g. \"Series A Term Sheet\"). Optional."
+        },
+        "uri": {
+          "type": "string",
+          "description": "Relative URI to retrieve the document (the fileURI returned by the data-documents upload; fetched via GET /docs/{uri}). Not an external http(s) URL."
+        },
+        "hash": {
+          "type": "string",
+          "description": "base64-encoded sha3-256 of the document bytes, for integrity verification."
+        },
+        "mimeType": {
+          "type": "string",
+          "description": "The document's MIME type (e.g. \"application/pdf\")."
+        },
+        "fileName": {
+          "type": "string",
+          "description": "The document's file name."
+        },
+        "size": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The document size in bytes."
+        }
+      },
+      "required": ["type", "uri"]
     }
   },
   "properties": {
@@ -99,6 +136,11 @@
       "type": "array",
       "description": "Identifiers other than the primary one carried in the ingest envelope (ISIN, CUSIP, FIGI, DTI, LEI, etc.)",
       "items": { "$ref": "#/definitions/additionalIdentifier" }
+    },
+    "documents": {
+      "type": "array",
+      "description": "Documents attached to the asset (prospectus, term sheet, certificates…), uploaded via the data-documents endpoint. Each item carries a stored-file URI plus integrity metadata.",
+      "items": { "$ref": "#/definitions/document" }
     }
   },
   "required": ["name", "category"]
