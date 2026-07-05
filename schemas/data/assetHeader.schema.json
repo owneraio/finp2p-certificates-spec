@@ -56,6 +56,38 @@
         }
       },
       "required": ["type", "value"]
+    },
+    "document": {
+      "type": "object",
+      "description": "A document attached to the asset, uploaded to the router's file storage via the data-documents endpoint and retrievable by its URI. The binary lives in file storage; this reference travels inside the ingested data item.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Document id."
+        },
+        "uri": {
+          "type": "string",
+          "description": "Relative URI to retrieve the document (the fileURI returned by the data-documents upload; fetched via GET /docs/{uri}). Not an external http(s) URL."
+        },
+        "hash": {
+          "type": "string",
+          "description": "base64-encoded sha3-256 of the document bytes, for integrity verification."
+        },
+        "mimeType": {
+          "type": "string",
+          "description": "The document's MIME type (e.g. \"application/pdf\")."
+        },
+        "fileName": {
+          "type": "string",
+          "description": "The document's file name."
+        },
+        "size": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The document size in bytes."
+        }
+      },
+      "required": ["id", "uri"]
     }
   },
   "properties": {
@@ -99,6 +131,11 @@
       "type": "array",
       "description": "Identifiers other than the primary one carried in the ingest envelope (ISIN, CUSIP, FIGI, DTI, LEI, etc.)",
       "items": { "$ref": "#/definitions/additionalIdentifier" }
+    },
+    "documents": {
+      "type": "array",
+      "description": "Documents attached to the asset, uploaded via the data-documents endpoint. Each item carries a stored-file URI plus integrity metadata.",
+      "items": { "$ref": "#/definitions/document" }
     }
   },
   "required": ["name", "category"]
