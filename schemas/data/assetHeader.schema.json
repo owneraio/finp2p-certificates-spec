@@ -109,8 +109,8 @@
     },
     "icon": {
       "type": "string",
-      "format": "uri",
-      "description": "URL to asset icon image"
+      "format": "uri-reference",
+      "description": "Asset icon image. Either an absolute URL or a relative fileURI returned by the data-documents upload (e.g. \"dataprovider/data/<uuid>\")."
     },
     "currency": {
       "type": "string",
