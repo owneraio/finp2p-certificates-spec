@@ -59,16 +59,11 @@
     },
     "document": {
       "type": "object",
-      "description": "A document attached to the asset (prospectus, term sheet, factsheet, KID/KIID, certificate, etc.), uploaded to the router's file storage via the data-documents endpoint and retrievable by its URI. Distinct from referenceData's *Url fields, which are external web links rather than stored, hash-verified artifacts.",
+      "description": "A document attached to the asset, uploaded to the router's file storage via the data-documents endpoint and retrievable by its URI. The binary lives in file storage; this reference travels inside the ingested data item.",
       "properties": {
-        "type": {
+        "id": {
           "type": "string",
-          "enum": ["prospectus", "termSheet", "factsheet", "kid", "kiid", "annualReport", "offeringMemorandum", "certificate", "other"],
-          "description": "Semantic document type so consumers can label/route it. Use \"other\" when none fit; free-text intent goes in `title`."
-        },
-        "title": {
-          "type": "string",
-          "description": "Human-readable label for the document (e.g. \"Series A Term Sheet\"). Optional."
+          "description": "Document id."
         },
         "uri": {
           "type": "string",
@@ -92,7 +87,7 @@
           "description": "The document size in bytes."
         }
       },
-      "required": ["type", "uri"]
+      "required": ["id", "uri"]
     }
   },
   "properties": {
@@ -139,7 +134,7 @@
     },
     "documents": {
       "type": "array",
-      "description": "Documents attached to the asset (prospectus, term sheet, certificates…), uploaded via the data-documents endpoint. Each item carries a stored-file URI plus integrity metadata.",
+      "description": "Documents attached to the asset, uploaded via the data-documents endpoint. Each item carries a stored-file URI plus integrity metadata.",
       "items": { "$ref": "#/definitions/document" }
     }
   },
