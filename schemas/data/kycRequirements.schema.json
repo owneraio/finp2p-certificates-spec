@@ -23,11 +23,6 @@
     "country"
   ],
   "properties": {
-    "financialAssetId": {
-      "type": "string",
-      "pattern": "^[A-Z]{2}[A-Z0-9]{9}[0-9]$",
-      "description": "FK to the Asset Header (ISIN, ISO 6166)."
-    },
     "investorName": {
       "type": "string",
       "description": "Investor name required for KYC on this asset."
