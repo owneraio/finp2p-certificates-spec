@@ -1,0 +1,31 @@
+{
+  "timestamp": 1779000000000,
+  "debtId": "ISN:IE0004514711",
+  "otherIdentifiers": [
+    "ISN:IE0005070622",
+    "ISN:IE0004514828",
+    "ISN:IE0032713202",
+    "ISN:IE0030625135"
+  ],
+  "fundName": "BNY Mellon US Dollar Liquidity Fund",
+  "regulatoryDisclosures": "Please see www.moodys.com for the assessment announcement, copyright notice/disclaimer, additional disclosures and other terms and conditions.",
+  "values": {
+    "mmf": {
+      "grade": "Aaa-mf",
+      "scale": "moodys-mmf",
+      "class": "Backed LT Mutual Fund (Foreign Currency)",
+      "classDescription": "MONEY MARKET FUND",
+      "timestamp": 1305936000000,
+      "action": "Change in Scale",
+      "supportingEntity": "BNY Mellon Investment Adviser, Inc.",
+      "supportTypeDescription": "Mutual Fund Advisor"
+    }
+  },
+  "classification": {
+    "securityClass": "Mutual Fund (MMK)",
+    "instrumentType": "Money Market Fund",
+    "privatePlacement": "Not Applicable",
+    "enhancements": "BNY Mellon Investment Adviser, Inc.",
+    "equityEvents": "Mutual Fund Inception Date"
+  }
+}
