@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/data/kycRequirements.schema.json",
   "title": "KycRequirements",
-  "description": "Per-asset KYC requirements declared by the asset creator. Tells any prospective holder of this asset which investor fields must be supplied (investorName, investorIdType, investorIdValue, country) plus optional documents and an open-ended additionalKycData[] key-value list for further requirements. The asset's Transfer Agent (TA) uses this to perform client whitelisting. Keyed by ISIN. Introduced by epic #1236.",
+  "description": "Per-asset KYC requirements declared by the asset creator. Tells any prospective holder of this asset which investor fields must be supplied (investorName, investorIdType, investorIdValue, country) plus an open-ended additionalKycData[] key-value list for further requirements. The asset's Transfer Agent (TA) uses this to perform client whitelisting.",
   "type": "object",
   "definitions": {
     "additionalKycDataItem": {
