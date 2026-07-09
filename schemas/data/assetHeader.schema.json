@@ -154,7 +154,7 @@
     },
     "symbol": {
       "type": "string",
-      "description": "Ticker symbol. Renamed from `ticker` per epic #1236."
+      "description": "Ticker symbol."
     },
     "type": {
       "type": "string",
