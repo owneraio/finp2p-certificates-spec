@@ -10,10 +10,11 @@
       "type": "integer",
       "description": "Producer timestamp at which the snapshot was emitted, epoch milliseconds. Used as the default for any value entry that omits its own `timestamp`."
     },
-    "debtId": {
+    "instrumentId": {
       "type": "string",
       "maxLength": 50,
-      "description": "Primary identifier for the rated instrument. Priority order: CUSIP, ISIN, Moody's ID (only one identifier appears here; the rest go in `otherIdentifiers`). Examples: \"ISN:IE0004514711\", \"MDY:823482245\"."
+      "description": "Primary identifier for the rated instrument. Only one identifier appears here (priority: CUSIP, ISIN, agency ID); any others go in `otherIdentifiers`. Examples: \"ISN:IE0004514711\", \"MDY:823482245\"."
+    },
     },
     "otherIdentifiers": {
       "type": "array",
