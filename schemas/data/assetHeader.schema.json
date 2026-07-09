@@ -202,5 +202,5 @@
       "items": { "$ref": "#/definitions/assetPublicInfoItem" }
     }
   },
-  "required": ["name", "symbol", "type", "issuingOrg", "currency"]
+  "required": ["name", "symbol", "type", "currency"]
 }
