@@ -158,8 +158,8 @@
     },
     "type": {
       "type": "string",
-      "enum": ["EQUITY", "BOND", "FUND", "MMF", "STRUCTURED", "OTHER"],
-      "description": "Instrument type. Renamed from `category` per epic #1236. For formal classification use the optional `cfiCode` field (ISO 10962)."
+      "enum": ["EQUITY", "BOND", "FUND", "MMF", "STRUCTURED", "STABLECOIN", "DEPOSIT_TOKEN", "FIAT", "OTHER"],
+      "description": "Instrument type. For formal classification use the optional `cfiCode` field (ISO 10962)."
     },
     "description": {
       "type": "string",
