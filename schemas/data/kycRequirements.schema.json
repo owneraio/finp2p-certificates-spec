@@ -16,7 +16,6 @@
     }
   },
   "required": [
-    "financialAssetId",
     "investorName",
     "investorIdType",
     "investorIdValue",
