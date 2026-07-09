@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/data/assetHeader.schema.json",
   "title": "Asset Header",
-  "description": "Core asset catalog/header data describing an asset's identity and on-chain representations. Designed to apply across asset classes (securities, funds, stablecoins, digital commodities, tokenised RWAs).",
+  "description": "Core asset catalog/header data describing an asset's identity, issuing organisation(s), and on-chain representations. Designed to apply across asset classes (securities, funds, stablecoins, digital commodities, tokenised RWAs). Aligned with roadmap epic #1236.",
   "type": "object",
   "definitions": {
     "caip19": {
@@ -43,16 +43,16 @@
     },
     "additionalIdentifier": {
       "type": "object",
-      "description": "Non-primary asset identifier. Industry-standard identifier types are enumerated to keep downstream consumers consistent.",
+      "description": "Asset identifier (type + value). Industry-standard identifier types are enumerated to keep downstream consumers consistent.",
       "properties": {
         "type": {
           "type": "string",
           "enum": ["ISIN", "CUSIP", "SEDOL", "FIGI", "DTI", "RIC", "BBGID", "WKN", "VALOR"],
-          "description": "Asset-level identifier type. ISIN (ISO 6166), CUSIP, SEDOL, FIGI (OpenFIGI), DTI (ISO 24165), RIC (Refinitiv), BBGID (Bloomberg), WKN (German), VALOR (Swiss). LEI is issuer-level (see referenceData.issuerLEI); CFI/FISN are top-level fields on this header."
+          "description": "Asset-level identifier type. ISIN (ISO 6166), CUSIP, SEDOL, FIGI (OpenFIGI), DTI (ISO 24165), RIC (Refinitiv), BBGID (Bloomberg), WKN (German), VALOR (Swiss). LEI is issuer-level (see issuingOrg[].id); CFI is a top-level field on this header (cfiCode)."
         },
         "value": {
           "type": "string",
-          "description": "Identifier value"
+          "description": "Identifier value under the chosen scheme."
         }
       },
       "required": ["type", "value"]
@@ -88,55 +88,119 @@
         }
       },
       "required": ["id", "uri"]
+    },
+    "issuingOrg": {
+      "type": "object",
+      "description": "Issuing organisation entry — carries the org's legal name, an identifier (currently LEI only), and country of incorporation.",
+      "properties": {
+        "org_name": {
+          "type": "string",
+          "description": "Legal name of the issuing organisation."
+        },
+        "id": {
+          "type": "object",
+          "description": "Issuer identifier.",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["LEI"],
+              "description": "Identifier scheme. Only LEI is supported for now."
+            },
+            "value": {
+              "type": "string",
+              "pattern": "^[A-Z0-9]{18}[0-9]{2}$",
+              "description": "Identifier value under the chosen scheme. For LEI (ISO 17442): 20-character code."
+            }
+          },
+          "required": ["type", "value"]
+        },
+        "country": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$",
+          "description": "Issuer country of incorporation, ISO 3166-1 alpha-2."
+        }
+      },
+      "required": ["org_name", "id", "country"]
+    },
+    "assetPublicInfoItem": {
+      "type": "object",
+      "description": "Public info entry for the asset (name / type / value) — either a text note or a link. Same shape as the KYA info item.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Label for the public info entry."
+        },
+        "type": {
+          "type": "string",
+          "enum": ["text", "link"],
+          "description": "Entry type — plain text or a link (URL)."
+        },
+        "value": {
+          "type": "string",
+          "description": "Entry value — text content when type=text; URL when type=link."
+        }
+      },
+      "required": ["name", "type", "value"]
     }
   },
   "properties": {
     "name": {
       "type": "string",
-      "description": "Asset display name"
+      "description": "Instrument name."
     },
-    "ticker": {
+    "displayName": {
       "type": "string",
-      "description": "Ticker or trading symbol. Optional — many asset classes (private funds, bonds, pre-issuance tokens) have no ticker."
+      "description": "Display name for the asset."
     },
-    "category": {
+    "symbol": {
       "type": "string",
-      "description": "Asset category. Free-form for now; expected vocabulary includes \"Equity\", \"Bond\", \"Fund\", \"MMF\", \"Stablecoin\", \"Digital Commodity\", \"Token\", \"Derivative\", \"Commodity\", \"RealEstate\". For formal classification use the optional `cfi` field (ISO 10962)."
+      "description": "Ticker symbol. Renamed from `ticker` per epic #1236."
+    },
+    "type": {
+      "type": "string",
+      "enum": ["EQUITY", "BOND", "FUND", "MMF", "STRUCTURED", "OTHER"],
+      "description": "Instrument type. Renamed from `category` per epic #1236. For formal classification use the optional `cfiCode` field (ISO 10962)."
     },
     "description": {
       "type": "string",
-      "description": "Human-readable description of the asset"
+      "description": "Human-readable description of the asset."
     },
-    "icon": {
-      "type": "string",
-      "format": "uri-reference",
-      "description": "Asset icon image. Either an absolute URL or a relative fileURI returned by the data-documents upload (e.g. \"dataprovider/data/<uuid>\")."
-    },
-    "currency": {
-      "type": "string",
-      "pattern": "^[A-Z]{3}$",
-      "description": "Denomination currency (ISO 4217). Optional."
-    },
-    "cfi": {
+    "cfiCode": {
       "type": "string",
       "pattern": "^[A-Z]{6}$",
       "description": "Classification of Financial Instruments code (ISO 10962). Optional structured counterpart to `category`."
     },
-    "representations": {
+    "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$",
+      "description": "Denomination / settlement currency (ISO 4217)."
+    },
+    "issuingOrg": {
       "type": "array",
-      "description": "Blockchain representations (CAIP-19)",
-      "items": { "$ref": "#/definitions/representation" }
+      "description": "Issuing organisation(s). Inlined into the header (separate Issuer schema is out of scope for epic #1236).",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/issuingOrg" }
     },
     "additionalIdentifiers": {
       "type": "array",
-      "description": "Identifiers other than the primary one carried in the ingest envelope (ISIN, CUSIP, FIGI, DTI, LEI, etc.)",
+      "description": "Asset identifiers as an array of {type, value} entries; carries ISIN, CUSIP, FIGI, DTI, etc.",
       "items": { "$ref": "#/definitions/additionalIdentifier" }
+    },
+    "representations": {
+      "type": "array",
+      "description": "Blockchain representations (CAIP-19).",
+      "items": { "$ref": "#/definitions/representation" }
     },
     "documents": {
       "type": "array",
       "description": "Documents attached to the asset, uploaded via the data-documents endpoint. Each item carries a stored-file URI plus integrity metadata.",
       "items": { "$ref": "#/definitions/document" }
+    },
+    "assetPublicInfo": {
+      "type": "array",
+      "description": "Public info entries for the asset. Each item is a labelled entry that is either plain text or a link.",
+      "items": { "$ref": "#/definitions/assetPublicInfoItem" }
     }
   },
-  "required": ["name", "category"]
+  "required": ["name", "symbol", "type", "issuingOrg", "currency"]
 }

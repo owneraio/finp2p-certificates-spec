@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/data/kycRequirements.schema.json",
+  "title": "KycRequirements",
+  "description": "Per-asset KYC requirements declared by the asset creator. Tells any prospective holder of this asset which investor fields must be supplied (investorName, investorIdType, investorIdValue, country) plus optional documents and an open-ended additionalKycData[] key-value list for further requirements. The asset's Transfer Agent (TA) uses this to perform client whitelisting. Keyed by ISIN. Introduced by epic #1236.",
+  "type": "object",
+  "definitions": {
+    "additionalKycDataItem": {
+      "type": "object",
+      "description": "Additional KYC requirement declared by the asset creator, as a key-value pair.",
+      "required": ["key", "value"],
+      "properties": {
+        "key":   { "type": "string" },
+        "value": { "type": "string" }
+      }
+    }
+  },
+  "required": [
+    "financialAssetId",
+    "investorName",
+    "investorIdType",
+    "investorIdValue",
+    "country"
+  ],
+  "properties": {
+    "financialAssetId": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}[A-Z0-9]{9}[0-9]$",
+      "description": "FK to the Asset Header (ISIN, ISO 6166)."
+    },
+    "investorName": {
+      "type": "string",
+      "description": "Investor name required for KYC on this asset."
+    },
+    "investorIdType": {
+      "type": "string",
+      "description": "Type of investor identifier required (e.g. passport, national-id, LEI, taxId). Enum TBD — to be finalised with the Transfer Agent."
+    },
+    "investorIdValue": {
+      "type": "string",
+      "description": "Investor identifier value required, under the chosen investorIdType."
+    },
+    "country": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$",
+      "description": "Country required for KYC, ISO 3166-1 alpha-2."
+    },
+    "documents": {
+      "type": "array",
+      "description": "Documents required from the investor (optional). Same shape as assetHeader.documents[].",
+      "items": { "type": "object" }
+    },
+    "additionalKycData": {
+      "type": "array",
+      "description": "Additional KYC requirements declared by the asset creator, as key-value pairs (optional).",
+      "items": { "$ref": "#/definitions/additionalKycDataItem" }
+    }
+  },
+  "additionalProperties": true
+}

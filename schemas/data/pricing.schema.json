@@ -6,6 +6,11 @@
   "type": "object",
   "required": ["currency", "timestamp", "values"],
   "properties": {
+    "nominalValue": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Face / par value per unit. Moved from `assetHeader` to `pricing` per epic #1236 — belongs with pricing data."
+    },
     "currency": {
       "type": "string",
       "pattern": "^[A-Z]{3}$",
