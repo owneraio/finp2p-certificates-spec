@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/data/assetHeader.schema.json",
   "title": "Asset Header",
-  "description": "Core asset catalog/header data describing an asset's identity, issuing organisation(s), and on-chain representations. Designed to apply across asset classes (securities, funds, stablecoins, digital commodities, tokenised RWAs). Aligned with roadmap epic #1236.",
+  "description": "Core asset catalog/header data describing an asset's identity, issuing organisation(s), and on-chain representations. Designed to apply across asset classes (securities, funds, stablecoins, digital commodities, tokenised RWAs).",
   "type": "object",
   "definitions": {
     "caip19": {
