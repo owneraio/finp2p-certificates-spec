@@ -43,7 +43,7 @@
     },
     "additionalIdentifier": {
       "type": "object",
-      "description": "Asset identifier (type + value). Industry-standard identifier types are enumerated to keep downstream consumers consistent.",
+      "description": "Non-primary asset identifier. Industry-standard identifier types are enumerated to keep downstream consumers consistent.",
       "properties": {
         "type": {
           "type": "string",
