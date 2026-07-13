@@ -4,29 +4,8 @@
   "title": "DataEnvelope",
   "description": "Common envelope for asset-management data sub-schemas (pricing, rating, marketData). Mirrors the router's AssetDataItem on POST /data/assets/ingest. Each data sub-schema reuses this envelope and defines only the `data` payload. Introduced by epic #1236.",
   "type": "object",
-  "required": ["identifier", "data"],
+  "required": ["data"],
   "properties": {
-    "identifier": {
-      "type": "object",
-      "description": "Instrument identifier that the data payload attaches to.",
-      "required": ["identifierType", "identifierValue"],
-      "properties": {
-        "identifierType": {
-          "type": "string",
-          "enum": ["ISIN", "CAIP19"],
-          "description": "Identifier scheme."
-        },
-        "identifierValue": {
-          "type": "string",
-          "description": "Identifier value."
-        }
-      }
-    },
-    "source": {
-      "type": "string",
-      "maxLength": 64,
-      "description": "Connector / provider id that supplied the payload; used for traceability and conflict resolution."
-    },
     "timestamp": {
       "type": "string",
       "format": "date-time",

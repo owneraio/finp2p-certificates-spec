@@ -89,9 +89,62 @@
       },
       "required": ["id", "uri"]
     },
+    "assetPublicInfoItem": {
+      "type": "object",
+      "description": "Public info entry for the asset (name / type / value) — either a text note or a link. Same shape as the KYA info item.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Label for the public info entry."
+        },
+        "type": {
+          "type": "string",
+          "enum": ["text", "link"],
+          "description": "Entry type — plain text or a link (URL)."
+        },
+        "value": {
+          "type": "string",
+          "description": "Entry value — text content when type=text; URL when type=link."
+        }
+      },
+      "required": ["name", "type", "value"]
+    }
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The legal name of the asset or financial instrument."
+    },
+    "displayName": {
+      "type": "string",
+      "description": "Display name for the asset."
+    },
+    "symbol": {
+      "type": "string",
+      "description": "A short display identifier for the asset. May be shared across multiple markets or platforms and is not guaranteed to be unique."
+    },
+    "assetClass": {
+      "type": "string",
+      "enum": ["EQUITY", "BOND", "FUND", "MMF", "STRUCTURED", "STABLECOIN", "DEPOSIT_TOKEN", "FIAT", "OTHER"],
+      "description": "The high-level classification of the asset, describing its financial category."
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of the asset."
+    },
+    "cfiCode": {
+      "type": "string",
+      "pattern": "^[A-Z]{6}$",
+      "description": "Classification of Financial Instruments code (ISO 10962). Optional structured counterpart to `category`."
+    },
+    "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$",
+      "description": "Denomination / settlement currency (ISO 4217)."
+    },
     "issuingOrg": {
       "type": "object",
-      "description": "Issuing organisation entry — carries the org's legal name, an identifier (currently LEI only), and country of incorporation.",
+      "description": "Issuing organisation — carries the org's legal name, an identifier (currently LEI only), and country of incorporation. Inlined into the header (separate Issuer schema is out of scope for epic #1236).",
       "properties": {
         "org_name": {
           "type": "string",
@@ -122,65 +175,6 @@
       },
       "required": ["org_name", "id", "country"]
     },
-    "assetPublicInfoItem": {
-      "type": "object",
-      "description": "Public info entry for the asset (name / type / value) — either a text note or a link. Same shape as the KYA info item.",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Label for the public info entry."
-        },
-        "type": {
-          "type": "string",
-          "enum": ["text", "link"],
-          "description": "Entry type — plain text or a link (URL)."
-        },
-        "value": {
-          "type": "string",
-          "description": "Entry value — text content when type=text; URL when type=link."
-        }
-      },
-      "required": ["name", "type", "value"]
-    }
-  },
-  "properties": {
-    "name": {
-      "type": "string",
-      "description": "Instrument name."
-    },
-    "displayName": {
-      "type": "string",
-      "description": "Display name for the asset."
-    },
-    "symbol": {
-      "type": "string",
-      "description": "Ticker symbol."
-    },
-    "type": {
-      "type": "string",
-      "enum": ["EQUITY", "BOND", "FUND", "MMF", "STRUCTURED", "STABLECOIN", "DEPOSIT_TOKEN", "FIAT", "OTHER"],
-      "description": "Instrument type. For formal classification use the optional `cfiCode` field (ISO 10962)."
-    },
-    "description": {
-      "type": "string",
-      "description": "Human-readable description of the asset."
-    },
-    "cfiCode": {
-      "type": "string",
-      "pattern": "^[A-Z]{6}$",
-      "description": "Classification of Financial Instruments code (ISO 10962). Optional structured counterpart to `category`."
-    },
-    "currency": {
-      "type": "string",
-      "pattern": "^[A-Z]{3}$",
-      "description": "Denomination / settlement currency (ISO 4217)."
-    },
-    "issuingOrg": {
-      "type": "array",
-      "description": "Issuing organisation(s). Inlined into the header (separate Issuer schema is out of scope for epic #1236).",
-      "minItems": 1,
-      "items": { "$ref": "#/definitions/issuingOrg" }
-    },
     "additionalIdentifiers": {
       "type": "array",
       "description": "Asset identifiers as an array of {type, value} entries; carries ISIN, CUSIP, FIGI, DTI, etc.",
@@ -202,5 +196,5 @@
       "items": { "$ref": "#/definitions/assetPublicInfoItem" }
     }
   },
-  "required": ["name", "symbol", "type", "currency"]
+  "required": ["name", "symbol", "assetClass", "currency"]
 }
