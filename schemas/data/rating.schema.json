@@ -15,7 +15,6 @@
       "maxLength": 50,
       "description": "Primary identifier for the rated instrument. Only one identifier appears here (priority: CUSIP, ISIN, agency ID); any others go in `otherIdentifiers`. Examples: \"ISN:IE0004514711\", \"MDY:823482245\"."
     },
-    },
     "otherIdentifiers": {
       "type": "array",
       "items": { "type": "string", "maxLength": 50 },
