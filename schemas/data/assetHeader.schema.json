@@ -107,8 +107,7 @@
     },
     "currency": {
       "type": "string",
-      "pattern": "^[A-Z]{3}$",
-      "description": "Denomination / settlement currency (ISO 4217)."
+      "description": "Denomination / settlement currency"
     },
     "issuingOrg": {
       "type": "object",

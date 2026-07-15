@@ -8,8 +8,7 @@
   "properties": {
     "currency": {
       "type": "string",
-      "pattern": "^[A-Z]{3}$",
-      "description": "Denomination currency for the snapshot (ISO 4217)."
+      "description": "Denomination currency for the snapshot."
     },
     "timestamp": {
       "type": "integer",
