@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/data/rating.schema.json",
+  "title": "Rating",
+  "description": "A snapshot of credit-rating observations for a single asset from a single rating agency. The platform aggregates data items by (asset, dataType=rating, source); each subsequent record from the same source overwrites the agency's previous snapshot. Multi-agency aggregation falls out naturally — different agencies (moodys, sp, fitch, dbrs, …) contribute distinct (asset, dataType=rating, source) rows. Agencies that publish multiple ratings for the same asset (e.g. long-term + short-term + outlook) ship them all in one snapshot via the `values` map keyed by semantic rating type. Asset-level identifiers and instrument classification metadata are carried at snapshot level since they describe the asset, not individual rating dimensions. Field shape and vocabulary follow the Moody's RMC data model and are reused by other agencies where applicable.",
+  "type": "object",
+  "required": ["timestamp", "values"],
+  "properties": {
+    "timestamp": {
+      "type": "integer",
+      "description": "Producer timestamp at which the snapshot was emitted, epoch milliseconds. Used as the default for any value entry that omits its own `timestamp`."
+    },
+    "instrumentId": {
+      "type": "string",
+      "maxLength": 50,
+      "description": "Primary identifier for the rated instrument. Only one identifier appears here (priority: CUSIP, ISIN, agency ID); any others go in `otherIdentifiers`. Examples: \"ISN:IE0004514711\", \"MDY:823482245\"."
+    },
+    "otherIdentifiers": {
+      "type": "array",
+      "items": { "type": "string", "maxLength": 50 },
+      "description": "Additional identifiers beyond the primary `debtId`. UI surfaces a \"View All\" affordance when more than one is present."
+    },
+    "fundName": {
+      "type": "string",
+      "maxLength": 255,
+      "description": "Deal name / issuer name as registered with the agency. e.g. \"BNY Mellon US Dollar Liquidity Fund\"."
+    },
+    "regulatoryDisclosures": {
+      "type": "string",
+      "maxLength": 255,
+      "description": "Regulatory disclosure text required by the agency. e.g. \"Please see www.moodys.com for the assessment announcement, copyright notice/disclaimer, additional disclosures and other terms and conditions.\""
+    },
+    "values": {
+      "type": "object",
+      "minProperties": 1,
+      "description": "Map of ratingType → observation. Keys are semantic rating names so consumers can look up a known rating dimension across agencies. Expected vocabulary: \"longTerm\", \"shortTerm\", \"mmf\" (money-market-fund rating), \"fundCredit\", \"issuer\", \"issue\" (rated instrument vs rated entity), \"counterparty\"; \"outlook\" (Stable/Positive/Negative/Developing); \"watch\" (Negative/Positive/Evolving). Grade values are preserved verbatim from each agency — no cross-agency normalization on our side. New keys may be added as use cases arise; consumers should ignore unrecognised keys.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["grade"],
+        "properties": {
+          "grade": {
+            "type": "string",
+            "maxLength": 50,
+            "description": "Current rating grade as published by the agency, preserved verbatim. Moody's long-term: Aaa…C; Moody's MMF: Aaa-mf…C-mf; S&P/Fitch/DBRS long-term: AAA…D; outlook/watch use each agency's own vocabulary. (Source field: Moody's \"Current\".)"
+          },
+          "scale": {
+            "type": "string",
+            "description": "Optional. Identifier of the agency's rating scale used for `grade` (e.g. \"moodys-long-term\", \"moodys-mmf\", \"sp-short-term\", \"fitch-issuer-default\"). Useful when an agency publishes multiple scales under the same rating type."
+          },
+          "class": {
+            "type": "string",
+            "maxLength": 50,
+            "description": "Rating class value. The agency surfaces only credit ratings here, filtering out non-credit rating classes. e.g. \"Backed LT Mutual Fund (Foreign Currency)\"."
+          },
+          "classDescription": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "Rating class description (issuer tab) or security class description (debt tab). e.g. \"MONEY MARKET FUND\". (Source field: Moody's \"Description\".)"
+          },
+          "timestamp": {
+            "type": "integer",
+            "description": "Optional. Latest credit-rating date for this observation, including watch and confirmation, in epoch milliseconds. Falls back to the snapshot's top-level `timestamp` if absent. (Source field: Moody's \"Date\".)"
+          },
+          "action": {
+            "type": "string",
+            "maxLength": 50,
+            "description": "Word(s) describing the rating direction or event. e.g. \"New\", \"Change in Scale\", \"Affirmed\", \"Upgrade\", \"Downgrade\"."
+          },
+          "supportingEntity": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "Third party that acts as a guarantor for this specific rating (e.g. mutual fund advisor). Per-rating equivalent of the asset-level `classification.enhancements`. (Source field: Moody's \"Supporting_entity\".)"
+          },
+          "supportTypeDescription": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "Description of the supporting entity's role. e.g. \"Mutual Fund Advisor\". (Source field: Moody's \"Support_type_description\".)"
+          },
+          "signature": {
+            "type": "string",
+            "description": "Optional. DER-encoded signature over the observation, when the producer is a signing oracle. Passed through verbatim for downstream verification."
+          }
+        }
+      }
+    },
+    "classification": {
+      "type": "object",
+      "description": "Optional asset-level instrument classification metadata. Carried at snapshot level since these attributes describe the asset, not individual rating dimensions. Field shape follows the Moody's classification taxonomy and is reused by other agencies where applicable.",
+      "properties": {
+        "securityClass": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Type of instrument based on a broad grouping. e.g. \"Mutual Fund (MMK)\"."
+        },
+        "instrumentType": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Description of the category or class of the equity/debt issuance. e.g. \"Money Market Fund\", \"Bond Fund\"."
+        },
+        "privatePlacement": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Indicates whether the instrument is at least partially made available to pre-selected investors instead of by way of a public issue (includes 144A). e.g. \"Yes\", \"Not Applicable\"."
+        },
+        "enhancements": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "Asset-level credit enhancement / advisor name. Per-rating support attribution is carried under the rating's `supportingEntity` / `supportTypeDescription`."
+        },
+        "equityEvents": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "Date or descriptor of when the fund becomes active / is launched / first trades (e.g. mutual fund inception date)."
+        }
+      }
+    }
+  }
+}

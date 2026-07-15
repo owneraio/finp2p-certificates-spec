@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/data/dataEnvelope.schema.json",
+  "title": "DataEnvelope",
+  "description": "Common envelope for asset-management data sub-schemas (pricing, rating, marketData). Mirrors the router's AssetDataItem on POST /data/assets/ingest. Each data sub-schema reuses this envelope and defines only the `data` payload. Introduced by epic #1236.",
+  "type": "object",
+  "required": ["data"],
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last update time from the source (ISO 8601)."
+    },
+    "priority": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Source priority for conflict resolution when multiple connectors supply the same field. New vs. router AssetDataItem."
+    },
+    "schemaRef": {
+      "type": "string",
+      "format": "uri",
+      "description": "URI to the payload sub-schema."
+    },
+    "data": {
+      "type": "object",
+      "description": "Payload conforming to the referenced sub-schema.",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}
