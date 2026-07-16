@@ -4,11 +4,11 @@
   "title": "CurrencyRating",
   "description": "A snapshot of foreign-exchange rates for a single asset. The asset's own currency is the base; each entry in `rates` gives the exchange rate from that base to a target currency. Example: for an asset denominated in USD, `rates` may contain `{ currencyId: \"EUR\", rate: 2.2 }`, `{ currencyId: \"CAD\", rate: 1.1 }`.",
   "type": "object",
-  "required": ["updateId", "timestamp", "rates"],
+  "required": ["quoteId", "timestamp", "rates"],
   "properties": {
-    "updateId": {
+    "quoteId": {
       "type": "string",
-      "description": "Unique identifier for this rate-snapshot update."
+      "description": "Unique identifier for this FX-quote snapshot."
     },
     "timestamp": {
       "type": "integer",
