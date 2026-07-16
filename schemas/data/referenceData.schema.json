@@ -44,7 +44,7 @@
     },
     "prospectusUrl": {
       "type": "string",
-      "format": "uri",
+      "format": "uri-reference",
       "description": "URL to the prospectus or offering memorandum."
     },
     "regulatoryStatus": {

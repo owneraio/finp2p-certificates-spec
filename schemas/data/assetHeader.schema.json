@@ -154,12 +154,12 @@
     },
     "profileImage": {
       "type": "string",
-      "format": "uri",
+      "format": "uri-reference",
       "description": "URI to the asset's profile picture. Router-fetched as a file via the URI-typed file-detection rule (roadmap#1291)."
     },
     "bannerImage": {
       "type": "string",
-      "format": "uri",
+      "format": "uri-reference",
       "description": "URI to the asset's banner image. Router-fetched as a file via the URI-typed file-detection rule (roadmap#1291)."
     },
     "documents": {
@@ -167,7 +167,7 @@
       "description": "URIs of documents attached to the asset. Each item is a URI resolved by the router's file-fetch process under the URI-typed file-detection rule (roadmap#1291). Router fetches every entry; document metadata (hash, mimeType, fileName, size) is looked up separately via the data-documents endpoint.",
       "items": {
         "type": "string",
-        "format": "uri"
+        "format": "uri-reference"
       }
     },
     "assetPublicInfo": {
