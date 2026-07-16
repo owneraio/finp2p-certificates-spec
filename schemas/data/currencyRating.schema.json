@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/data/currencyRating.schema.json",
+  "title": "CurrencyRating",
+  "description": "A snapshot of foreign-exchange rates for a single asset. The asset's own currency is the base; each entry in `rates` gives the exchange rate from that base to a target currency. Example: for an asset denominated in USD, `rates` may contain `{ currencyId: \"EUR\", rate: 2.2 }`, `{ currencyId: \"CAD\", rate: 1.1 }`.",
+  "type": "object",
+  "required": ["quoteId", "timestamp", "rates"],
+  "properties": {
+    "quoteId": {
+      "type": "string",
+      "description": "Unique identifier for this FX-quote snapshot."
+    },
+    "timestamp": {
+      "type": "integer",
+      "description": "Producer timestamp at which the snapshot was emitted, epoch milliseconds."
+    },
+    "rates": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Array of {currencyId, rate} pairs — FX rate from the asset's currency to each listed target currency.",
+      "items": {
+        "type": "object",
+        "required": ["currencyId", "rate"],
+        "properties": {
+          "currencyId": {
+            "type": "string",
+            "description": "Target currency identifier. e.g. \"EUR\", \"CAD\"."
+          },
+          "rate": {
+            "type": "number",
+            "description": "Exchange rate from the asset's currency to `currencyId`."
+          }
+        }
+      }
+    }
+  }
+}
