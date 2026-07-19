@@ -5,6 +5,26 @@
   "description": "Core asset catalog/header data describing an asset's identity, issuing organisation(s), and on-chain representations. Designed to apply across asset classes (securities, funds, stablecoins, digital commodities, tokenised RWAs).",
   "type": "object",
   "definitions": {
+    "fileReference": {
+      "type": "object",
+      "description": "Reference to an attached file. fileName and mimeType describe the file so it can be rendered (image, PDF, …) without fetching it first.",
+      "properties": {
+        "uri": {
+          "type": "string",
+          "format": "uri-reference",
+          "description": "File location, e.g. \"dataprovider/data/<uuid>\"."
+        },
+        "fileName": {
+          "type": "string",
+          "description": "Original file name, e.g. \"prospectus.pdf\"."
+        },
+        "mimeType": {
+          "type": "string",
+          "description": "IANA media type of the file, e.g. \"application/pdf\", \"image/png\"."
+        }
+      },
+      "required": ["uri", "mimeType"]
+    },
     "caip19": {
       "type": "object",
       "description": "CAIP-19 blockchain asset identifier",
@@ -164,11 +184,8 @@
     },
     "documents": {
       "type": "array",
-      "description": "URIs of documents attached to the asset. Each item is a URI resolved by the router's file-fetch process under the URI-typed file-detection rule (roadmap#1291). Router fetches every entry; document metadata (hash, mimeType, fileName, size) is looked up separately via the data-documents endpoint.",
-      "items": {
-        "type": "string",
-        "format": "uri-reference"
-      }
+      "description": "Documents attached to the asset.",
+      "items": { "$ref": "#/definitions/fileReference" }
     },
     "assetPublicInfo": {
       "type": "array",
