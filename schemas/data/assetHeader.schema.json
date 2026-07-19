@@ -173,12 +173,14 @@
       "items": { "$ref": "#/definitions/representation" }
     },
     "profileImage": {
-      "allOf": [{ "$ref": "#/definitions/fileReference" }],
-      "description": "The asset's profile picture."
+      "type": "string",
+      "format": "uri-reference",
+      "description": "URI to the asset's profile picture. Router-fetched as a file via the URI-typed file-detection rule (roadmap#1291)."
     },
     "bannerImage": {
-      "allOf": [{ "$ref": "#/definitions/fileReference" }],
-      "description": "The asset's banner image."
+      "type": "string",
+      "format": "uri-reference",
+      "description": "URI to the asset's banner image. Router-fetched as a file via the URI-typed file-detection rule (roadmap#1291)."
     },
     "documents": {
       "type": "array",
