@@ -127,7 +127,8 @@
     },
     "currency": {
       "type": "string",
-      "description": "Denomination / settlement currency"
+      "pattern": "^[A-Z]{3}$",
+      "description": "Denomination / settlement currency (ISO 4217). Optional: not every asset class has a meaningful denomination, and catalog identity must not depend on valuation data — consumers that value holdings must treat a missing currency like a missing FX rate (exclude and surface, do not guess)."
     },
     "issuingOrg": {
       "type": "object",
@@ -193,5 +194,5 @@
       "items": { "$ref": "#/definitions/assetPublicInfoItem" }
     }
   },
-  "required": ["name", "symbol", "assetClass", "currency"]
+  "required": ["name", "symbol", "assetClass"]
 }
