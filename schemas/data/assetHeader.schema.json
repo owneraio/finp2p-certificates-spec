@@ -127,8 +127,7 @@
     },
     "currency": {
       "type": "string",
-      "pattern": "^[A-Z]{3}$",
-      "description": "Denomination / settlement currency (ISO 4217). Optional: not every asset class has a meaningful denomination, and catalog identity must not depend on valuation data — consumers that value holdings must treat a missing currency like a missing FX rate (exclude and surface, do not guess)."
+      "description": "Denomination / settlement currency — an ISO 4217 code (`USD`) or a digital-asset code (`USDC`, `USDT`), so deliberately not constrained to three letters. Optional: not every asset class has a meaningful denomination, and catalog identity must not depend on valuation data — consumers that value holdings must treat a missing currency like a missing FX rate (exclude and surface, do not guess)."
     },
     "issuingOrg": {
       "type": "object",
