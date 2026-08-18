@@ -57,5 +57,5 @@
     },
     "address": { "$ref": "#/definitions/address" }
   },
-  "required": ["name", "email", "address"]
+  "required": ["name", "address"]
 }

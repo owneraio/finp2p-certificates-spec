@@ -112,16 +112,15 @@
     "businessRegistrationId": {
       "$ref": "#/definitions/businessRegistrationId"
     },
+    "lei": {
+      "description": "Legal Entity Identifier (ISO 17442) of the company",
+      "type": "string",
+      "pattern": "^[A-Z0-9]{18}[0-9]{2}$"
+    },
     "beneficialOwners": {
       "description": "List of beneficial owners",
       "type": "array",
       "items": { "$ref": "#/definitions/beneficialOwner" }
-    },
-    "industryCode": {
-      "description": "Merchant category codes (MCC)",
-      "type": "string",
-      "maxLength": 4,
-      "pattern": "^[0-9]{4}$"
     },
     "vatNumber": {
       "description": "VAT number",
@@ -134,18 +133,10 @@
       "type": "string",
       "maxLength": 100,
       "minLength": 1
-    },
-    "statementDescriptor": {
-      "description": "Statement descriptor explains charges or payments on customer's bank statements",
-      "type": "string",
-      "minLength": 5,
-      "maxLength": 22,
-      "pattern": "^[^<>,'\"*]*$"
     }
   },
   "required": [
     "legalBusinessName",
-    "businessRegisteredCountry",
-    "beneficialOwners"
+    "businessRegisteredCountry"
   ]
 }
