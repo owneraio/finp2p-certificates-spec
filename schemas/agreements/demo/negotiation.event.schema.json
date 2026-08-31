@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/events/negotiation.schema.json",
+  "title": "Negotiation",
+  "description": "negotiation/v1 — the document a negotiation event carries. One event type covers a whole conversation about a report: each event is one round in a thread, and `action` says what the round does. Folding the rounds in log order yields the thread's status (open, agreed, rejected, withdrawn); nothing executes until a thread reaches FULL agreement, and a partial agreement is a counter rather than a commitment.",
+  "type": "object",
+  "definitions": {
+    "line": {
+      "type": "object",
+      "description": "One asset line of a proposal.",
+      "properties": {
+        "assetId": { "type": "string", "minLength": 1 },
+        "quantity": { "type": "string", "minLength": 1 }
+      },
+      "required": ["assetId", "quantity"],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "reportId": {
+      "type": "string",
+      "description": "The report being negotiated. The event also references the authoring margin-report event.",
+      "minLength": 1
+    },
+    "negotiationId": {
+      "type": "string",
+      "description": "The thread. Several threads may run on one report as competing alternatives; agreement picks the winner.",
+      "minLength": 1
+    },
+    "kind": {
+      "type": "string",
+      "description": "fulfillment = how the obligation will be met; substitution = swapping already-posted collateral. A substitution report's threads negotiate the substitution kind only.",
+      "enum": ["fulfillment", "substitution"]
+    },
+    "round": {
+      "type": "integer",
+      "description": "1 on the opening offer. A response must cite the thread's standing round; a stale round is recorded but changes no state.",
+      "minimum": 1
+    },
+    "action": {
+      "type": "string",
+      "description": "offer opens the thread; counter supersedes the standing proposal and is itself a proposal; agree closes it and makes the standing lines binding; reject closes it; withdraw is the OPENER retracting their own open thread — the one response action not reserved to the counterparty.",
+      "enum": [
+        "offer",
+        "counter",
+        "agree",
+        "reject",
+        "withdraw",
+        "substitution-offered"
+      ]
+    },
+    "lines": {
+      "type": "array",
+      "description": "The proposal. Carried by offer and counter; agree, reject and withdraw carry none, since the standing round's lines are what an agreement binds.",
+      "items": { "$ref": "#/definitions/line" }
+    },
+    "intentId": {
+      "type": "string",
+      "description": "The DVP intent created by the offering side after full agreement. Substitution threads only."
+    },
+    "reason": {
+      "type": "string",
+      "description": "Free-text explanation for the round."
+    },
+    "by": {
+      "type": "string",
+      "description": "The emitting ORGANIZATION. Agreement events carry a role rather than an org, so authority checks and the read model rely on this field."
+    }
+  },
+  "required": ["reportId", "negotiationId", "kind", "round", "action", "by"],
+  "additionalProperties": false
+}
