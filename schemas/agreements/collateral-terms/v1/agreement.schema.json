@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/collateral-terms.schema.json",
+  "title": "Collateral Terms",
+  "description": "collateral-terms/v1 — the terms document carried in Agreement.terms for a collateral agreement, base64-encoded on the wire and identified by Agreement.termsType. Part of the co-signed contract zone, so it cannot be changed by an amendment.",
+  "type": "object",
+  "definitions": {
+    "eligibleAsset": {
+      "type": "object",
+      "description": "One asset the receiver accepts as collateral.",
+      "properties": {
+        "assetId": {
+          "type": "string",
+          "description": "FinP2P asset identifier.",
+          "minLength": 1
+        },
+        "haircut": {
+          "type": "number",
+          "description": "Valuation discount applied to this asset, as a fraction (0.02 = 2%). Absent means no haircut.",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "caip19": {
+          "type": "string",
+          "description": "CAIP-19 identifier of the on-chain asset, when the eligible asset is chain-native."
+        }
+      },
+      "required": ["assetId"],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "baseCurrency": {
+      "type": "string",
+      "description": "Currency the report nominals are expressed in, e.g. USD."
+    },
+    "eligibleAssets": {
+      "type": "array",
+      "description": "The eligible collateral set. An empty or absent list means the agreement declares no eligibility constraint.",
+      "items": { "$ref": "#/definitions/eligibleAsset" }
+    }
+  },
+  "additionalProperties": false
+}

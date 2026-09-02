@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/events/report-status.schema.json",
+  "title": "Report Status",
+  "description": "report-status/v1 — the document every report-status event carries, on all five event types (report-status, -completed, -incomplete, -resolved, -rejected). It records progress on a report authored by an earlier margin-report event, which the event references.\n\nThe document spans TWO INDEPENDENT AXES and the `status` value says which one applies. Evaluation statuses (new, in_progress, completed, incomplete) are measured by the valuation engine from the collateral actually posted; they overlay the report's single status. Dispositions (resolved, rejected) are declared per organization and accumulate — one report can be `completed` and still carry a rejection from each party. The event TYPE mirrors the terminal values so a state machine can act on them without reading this document.",
+  "type": "object",
+  "properties": {
+    "reportId": {
+      "type": "string",
+      "description": "The report this status is about. The event also references the authoring margin-report event, which is the protocol-level counterpart of this field.",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "description": "EVALUATION axis — new = authored, nothing posted yet; in_progress = partially covered; completed = coverage reached the nominal; incomplete = the deadline passed without coverage. DISPOSITION axis — resolved = this org considers its close-out done; rejected = this org disputes the report. `in_complete` is a legacy spelling of incomplete found on older logs.",
+      "enum": [
+        "new",
+        "in_progress",
+        "completed",
+        "incomplete",
+        "in_complete",
+        "resolved",
+        "rejected"
+      ]
+    },
+    "resolvedBy": {
+      "type": "string",
+      "description": "Organization declaring the resolution. Present only when status is `resolved`; a resolution is per-org, so several may exist for one report."
+    },
+    "rejectedBy": {
+      "type": "string",
+      "description": "Organization declaring the rejection. Present only when status is `rejected`."
+    },
+    "note": {
+      "type": "string",
+      "description": "Free-text explanation. Carried by dispositions; evaluation transitions leave it empty."
+    }
+  },
+  "required": ["reportId", "status"],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "description": "A resolution names the org that resolved.",
+      "if": { "properties": { "status": { "const": "resolved" } }, "required": ["status"] },
+      "then": { "required": ["resolvedBy"] }
+    },
+    {
+      "description": "A rejection names the org that rejected.",
+      "if": { "properties": { "status": { "const": "rejected" } }, "required": ["status"] },
+      "then": { "required": ["rejectedBy"] }
+    }
+  ]
+}
