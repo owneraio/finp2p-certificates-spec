@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/demo/closeout.event.schema.json",
+  "title": "Close-out",
+  "description": "closeout/v1 — the document a closeout event carries. The orderly end of a collateral agreement, authored by the valuation engine once every report has been disposed of by the parties, every report has concluded evaluation, and the LAST report concluded as completed. It moves the agreement to its final state, so no further event can be appended.\n\nThe document is informational: the definition's guard decides admissibility from the log, not from anything here.",
+  "type": "object",
+  "properties": {
+    "reason": {
+      "type": "string",
+      "description": "Why the agreement is closing, e.g. the term being reached. Free text for the audit trail."
+    }
+  },
+  "additionalProperties": false
+}
