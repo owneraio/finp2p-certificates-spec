@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/events/negotiation.schema.json",
   "title": "Negotiation",
-  "description": "negotiation/v1 — the document a negotiation event carries. One event type covers a whole conversation about a report: each event is one round in a thread, and `action` says what the round does. Folding the rounds in log order yields the thread's status (open, agreed, rejected, withdrawn); nothing executes until a thread reaches FULL agreement, and a partial agreement is a counter rather than a commitment.",
+  "description": "negotiation/v2 — the document a negotiation event carries. One event type covers a whole conversation about a report: each event is one round in a thread, and `action` says what the round does. Folding the rounds in log order yields the thread's status (open, agreed, rejected, withdrawn); nothing executes until a thread reaches FULL agreement, and a partial agreement is a counter rather than a commitment.",
   "type": "object",
   "definitions": {
     "line": {

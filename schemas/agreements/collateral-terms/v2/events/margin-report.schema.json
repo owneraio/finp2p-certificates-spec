@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/events/margin-report.schema.json",
   "title": "Margin Report",
-  "description": "margin-report/v1 — the document a vm-report event carries. Authored by the valuation engine, it opens a report cycle by stating the obligation: how much collateral is called for and which assets may satisfy it. Every later status, attribution and negotiation event references this event.",
+  "description": "margin-report/v2 — the document a vm-report event carries. Authored by the valuation engine, it opens a report cycle by stating the obligation: how much collateral is called for and which assets may satisfy it. Every later status, attribution and negotiation event references this event.",
   "type": "object",
   "definitions": {
     "eligibleAssetMetadata": {

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/demo/container-info.event.schema.json",
   "title": "Container Info",
-  "description": "container-info/v1 — the document container-provisioned and container-retired events carry. Unlike every other event here it is authored by the ROUTER, not by an application: the provisioning engine materializes a container declared in the agreement's provisioningSpec and reports the account, policy and per-asset onboarding state it created.\n\nBeing protocol-level, these events are exempt from the definition's event-vocabulary and emitter-role checks — the container's effective provisioner role is a narrower authority drawn from provisioningSpec. A definition still declares the type so a transition can name it.",
+  "description": "container-info/v2 — the document container-provisioned and container-retired events carry. Unlike every other event here it is authored by the ROUTER, not by an application: the provisioning engine materializes a container declared in the agreement's provisioningSpec and reports the account, policy and per-asset onboarding state it created.\n\nBeing protocol-level, these events are exempt from the definition's event-vocabulary and emitter-role checks — the container's effective provisioner role is a narrower authority drawn from provisioningSpec. A definition still declares the type so a transition can name it.",
   "type": "object",
   "definitions": {
     "caip19": {

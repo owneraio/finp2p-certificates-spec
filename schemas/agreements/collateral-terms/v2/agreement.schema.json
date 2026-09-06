@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/collateral-terms.schema.json",
   "title": "Collateral Terms",
-  "description": "collateral-terms/v1 — the terms document carried in Agreement.terms for a collateral agreement, base64-encoded on the wire and identified by Agreement.termsType. Part of the co-signed contract zone, so it cannot be changed by an amendment.",
+  "description": "collateral-terms/v2 — the terms document carried in Agreement.terms for a collateral agreement, base64-encoded on the wire and identified by Agreement.termsType. Part of the co-signed contract zone, so it cannot be changed by an amendment.",
   "type": "object",
   "definitions": {
     "eligibleAsset": {

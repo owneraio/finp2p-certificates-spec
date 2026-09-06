@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/events/posting-attribution.schema.json",
   "title": "Posting Attribution",
-  "description": "posting-attribution/v1 — the document a posting-attribution event carries. It joins a live ledger movement to the report it satisfies, which is what lets every organization's earmark fold attribute the movement to the right obligation from the shared log alone. Declared by the posting party as part of the same operation that started the transfer, so it can exist before the transfer settles.",
+  "description": "posting-attribution/v2 — the document a posting-attribution event carries. It joins a live ledger movement to the report it satisfies, which is what lets every organization's earmark fold attribute the movement to the right obligation from the shared log alone. Declared by the posting party as part of the same operation that started the transfer, so it can exist before the transfer settles.",
   "type": "object",
   "properties": {
     "reportId": {
