@@ -14,7 +14,8 @@
     "onCreation": "proposed",
     "onApproval": "allocating",
     "finalStates": [
-      "closed"
+      "closed",
+      "defaulted"
     ],
     "allowedStates": [
       "proposed",
