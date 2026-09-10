@@ -216,6 +216,30 @@
         }
       },
       "guard": "event.emitterRole == 'valuation-engine'"
+    },
+    {
+      "type": "default-notice",
+      "schema": {
+        "name": "default-notice",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v2",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState in ['active', 'reportProcessing'] && event.emitterRole in ['pledger', 'receiver']"
+    },
+    {
+      "type": "default-revocation",
+      "schema": {
+        "name": "default-revocation",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v2",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState in ['active', 'reportProcessing'] && event.emitterRole in ['pledger', 'receiver']"
     }
   ]
 }

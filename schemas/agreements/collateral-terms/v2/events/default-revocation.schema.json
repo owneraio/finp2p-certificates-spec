@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/demo/default-revocation.event.schema.json",
+  "title": "Default Revocation",
+  "description": "default-revocation/v2 — the document a default-revocation event carries. Emitted by the same role that asserted a prior default-notice, to deactivate the unilateral seizure authorization it activated (e.g. a cure of the underlying default). Only a same-role revocation clears the condition — the account policy's asserter check is scoped by emitter role, not by which party within the role acted.\n\nThe document is informational: the definition's guard asks only who is emitting and when.",
+  "type": "object",
+  "properties": {
+    "conditionName": {
+      "type": "string",
+      "description": "The account policy condition this revocation deactivates — 'default' for every container the facade provisions today."
+    },
+    "reason": {
+      "type": "string",
+      "description": "Why the assertion is withdrawn, e.g. the missed obligation was cured. Free text for the audit trail."
+    }
+  },
+  "required": ["conditionName"],
+  "additionalProperties": false
+}
