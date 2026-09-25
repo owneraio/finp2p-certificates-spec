@@ -7,21 +7,46 @@
   "definitions": {
     "eligibleAssetMetadata": {
       "type": "object",
-      "description": "The valuation pair the report builder derived for this asset. Reference prices are rounded to 6dp at authoring.",
+      "description": "The valuation for this asset, already calculated when the report was authored and recorded exactly as it was sent. The report builder derives none of it and checks none of it — not against haircutApplyMethod, not against the other fields. Every value is a decimal string; any rounding is the author's own.",
       "properties": {
         "appliedHaircut": {
           "type": "string",
-          "description": "Haircut applied when valuing this asset, as a decimal string."
+          "description": "The haircut actually taken on this asset, as a decimal string, applied however haircutApplyMethod says it was applied."
         },
-        "valuationDate": {
+        "baseUnitPrice": {
           "type": "string",
-          "description": "Date the reference price was taken."
+          "description": "Unit price before the haircut, as a decimal string."
         },
-        "referencePrice": {
+        "baseValue": {
           "type": "string",
-          "description": "Unit price used to convert quantity to value, as a decimal string."
+          "description": "Value of this asset's line before the haircut, as a decimal string."
+        },
+        "baseUnits": {
+          "type": "string",
+          "description": "Units of this asset before the haircut, as a decimal string."
+        },
+        "finalUnitPrice": {
+          "type": "string",
+          "description": "Unit price after the haircut, as a decimal string. Coverage values a holding at quantity × finalUnitPrice, so this is carried rather than divided out of finalValue."
+        },
+        "finalValue": {
+          "type": "string",
+          "description": "Value of this asset's line after the haircut, as a decimal string."
+        },
+        "finalUnits": {
+          "type": "string",
+          "description": "Units of this asset after the haircut, as a decimal string — and the amount transferred when this line is the one satisfied."
         }
       },
+      "required": [
+        "appliedHaircut",
+        "baseUnitPrice",
+        "baseValue",
+        "baseUnits",
+        "finalUnitPrice",
+        "finalValue",
+        "finalUnits"
+      ],
       "additionalProperties": false
     },
     "eligibleAsset": {
@@ -36,7 +61,7 @@
         "assetIdentifierValue": { "type": "string" },
         "metadata": { "$ref": "#/definitions/eligibleAssetMetadata" }
       },
-      "required": ["assetId"],
+      "required": ["assetId", "metadata"],
       "additionalProperties": false
     },
     "recoveredAsset": {
@@ -137,8 +162,13 @@
       "type": "string",
       "description": "direct = the obligated side posts against the report as authored; negotiated = the lines are agreed through a negotiation thread first and are never auto-executed. Absent means derived.",
       "enum": ["direct", "negotiated"]
+    },
+    "haircutApplyMethod": {
+      "type": "string",
+      "description": "How the haircut was applied when the per-asset valuations were calculated. reduce-from-price = the haircut was taken off the unit price, leaving the units unchanged; add-to-total = the haircut was covered by calling for more units. Recorded for display and audit only — no reader applies it, and readers must not treat this list as closed: further methods are expected and will extend it.",
+      "enum": ["reduce-from-price", "add-to-total"]
     }
   },
-  "required": ["agreementId", "type", "nominalMarginAmount", "actions"],
+  "required": ["agreementId", "type", "nominalMarginAmount", "haircutApplyMethod", "actions"],
   "additionalProperties": false
 }
