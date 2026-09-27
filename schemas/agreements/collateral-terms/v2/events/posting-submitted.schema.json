@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/events/posting-submitted.schema.json",
+  "title": "Posting Submitted",
+  "description": "posting-submitted/v2 — the document a posting-submitted event carries. Declared by the posting party the moment a transfer is accepted by the ledger rail, long before it settles, so every organization folding the log can see the leg in flight rather than reading the posting party's own private execution records. Its posting-attribution sibling, declared once the movement is confirmed settled, retires it: the two carry the same join key on purpose.",
+  "type": "object",
+  "properties": {
+    "reportId": {
+      "type": "string",
+      "description": "The report this posting is meant to satisfy.",
+      "minLength": 1
+    },
+    "executionPlanId": {
+      "type": "string",
+      "description": "The execution plan carrying the movement. The join key: the matching posting-attribution names the same plan, which is how the fold drains a submission once it settles.",
+      "minLength": 1
+    },
+    "assetId": {
+      "type": "string",
+      "description": "Asset being moved. Absent on submissions that name only the plan."
+    },
+    "quantity": {
+      "type": "string",
+      "description": "Quantity being moved, as a decimal string. Intent, not a settled amount — the movement may still fail or settle short."
+    },
+    "negotiationId": {
+      "type": "string",
+      "description": "The agreed negotiation thread this posting executes, when the report is fulfilled through negotiation rather than directly."
+    },
+    "purpose": {
+      "type": "string",
+      "description": "`settlement` marks the receiver's counter-payment leg. Absent means a collateral leg — the settlement asset may equal an eligible line's asset, so (reportId, assetId) alone would be ambiguous without this.",
+      "enum": ["settlement"]
+    }
+  },
+  "required": ["reportId", "executionPlanId"],
+  "additionalProperties": false
+}
