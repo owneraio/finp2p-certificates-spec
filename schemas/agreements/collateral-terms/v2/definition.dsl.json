@@ -170,18 +170,6 @@
       "guard": "agreement.businessState == 'reportProcessing' && agreement.events.allExistByIdAndType(event.referencedEventIds, 'vm-report') && event.emitterRole in agreement.events.outstandingRoles(event.referencedEventIds, ['report-status-resolved', 'report-status-rejected'], ['pledger', 'receiver'])"
     },
     {
-      "type": "posting-submitted",
-      "schema": {
-        "name": "posting-submitted",
-        "version": "1",
-        "documentReference": {
-          "key": "collateral-terms/v2",
-          "format": "json-schema"
-        }
-      },
-      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver']"
-    },
-    {
       "type": "posting-attribution",
       "schema": {
         "name": "posting-attribution",
