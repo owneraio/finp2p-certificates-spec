@@ -53,25 +53,52 @@
       "type": "object",
       "description": "One asset that may satisfy this obligation. The name, ticker and identifier fields are serialized empty on purpose — every reading org overwrites them from its own asset registry.",
       "properties": {
-        "assetIdType": { "type": "string" },
-        "assetId": { "type": "string", "minLength": 1 },
-        "name": { "type": "string" },
-        "ticker": { "type": "string" },
-        "assetIdentifierType": { "type": "string" },
-        "assetIdentifierValue": { "type": "string" },
-        "metadata": { "$ref": "#/definitions/eligibleAssetMetadata" }
+        "assetIdType": {
+          "type": "string"
+        },
+        "assetId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string"
+        },
+        "ticker": {
+          "type": "string"
+        },
+        "assetIdentifierType": {
+          "type": "string"
+        },
+        "assetIdentifierValue": {
+          "type": "string"
+        },
+        "metadata": {
+          "$ref": "#/definitions/eligibleAssetMetadata"
+        }
       },
-      "required": ["assetId", "metadata"],
+      "required": [
+        "assetId",
+        "metadata"
+      ],
       "additionalProperties": false
     },
     "recoveredAsset": {
       "type": "object",
       "description": "The exact posted position a substitution report returns to the pledger — the agreed thread's return leg. Substitution reports only.",
       "properties": {
-        "assetId": { "type": "string", "minLength": 1 },
-        "quantity": { "type": "string", "minLength": 1 }
+        "assetId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "quantity": {
+          "type": "string",
+          "minLength": 1
+        }
       },
-      "required": ["assetId", "quantity"],
+      "required": [
+        "assetId",
+        "quantity"
+      ],
       "additionalProperties": false
     },
     "action": {
@@ -81,7 +108,11 @@
         "action": {
           "type": "string",
           "description": "keep = the position stays where it is and never counts toward coverage; transfer = collateral must move; swap = a substitution leg.",
-          "enum": ["keep", "transfer", "swap"]
+          "enum": [
+            "keep",
+            "transfer",
+            "swap"
+          ]
         },
         "nominalAmount": {
           "type": "string",
@@ -89,20 +120,32 @@
         },
         "eligibleAssets": {
           "type": "array",
-          "items": { "$ref": "#/definitions/eligibleAsset" }
+          "items": {
+            "$ref": "#/definitions/eligibleAsset"
+          }
         },
-        "recoveredAsset": { "$ref": "#/definitions/recoveredAsset" }
+        "recoveredAsset": {
+          "$ref": "#/definitions/recoveredAsset"
+        }
       },
-      "required": ["action", "nominalAmount"],
+      "required": [
+        "action",
+        "nominalAmount"
+      ],
       "additionalProperties": false
     },
     "settlement": {
       "type": "object",
       "description": "The optional settlement leg — the asset the receiver pays back in.",
       "properties": {
-        "assetId": { "type": "string", "minLength": 1 }
+        "assetId": {
+          "type": "string",
+          "minLength": 1
+        }
       },
-      "required": ["assetId"],
+      "required": [
+        "assetId"
+      ],
       "additionalProperties": false
     }
   },
@@ -118,24 +161,38 @@
     "type": {
       "type": "string",
       "description": "initial = the opening margin call; variation = a periodic re-margin; substitution = a swap of posted collateral; closeout_default = the terminating call.",
-      "enum": ["initial", "variation", "substitution", "closeout_default"]
+      "enum": [
+        "initial",
+        "variation",
+        "substitution",
+        "closeout_default"
+      ]
     },
     "status": {
       "type": "string",
       "description": "Always `new` on the authoring event. The report's live status is overlaid by report-status events, never by rewriting this field.",
-      "enum": ["new"]
+      "enum": [
+        "new"
+      ]
     },
-    "currency": { "type": "string", "description": "Currency of the nominal amounts." },
+    "currency": {
+      "type": "string",
+      "description": "Currency of the nominal amounts."
+    },
     "senderOrgId": {
       "type": "string",
       "description": "Organization that owes the collateral on this report."
     },
-    "senderProfileId": { "type": "string" },
+    "senderProfileId": {
+      "type": "string"
+    },
     "receiverOrgId": {
       "type": "string",
       "description": "Organization the collateral is owed to."
     },
-    "receiverProfileId": { "type": "string" },
+    "receiverProfileId": {
+      "type": "string"
+    },
     "reportCreatorId": {
       "type": "string",
       "description": "Organization that authored the report — the valuation engine."
@@ -144,12 +201,20 @@
       "type": "string",
       "description": "Total value called for, as a decimal string. Coverage is complete when the earmarked holdings reach it at currency precision."
     },
+    "deadline": {
+      "type": "integer",
+      "description": "The date this report must be covered by, as a Unix timestamp in seconds. Past it and still uncovered, the report is settled incomplete. May not exceed the agreement's deadline. Absent means the node's configured default, measured from the report's own creation."
+    },
     "actions": {
       "type": "array",
       "description": "The obligations. A report whose only actions are `keep` has no evaluable obligation at all: dispositions are its whole lifecycle.",
-      "items": { "$ref": "#/definitions/action" }
+      "items": {
+        "$ref": "#/definitions/action"
+      }
     },
-    "settlement": { "$ref": "#/definitions/settlement" },
+    "settlement": {
+      "$ref": "#/definitions/settlement"
+    },
     "containerKey": {
       "type": "string",
       "description": "Which declared container this report draws on. Absent on pre-multi-container reports, where a single-container agreement is unambiguous."
@@ -161,14 +226,26 @@
     "fulfillmentMode": {
       "type": "string",
       "description": "direct = the obligated side posts against the report as authored; negotiated = the lines are agreed through a negotiation thread first and are never auto-executed. Absent means derived.",
-      "enum": ["direct", "negotiated"]
+      "enum": [
+        "direct",
+        "negotiated"
+      ]
     },
     "haircutApplyMethod": {
       "type": "string",
       "description": "How the haircut was applied when the per-asset valuations were calculated. reduce-from-price = the haircut was taken off the unit price, leaving the units unchanged; add-to-total = the haircut was covered by calling for more units. Recorded for display and audit only — no reader applies it, and readers must not treat this list as closed: further methods are expected and will extend it.",
-      "enum": ["reduce-from-price", "add-to-total"]
+      "enum": [
+        "reduce-from-price",
+        "add-to-total"
+      ]
     }
   },
-  "required": ["agreementId", "type", "nominalMarginAmount", "haircutApplyMethod", "actions"],
+  "required": [
+    "agreementId",
+    "type",
+    "nominalMarginAmount",
+    "haircutApplyMethod",
+    "actions"
+  ],
   "additionalProperties": false
 }

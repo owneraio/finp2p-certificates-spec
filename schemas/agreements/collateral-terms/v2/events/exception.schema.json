@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/events/exception.schema.json",
   "title": "Exception",
-  "description": "exception/v1 — the document an exception event carries. The executing organization declares that a leg of this report cannot complete, which parks the report: its deadline is held while the exception is open, so it is never settled incomplete in the middle of being answered. Raised by a party or by the valuation engine: execution records are organization-private and never replicated, so only the executing organization can tell a failed leg from one still settling, while the engine is the side that knows a report can no longer be covered in time. A report may carry several open exceptions at once, one per failed leg. The event itself cites the report's authoring event in its reference list.",
+  "description": "exception/v1 — the document an exception event carries. The executing organization declares that a leg of this report cannot complete, which parks the report: its deadline is held while the exception is open, so it is never settled incomplete in the middle of being answered. Raised by any participant: the organization that ran the leg is the only one that can tell a failure from a transfer still settling, since execution records are organization-private and never replicated, while the valuation engine is the side that knows a report can no longer be covered in time. A report may carry several open exceptions at once, one per failed leg. The event itself cites the report's authoring event in its reference list.",
   "type": "object",
   "properties": {
     "exceptionId": {

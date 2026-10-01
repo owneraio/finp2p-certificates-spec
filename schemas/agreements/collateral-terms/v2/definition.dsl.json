@@ -127,7 +127,7 @@
           "format": "json-schema"
         }
       },
-      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver', 'valuation-engine'] && agreement.events.allExistByIdAndType(event.referencedEventIds, 'vm-report')"
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver', 'controller', 'valuation-engine'] && agreement.events.allExistByIdAndType(event.referencedEventIds, 'vm-report')"
     },
     {
       "type": "manual-resolve",
@@ -164,6 +164,30 @@
         }
       },
       "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in agreement.events.outstandingRoles(event.referencedEventIds, ['manual-resolve', 'manual-resolve-accepted', 'manual-resolve-rejected'], ['pledger', 'receiver'])"
+    },
+    {
+      "type": "coverage-recheck",
+      "schema": {
+        "name": "coverage-recheck",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v2",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver'] && agreement.events.allExistByIdAndType(event.referencedEventIds, 'vm-report')"
+    },
+    {
+      "type": "substitution-plan",
+      "schema": {
+        "name": "substitution-plan",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v2",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver', 'controller', 'valuation-engine'] && agreement.events.allExistByIdAndType(event.referencedEventIds, 'vm-report')"
     },
     {
       "type": "report-status-completed",

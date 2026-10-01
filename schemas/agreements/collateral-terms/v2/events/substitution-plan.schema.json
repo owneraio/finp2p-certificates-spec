@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/events/substitution-plan.schema.json",
+  "title": "Substitution Plan",
+  "description": "substitution-plan/v1 — the assets to move into the container and the posted positions to recall, named by whoever calculated them. Which assets satisfy a call, and how much of each, is the calculator's judgement rather than the valuation engine's: the engine states how much is owed, this states what would settle it. A plan is a PROPOSAL, not a decision — parting with a posted position needs the counterparty's consent, so an agreed substitution thread remains what authorises execution.",
+  "type": "object",
+  "properties": {
+    "planId": {
+      "type": "string",
+      "description": "Identity of this plan, so a later event can cite it.",
+      "minLength": 1
+    },
+    "reportId": {
+      "type": "string",
+      "description": "The report whose obligation this plan would settle.",
+      "minLength": 1
+    },
+    "proposedBy": {
+      "type": "string",
+      "description": "The organization proposing it. Events carry roles rather than organizations, so the document pins the organization.",
+      "minLength": 1
+    },
+    "in": {
+      "type": "array",
+      "description": "Positions to post into the container.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "assetId",
+          "quantity"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quantity": {
+            "type": "string",
+            "description": "Decimal string.",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "out": {
+      "type": "array",
+      "description": "Posted positions to recall from the container. Empty on a plain post; a substitution names at least one.",
+      "items": {
+        "type": "object",
+        "required": [
+          "assetId",
+          "quantity"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quantity": {
+            "type": "string",
+            "description": "Decimal string.",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "planId",
+    "reportId",
+    "proposedBy",
+    "in"
+  ],
+  "additionalProperties": false
+}
