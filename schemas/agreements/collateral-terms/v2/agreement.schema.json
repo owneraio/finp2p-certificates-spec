@@ -25,9 +25,7 @@
           "description": "CAIP-19 identifier of the on-chain asset, when the eligible asset is chain-native."
         }
       },
-      "required": [
-        "assetId"
-      ],
+      "required": ["assetId"],
       "additionalProperties": false
     }
   },
@@ -39,13 +37,11 @@
     "eligibleAssets": {
       "type": "array",
       "description": "The eligible collateral set. An empty or absent list means the agreement declares no eligibility constraint.",
-      "items": {
-        "$ref": "#/definitions/eligibleAsset"
-      }
+      "items": { "$ref": "#/definitions/eligibleAsset" }
     },
     "reportDeadline": {
       "type": "integer",
-      "description": "The latest date any report on this agreement may run to, as a Unix timestamp in seconds. A report carries its own deadline and may not set one beyond this; the facade refuses it. Absent means the node's configured default applies, which is what every agreement authored before this field relies on."
+      "description": "The latest date any report on this agreement may run to, as a Unix timestamp in seconds. A report carries its own deadline and may not set one beyond this; the facade refuses it. Absent means the node's configured default applies."
     }
   },
   "additionalProperties": false

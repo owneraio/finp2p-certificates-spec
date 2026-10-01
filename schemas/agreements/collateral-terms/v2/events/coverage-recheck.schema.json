@@ -19,10 +19,6 @@
       "type": "string",
       "description": "Why the engine should look again, in the requester's own words.",
       "minLength": 1
-    },
-    "executionPlanId": {
-      "type": "string",
-      "description": "The plan that settled late, when there was one. Diagnostic: the requester is the only party that can see its own execution records."
     }
   },
   "required": [
