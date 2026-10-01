@@ -144,6 +144,10 @@
       "type": "string",
       "description": "Total value called for, as a decimal string. Coverage is complete when the earmarked holdings reach it at currency precision."
     },
+    "deadline": {
+      "type": "integer",
+      "description": "The date this report must be covered by, as a Unix timestamp in seconds. Past it and still uncovered, the report is settled incomplete. May not exceed the agreement's reportDeadline. Absent means the node's configured default, measured from the report's own creation."
+    },
     "actions": {
       "type": "array",
       "description": "The obligations. A report whose only actions are `keep` has no evaluable obligation at all: dispositions are its whole lifecycle.",
