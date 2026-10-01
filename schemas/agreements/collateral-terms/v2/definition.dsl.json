@@ -118,6 +118,54 @@
       "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole == 'valuation-engine' && agreement.events.allExistByIdAndType(event.referencedEventIds, 'vm-report')"
     },
     {
+      "type": "exception",
+      "schema": {
+        "name": "exception",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v2",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver', 'valuation-engine'] && agreement.events.allExistByIdAndType(event.referencedEventIds, 'vm-report')"
+    },
+    {
+      "type": "manual-resolve",
+      "schema": {
+        "name": "manual-resolve",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v2",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver'] && agreement.events.allExistByIdAndType(event.referencedEventIds, 'exception')"
+    },
+    {
+      "type": "manual-resolve-accepted",
+      "schema": {
+        "name": "manual-resolve-decision",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v2",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in agreement.events.outstandingRoles(event.referencedEventIds, ['manual-resolve', 'manual-resolve-accepted', 'manual-resolve-rejected'], ['pledger', 'receiver'])"
+    },
+    {
+      "type": "manual-resolve-rejected",
+      "schema": {
+        "name": "manual-resolve-decision",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v2",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in agreement.events.outstandingRoles(event.referencedEventIds, ['manual-resolve', 'manual-resolve-accepted', 'manual-resolve-rejected'], ['pledger', 'receiver'])"
+    },
+    {
       "type": "report-status-completed",
       "schema": {
         "name": "report-status",
