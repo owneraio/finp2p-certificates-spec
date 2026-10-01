@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/events/substitution-plan.schema.json",
   "title": "Substitution Plan",
-  "description": "substitution-plan/v1 — the assets to move into the container and the posted positions to recall, named by whoever calculated them. Which assets satisfy a call, and how much of each, is the calculator's judgement rather than the valuation engine's: the engine states how much is owed, this states what would settle it. A plan is a PROPOSAL, not a decision — parting with a posted position needs the counterparty's consent, so an agreed substitution thread remains what authorises execution.",
+  "description": "substitution-plan/v1 — the positions to move into the container and the posted positions to recall. Created when the collateral already posted no longer covers the obligation because its assets' rate has fallen: the shortfall is closed by REPLACING positions rather than topping them up, so one event names both sides of the swap. An instruction, not a proposal — where the creating organization has auto-transfer enabled the facade executes it on creation, posting the incoming positions first and recalling the outgoing ones second, as one compensated plan, so the receiver is never under-collateralized in between. The outflow is still gated by the container's own policy, which requires both parties' authorization: the counterparty's consent sits at the ledger rather than in an agreement negotiation.",
   "type": "object",
   "properties": {
     "planId": {
@@ -22,7 +22,7 @@
     },
     "in": {
       "type": "array",
-      "description": "Positions to post into the container.",
+      "description": "Positions to post into the container. Executed FIRST, so the container is never short while a swap is in flight.",
       "minItems": 1,
       "items": {
         "type": "object",
@@ -46,7 +46,7 @@
     },
     "out": {
       "type": "array",
-      "description": "Posted positions to recall from the container. Empty on a plain post; a substitution names at least one.",
+      "description": "Posted positions to recall from the container, executed after the incoming ones have landed. Empty on a plain top-up; a substitution names at least one.",
       "items": {
         "type": "object",
         "required": [
