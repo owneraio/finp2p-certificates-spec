@@ -2,76 +2,26 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/events/margin-report.schema.json",
   "title": "Margin Report",
-  "description": "margin-report/v2 — the document a vm-report event carries. Authored by the valuation engine, it opens a report cycle by stating the obligation: how much collateral is called for and which assets may satisfy it. Every later status, attribution and negotiation event references this event.",
+  "description": "margin-report/v2 — the document a vm-report event carries. The valuation engine authors HOW MUCH must be transferred; it does not say which assets. Choosing the assets, and how much of each, belongs to the calculator role, whose output reaches the parties out of band and is committed by the posting party rather than by this document.",
   "type": "object",
   "definitions": {
-    "eligibleAssetMetadata": {
-      "type": "object",
-      "description": "The valuation for this asset, already calculated when the report was authored and recorded exactly as it was sent. The report builder derives none of it and checks none of it — not against haircutApplyMethod, not against the other fields. Every value is a decimal string; any rounding is the author's own.",
-      "properties": {
-        "appliedHaircut": {
-          "type": "string",
-          "description": "The haircut actually taken on this asset, as a decimal string, applied however haircutApplyMethod says it was applied."
-        },
-        "baseUnitPrice": {
-          "type": "string",
-          "description": "Unit price before the haircut, as a decimal string."
-        },
-        "baseValue": {
-          "type": "string",
-          "description": "Value of this asset's line before the haircut, as a decimal string."
-        },
-        "baseUnits": {
-          "type": "string",
-          "description": "Units of this asset before the haircut, as a decimal string."
-        },
-        "finalUnitPrice": {
-          "type": "string",
-          "description": "Unit price after the haircut, as a decimal string. Coverage values a holding at quantity × finalUnitPrice, so this is carried rather than divided out of finalValue."
-        },
-        "finalValue": {
-          "type": "string",
-          "description": "Value of this asset's line after the haircut, as a decimal string."
-        },
-        "finalUnits": {
-          "type": "string",
-          "description": "Units of this asset after the haircut, as a decimal string — and the amount transferred when this line is the one satisfied."
-        }
-      },
-      "required": [
-        "appliedHaircut",
-        "baseUnitPrice",
-        "baseValue",
-        "baseUnits",
-        "finalUnitPrice",
-        "finalValue",
-        "finalUnits"
-      ],
-      "additionalProperties": false
-    },
-    "eligibleAsset": {
-      "type": "object",
-      "description": "One asset that may satisfy this obligation. The name, ticker and identifier fields are serialized empty on purpose — every reading org overwrites them from its own asset registry.",
-      "properties": {
-        "assetIdType": { "type": "string" },
-        "assetId": { "type": "string", "minLength": 1 },
-        "name": { "type": "string" },
-        "ticker": { "type": "string" },
-        "assetIdentifierType": { "type": "string" },
-        "assetIdentifierValue": { "type": "string" },
-        "metadata": { "$ref": "#/definitions/eligibleAssetMetadata" }
-      },
-      "required": ["assetId", "metadata"],
-      "additionalProperties": false
-    },
     "recoveredAsset": {
       "type": "object",
       "description": "The exact posted position a substitution report returns to the pledger — the agreed thread's return leg. Substitution reports only.",
       "properties": {
-        "assetId": { "type": "string", "minLength": 1 },
-        "quantity": { "type": "string", "minLength": 1 }
+        "assetId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "quantity": {
+          "type": "string",
+          "minLength": 1
+        }
       },
-      "required": ["assetId", "quantity"],
+      "required": [
+        "assetId",
+        "quantity"
+      ],
       "additionalProperties": false
     },
     "action": {
@@ -81,28 +31,38 @@
         "action": {
           "type": "string",
           "description": "keep = the position stays where it is and never counts toward coverage; transfer = collateral must move; swap = a substitution leg.",
-          "enum": ["keep", "transfer", "swap"]
+          "enum": [
+            "keep",
+            "transfer",
+            "swap"
+          ]
         },
         "nominalAmount": {
           "type": "string",
           "description": "Value this line calls for, in the agreement's base currency, as a decimal string."
         },
-        "eligibleAssets": {
-          "type": "array",
-          "items": { "$ref": "#/definitions/eligibleAsset" }
-        },
-        "recoveredAsset": { "$ref": "#/definitions/recoveredAsset" }
+        "recoveredAsset": {
+          "$ref": "#/definitions/recoveredAsset"
+        }
       },
-      "required": ["action", "nominalAmount"],
+      "required": [
+        "action",
+        "nominalAmount"
+      ],
       "additionalProperties": false
     },
     "settlement": {
       "type": "object",
       "description": "The optional settlement leg — the asset the receiver pays back in.",
       "properties": {
-        "assetId": { "type": "string", "minLength": 1 }
+        "assetId": {
+          "type": "string",
+          "minLength": 1
+        }
       },
-      "required": ["assetId"],
+      "required": [
+        "assetId"
+      ],
       "additionalProperties": false
     }
   },
@@ -118,24 +78,38 @@
     "type": {
       "type": "string",
       "description": "initial = the opening margin call; variation = a periodic re-margin; substitution = a swap of posted collateral; closeout_default = the terminating call.",
-      "enum": ["initial", "variation", "substitution", "closeout_default"]
+      "enum": [
+        "initial",
+        "variation",
+        "substitution",
+        "closeout_default"
+      ]
     },
     "status": {
       "type": "string",
       "description": "Always `new` on the authoring event. The report's live status is overlaid by report-status events, never by rewriting this field.",
-      "enum": ["new"]
+      "enum": [
+        "new"
+      ]
     },
-    "currency": { "type": "string", "description": "Currency of the nominal amounts." },
+    "currency": {
+      "type": "string",
+      "description": "Currency of the nominal amounts."
+    },
     "senderOrgId": {
       "type": "string",
       "description": "Organization that owes the collateral on this report."
     },
-    "senderProfileId": { "type": "string" },
+    "senderProfileId": {
+      "type": "string"
+    },
     "receiverOrgId": {
       "type": "string",
       "description": "Organization the collateral is owed to."
     },
-    "receiverProfileId": { "type": "string" },
+    "receiverProfileId": {
+      "type": "string"
+    },
     "reportCreatorId": {
       "type": "string",
       "description": "Organization that authored the report — the valuation engine."
@@ -151,9 +125,13 @@
     "actions": {
       "type": "array",
       "description": "The obligations. A report whose only actions are `keep` has no evaluable obligation at all: dispositions are its whole lifecycle.",
-      "items": { "$ref": "#/definitions/action" }
+      "items": {
+        "$ref": "#/definitions/action"
+      }
     },
-    "settlement": { "$ref": "#/definitions/settlement" },
+    "settlement": {
+      "$ref": "#/definitions/settlement"
+    },
     "containerKey": {
       "type": "string",
       "description": "Which declared container this report draws on. Absent on pre-multi-container reports, where a single-container agreement is unambiguous."
@@ -165,14 +143,17 @@
     "fulfillmentMode": {
       "type": "string",
       "description": "direct = the obligated side posts against the report as authored; negotiated = the lines are agreed through a negotiation thread first and are never auto-executed. Absent means derived.",
-      "enum": ["direct", "negotiated"]
-    },
-    "haircutApplyMethod": {
-      "type": "string",
-      "description": "How the haircut was applied when the per-asset valuations were calculated. reduce-from-price = the haircut was taken off the unit price, leaving the units unchanged; add-to-total = the haircut was covered by calling for more units. Recorded for display and audit only — no reader applies it, and readers must not treat this list as closed: further methods are expected and will extend it.",
-      "enum": ["reduce-from-price", "add-to-total"]
+      "enum": [
+        "direct",
+        "negotiated"
+      ]
     }
   },
-  "required": ["agreementId", "type", "nominalMarginAmount", "haircutApplyMethod", "actions"],
+  "required": [
+    "agreementId",
+    "type",
+    "nominalMarginAmount",
+    "actions"
+  ],
   "additionalProperties": false
 }
