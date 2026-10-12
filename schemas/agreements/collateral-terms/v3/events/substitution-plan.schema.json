@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/events/substitution-plan.schema.json",
+  "title": "Substitution Plan",
+  "description": "substitution-plan/v1 — the positions to move into the container and the posted positions to recall. Created when the collateral already posted no longer covers the obligation because its assets' rate has fallen: the shortfall is closed by REPLACING positions rather than topping them up, so one event names both sides of the swap. An instruction, not a proposal — where the creating organization has auto-transfer enabled the facade executes it on creation, posting the incoming positions first and recalling the outgoing ones second, as one compensated plan, so the receiver is never under-collateralized in between. The outflow is still gated by the container's own policy, which requires both parties' authorization: the counterparty's consent sits at the ledger rather than in an agreement negotiation.",
+  "type": "object",
+  "properties": {
+    "planId": {
+      "type": "string",
+      "description": "Identity of this plan, so a later event can cite it.",
+      "minLength": 1
+    },
+    "reportId": {
+      "type": "string",
+      "description": "The report whose obligation this plan would settle.",
+      "minLength": 1
+    },
+    "proposedBy": {
+      "type": "string",
+      "description": "The organization proposing it. Events carry roles rather than organizations, so the document pins the organization.",
+      "minLength": 1
+    },
+    "in": {
+      "type": "array",
+      "description": "Positions to post into the container. Executed FIRST, so the container is never short while a swap is in flight.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "assetId",
+          "quantity"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quantity": {
+            "type": "string",
+            "description": "Decimal string.",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "out": {
+      "type": "array",
+      "description": "Posted positions to recall from the container, executed after the incoming ones have landed. Empty on a plain top-up; a substitution names at least one.",
+      "items": {
+        "type": "object",
+        "required": [
+          "assetId",
+          "quantity"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quantity": {
+            "type": "string",
+            "description": "Decimal string.",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "planId",
+    "reportId",
+    "proposedBy",
+    "in"
+  ],
+  "additionalProperties": false
+}
