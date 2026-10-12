@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/events/attribution-completed.schema.json",
+  "title": "Attribution Completed",
+  "description": "attribution-completed/v1 — the pledging side declaring that it has posted everything it will post against an approved list. It does two things and neither of them is evidence of delivery: it tells the valuation engine that the round is finished, so evaluation runs now rather than when the deadline passes, and it CLOSES the approval it cites, so a later posting needs a fresh proposal rather than riding consent already given. What was actually delivered is read from the receipts, never from this document.",
+  "type": "object",
+  "properties": {
+    "reportId": {
+      "type": "string",
+      "description": "The report whose attribution round is finished.",
+      "minLength": 1
+    },
+    "proposalId": {
+      "type": "string",
+      "description": "The approved proposal this round executed. The event also references the approval event itself, which is what closes it.",
+      "minLength": 1
+    },
+    "by": {
+      "type": "string",
+      "description": "The emitting ORGANIZATION. Agreement events carry a role rather than an org, so the document pins the organization.",
+      "minLength": 1
+    }
+  },
+  "required": ["reportId", "proposalId", "by"],
+  "additionalProperties": false
+}

@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/events/exception.schema.json",
+  "title": "Exception",
+  "description": "exception/v1 — the document an exception event carries. The executing organization declares that a leg of this report cannot complete, which parks the report: its deadline is held while the exception is open, so it is never settled incomplete in the middle of being answered. Raised by any participant: the organization that ran the leg is the only one that can tell a failure from a transfer still settling, since execution records are organization-private and never replicated, while the valuation engine is the side that knows a report can no longer be covered in time. A report may carry several open exceptions at once, one per failed leg. The event itself cites the report's authoring event in its reference list.",
+  "type": "object",
+  "properties": {
+    "exceptionId": {
+      "type": "string",
+      "description": "Identity of this exception, minted by the facade. A manual resolve answers it by this id, and cites its event in the reference list.",
+      "minLength": 1
+    },
+    "reportId": {
+      "type": "string",
+      "description": "The report whose execution cannot complete.",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "description": "Always `open` as authored. Like a margin report's own `new`, it never changes on the log — every organization derives the live value from what answers it, so all of them fold the same answer.",
+      "enum": [
+        "open"
+      ]
+    },
+    "blame": {
+      "type": "string",
+      "description": "The role whose SIDE the problem is on — not an allocation of fault. A container ledger being unavailable is the controller's side without being anyone's mistake.",
+      "enum": [
+        "pledger",
+        "receiver",
+        "controller",
+        "valuation-engine"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "description": "Why the leg cannot complete, in the raiser's own words. Shown to the counterparty, who decides what to do about it.",
+      "minLength": 1
+    },
+    "raisedBy": {
+      "type": "string",
+      "description": "The organization raising it. Events carry roles rather than organizations, so the document pins the organization for readers and authority checks.",
+      "minLength": 1
+    },
+    "executionPlanId": {
+      "type": "string",
+      "description": "The plan that failed, when there was one. Diagnostic: the raiser is the only party that can see its own execution records."
+    },
+    "assetId": {
+      "type": "string",
+      "description": "Asset of the failed leg."
+    },
+    "quantity": {
+      "type": "string",
+      "description": "The shortfall, as a decimal string."
+    }
+  },
+  "required": [
+    "exceptionId",
+    "reportId",
+    "status",
+    "blame",
+    "reason",
+    "raisedBy"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/events/attribution-proposal-rejection.schema.json",
+  "title": "Attribution Proposal Rejection",
+  "description": "attribution-proposal-rejection/v1 — the approver refusing a proposed list. A proposal is never partly refused: the pledging side answers a rejection with a new proposal, not with an edit of this one. It carries details rather than one reason because a list is refused for per-line causes, and the pledging side has to know which lines to change.",
+  "type": "object",
+  "definitions": {
+    "detail": {
+      "type": "object",
+      "description": "One objection, against one proposed line. Both codes are about a line, so the line is named.",
+      "properties": {
+        "assetId": {
+          "type": "string",
+          "description": "The proposed line this objection is about.",
+          "minLength": 1
+        },
+        "code": {
+          "type": "string",
+          "description": "Why this line is refused, as a closed vocabulary so a calculator can answer it without parsing prose. `assetRejected` — the asset itself is not acceptable, and offering less of it will not help. `amountRejected` — the asset is acceptable and the quantity is not.",
+          "enum": ["assetRejected", "amountRejected"]
+        },
+        "message": {
+          "type": "string",
+          "description": "The objection in the approver's own words."
+        }
+      },
+      "required": ["assetId", "code"],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "reportId": {
+      "type": "string",
+      "description": "The report the refused proposal belongs to.",
+      "minLength": 1
+    },
+    "proposalId": {
+      "type": "string",
+      "description": "The proposal being refused. The event also references the proposal event itself, which is the protocol-level counterpart of this field.",
+      "minLength": 1
+    },
+    "details": {
+      "type": "array",
+      "description": "Why the list was refused. At least one objection — a refusal that says nothing leaves the pledging side guessing.",
+      "items": { "$ref": "#/definitions/detail" },
+      "minItems": 1
+    },
+    "by": {
+      "type": "string",
+      "description": "The emitting ORGANIZATION. Agreement events carry a role rather than an org, so the document pins the organization.",
+      "minLength": 1
+    }
+  },
+  "required": ["reportId", "proposalId", "details", "by"],
+  "additionalProperties": false
+}

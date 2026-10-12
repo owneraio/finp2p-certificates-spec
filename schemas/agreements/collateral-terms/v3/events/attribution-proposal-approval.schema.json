@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/events/attribution-proposal-approval.schema.json",
+  "title": "Attribution Proposal Approval",
+  "description": "attribution-proposal-approval/v1 — the approver taking a proposed list, as a whole. The verdict is the EVENT TYPE rather than a field in here: a payload is opaque to a guard, so a rule that admits a posting only against an approved list can only be expressed if taking and refusing are different types. The event references the proposal it decides, and that reference is what a guard reads; the fields below restate it for readers of the log.",
+  "type": "object",
+  "properties": {
+    "reportId": {
+      "type": "string",
+      "description": "The report the approved proposal belongs to.",
+      "minLength": 1
+    },
+    "proposalId": {
+      "type": "string",
+      "description": "The proposal being approved. The event also references the proposal event itself, which is the protocol-level counterpart of this field.",
+      "minLength": 1
+    },
+    "note": {
+      "type": "string",
+      "description": "Free-text remark from the approver. An approval needs no justification, so this is informational."
+    },
+    "by": {
+      "type": "string",
+      "description": "The emitting ORGANIZATION. Agreement events carry a role rather than an org, so the document pins the organization.",
+      "minLength": 1
+    }
+  },
+  "required": ["reportId", "proposalId", "by"],
+  "additionalProperties": false
+}

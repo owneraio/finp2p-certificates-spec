@@ -1,0 +1,385 @@
+{
+  "name": "collateral-terms-v3",
+  "version": "3.0.0",
+  "schema": {
+    "name": "collateral-terms",
+    "version": "1",
+    "documentReference": {
+      "key": "collateral-terms/v3",
+      "format": "json-schema"
+    }
+  },
+  "states": {
+    "onCreation": "proposed",
+    "onApproval": "allocating",
+    "finalStates": [
+      "closed",
+      "defaulted"
+    ],
+    "allowedStates": [
+      "proposed",
+      "allocating",
+      "active",
+      "reportProcessing",
+      "defaulted",
+      "closed"
+    ]
+  },
+  "emitterRoles": [
+    "valuation-engine",
+    "pledger",
+    "receiver",
+    "vault-controller",
+    "approver"
+  ],
+  "transitions": [
+    {
+      "event": "container-provisioned",
+      "toState": "active",
+      "fromStates": [
+        "allocating"
+      ],
+      "guard": "agreement.allContainersProvisioned()"
+    },
+    {
+      "event": "vm-report",
+      "toState": "reportProcessing",
+      "fromStates": [
+        "active",
+        "reportProcessing"
+      ]
+    },
+    {
+      "event": "report-status-resolved",
+      "toState": "active",
+      "fromStates": [
+        "reportProcessing"
+      ],
+      "guard": "agreement.events.outstandingTargets('vm-report', ['report-status-resolved', 'report-status-rejected'], ['pledger', 'receiver']).size() == 0"
+    },
+    {
+      "event": "report-status-rejected",
+      "toState": "active",
+      "fromStates": [
+        "reportProcessing"
+      ],
+      "guard": "agreement.events.outstandingTargets('vm-report', ['report-status-resolved', 'report-status-rejected'], ['pledger', 'receiver']).size() == 0"
+    },
+    {
+      "event": "closeout",
+      "toState": "closed",
+      "fromStates": [
+        "active"
+      ]
+    },
+    {
+      "event": "closeout-default",
+      "toState": "defaulted",
+      "fromStates": [
+        "active",
+        "reportProcessing"
+      ]
+    }
+  ],
+  "allowedEvents": [
+    {
+      "type": "container-provisioned",
+      "schema": {
+        "name": "container-info",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      }
+    },
+    {
+      "type": "vm-report",
+      "schema": {
+        "name": "margin-report",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState in ['active', 'reportProcessing'] && event.emitterRole == 'valuation-engine'"
+    },
+    {
+      "type": "report-status",
+      "schema": {
+        "name": "report-status",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole == 'valuation-engine' && agreement.events.allExistByIdAndType(event.referencedEventIds, 'vm-report')"
+    },
+    {
+      "type": "exception",
+      "schema": {
+        "name": "exception",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver', 'vault-controller', 'valuation-engine'] && agreement.events.allExistByIdAndType(event.referencedEventIds, 'vm-report')"
+    },
+    {
+      "type": "manual-resolve",
+      "schema": {
+        "name": "manual-resolve",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver'] && agreement.events.allExistByIdAndType(event.referencedEventIds, 'exception')"
+    },
+    {
+      "type": "manual-resolve-accepted",
+      "schema": {
+        "name": "manual-resolve-decision",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in agreement.events.outstandingRoles(event.referencedEventIds, ['manual-resolve', 'manual-resolve-accepted', 'manual-resolve-rejected'], ['pledger', 'receiver'])"
+    },
+    {
+      "type": "manual-resolve-rejected",
+      "schema": {
+        "name": "manual-resolve-decision",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in agreement.events.outstandingRoles(event.referencedEventIds, ['manual-resolve', 'manual-resolve-accepted', 'manual-resolve-rejected'], ['pledger', 'receiver'])"
+    },
+    {
+      "type": "coverage-recheck",
+      "schema": {
+        "name": "coverage-recheck",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver'] && agreement.events.allExistByIdAndType(event.referencedEventIds, 'vm-report')"
+    },
+    {
+      "type": "substitution-plan",
+      "schema": {
+        "name": "substitution-plan",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver', 'vault-controller', 'valuation-engine'] && agreement.events.allExistByIdAndType(event.referencedEventIds, 'vm-report')"
+    },
+    {
+      "type": "report-status-completed",
+      "schema": {
+        "name": "report-status",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole == 'valuation-engine' && agreement.events.allExistByIdAndType(event.referencedEventIds, 'vm-report')"
+    },
+    {
+      "type": "report-status-incomplete",
+      "schema": {
+        "name": "report-status",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole == 'valuation-engine' && agreement.events.allExistByIdAndType(event.referencedEventIds, 'vm-report')"
+    },
+    {
+      "type": "report-status-resolved",
+      "schema": {
+        "name": "report-status",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && agreement.events.allExistByIdAndType(event.referencedEventIds, 'vm-report') && event.emitterRole in agreement.events.outstandingRoles(event.referencedEventIds, ['report-status-resolved', 'report-status-rejected'], ['pledger', 'receiver'])"
+    },
+    {
+      "type": "report-status-rejected",
+      "schema": {
+        "name": "report-status",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && agreement.events.allExistByIdAndType(event.referencedEventIds, 'vm-report') && event.emitterRole in agreement.events.outstandingRoles(event.referencedEventIds, ['report-status-resolved', 'report-status-rejected'], ['pledger', 'receiver'])"
+    },
+    {
+      "type": "posting-attribution",
+      "schema": {
+        "name": "posting-attribution",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver'] && event.referencedEventIds.exists(id, agreement.events.existsByIdAndType(id, 'attribution-proposal-approval') && !agreement.events.isReferencedBy(id, 'attribution-completed'))"
+    },
+    {
+      "type": "negotiation",
+      "schema": {
+        "name": "negotiation",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver']"
+    },
+    {
+      "type": "closeout",
+      "schema": {
+        "name": "closeout",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'active' && event.emitterRole == 'valuation-engine' && agreement.events.findByType('vm-report').allReferencedByOrAbsent(['report-status-completed', 'report-status-incomplete']) && agreement.events.lastByType('vm-report').allReferencedByOrAbsent('report-status-completed')"
+    },
+    {
+      "type": "closeout-default",
+      "schema": {
+        "name": "closeout-default",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "event.emitterRole == 'valuation-engine'"
+    },
+    {
+      "type": "default-notice",
+      "schema": {
+        "name": "default-notice",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState in ['active', 'reportProcessing'] && event.emitterRole in ['pledger', 'receiver']"
+    },
+    {
+      "type": "default-revocation",
+      "schema": {
+        "name": "default-revocation",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState in ['active', 'reportProcessing'] && event.emitterRole in ['pledger', 'receiver']"
+    },
+    {
+      "type": "attribution-proposal",
+      "schema": {
+        "name": "attribution-proposal",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole == 'pledger' && agreement.events.allExistByIdAndType(event.referencedEventIds, 'vm-report')"
+    },
+    {
+      "type": "attribution-proposal-approval",
+      "schema": {
+        "name": "attribution-proposal-approval",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole == 'approver' && event.referencedEventIds.exists(id, agreement.events.existsByIdAndType(id, 'attribution-proposal') && !agreement.events.isReferencedBy(id, ['attribution-proposal-approval', 'attribution-proposal-rejection']))"
+    },
+    {
+      "type": "attribution-proposal-rejection",
+      "schema": {
+        "name": "attribution-proposal-rejection",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole == 'approver' && event.referencedEventIds.exists(id, agreement.events.existsByIdAndType(id, 'attribution-proposal') && !agreement.events.isReferencedBy(id, ['attribution-proposal-approval', 'attribution-proposal-rejection']))"
+    },
+    {
+      "type": "attribution-completed",
+      "schema": {
+        "name": "attribution-completed",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole == 'pledger' && event.referencedEventIds.exists(id, agreement.events.existsByIdAndType(id, 'attribution-proposal-approval') && !agreement.events.isReferencedBy(id, 'attribution-completed'))"
+    },
+    {
+      "type": "settlement-attribution",
+      "schema": {
+        "name": "posting-attribution",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver']"
+    },
+    {
+      "type": "recovery-attribution",
+      "schema": {
+        "name": "posting-attribution",
+        "version": "1",
+        "documentReference": {
+          "key": "collateral-terms/v3",
+          "format": "json-schema"
+        }
+      },
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver']"
+    }
+  ]
+}
