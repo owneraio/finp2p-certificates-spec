@@ -14,13 +14,8 @@
       "type": "string",
       "description": "The approved proposal this round executed. The event also references the approval event itself, which is what closes it.",
       "minLength": 1
-    },
-    "by": {
-      "type": "string",
-      "description": "The emitting ORGANIZATION. Agreement events carry a role rather than an org, so the document pins the organization.",
-      "minLength": 1
     }
   },
-  "required": ["reportId", "proposalId", "by"],
+  "required": ["reportId", "proposalId"],
   "additionalProperties": false
 }

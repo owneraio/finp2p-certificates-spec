@@ -44,13 +44,8 @@
       "description": "Why the list was refused. At least one objection — a refusal that says nothing leaves the pledging side guessing.",
       "items": { "$ref": "#/definitions/detail" },
       "minItems": 1
-    },
-    "by": {
-      "type": "string",
-      "description": "The emitting ORGANIZATION. Agreement events carry a role rather than an org, so the document pins the organization.",
-      "minLength": 1
     }
   },
-  "required": ["reportId", "proposalId", "details", "by"],
+  "required": ["reportId", "proposalId", "details"],
   "additionalProperties": false
 }

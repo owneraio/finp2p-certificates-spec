@@ -90,13 +90,8 @@
       "description": "The offered list. An empty list is not a proposal.",
       "items": { "$ref": "#/definitions/line" },
       "minItems": 1
-    },
-    "by": {
-      "type": "string",
-      "description": "The emitting ORGANIZATION. Agreement events carry a role rather than an org, so the document pins the organization.",
-      "minLength": 1
     }
   },
-  "required": ["reportId", "proposalId", "round", "lines", "by"],
+  "required": ["reportId", "proposalId", "round", "lines"],
   "additionalProperties": false
 }
