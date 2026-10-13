@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/events/attribution-proposal.schema.json",
+  "title": "Attribution Proposal",
+  "description": "attribution-proposal/v1 — the priced list the pledging side offers to deliver against a report, for the approver to accept or refuse as a whole. It is the document the approver consents to, so it carries the valuation as well as the quantities: what the approver signs is what a later evaluation may credit. Nothing is per-line — an approver that will not take the list refuses it and the pledger proposes another.",
+  "type": "object",
+  "definitions": {
+    "metadata": {
+      "type": "object",
+      "description": "The valuation offered for this line, recorded exactly as it was sent. Every value is a decimal string; any rounding is the author's own.",
+      "properties": {
+        "appliedHaircut": {
+          "type": "string",
+          "description": "The haircut taken on this asset, as a decimal string."
+        },
+        "baseUnitPrice": {
+          "type": "string",
+          "description": "Unit price before the haircut, as a decimal string."
+        },
+        "baseValue": {
+          "type": "string",
+          "description": "Value of this line before the haircut, as a decimal string."
+        },
+        "baseUnits": {
+          "type": "string",
+          "description": "Units before the haircut, as a decimal string."
+        },
+        "finalUnitPrice": {
+          "type": "string",
+          "description": "Unit price after the haircut, as a decimal string. Coverage values a holding at quantity × finalUnitPrice, so this is carried rather than divided out of finalValue."
+        },
+        "finalValue": {
+          "type": "string",
+          "description": "Value of this line after the haircut, as a decimal string."
+        },
+        "finalUnits": {
+          "type": "string",
+          "description": "Units after the haircut, as a decimal string."
+        }
+      },
+      "required": [
+        "appliedHaircut",
+        "baseUnitPrice",
+        "baseValue",
+        "baseUnits",
+        "finalUnitPrice",
+        "finalValue",
+        "finalUnits"
+      ],
+      "additionalProperties": false
+    },
+    "line": {
+      "type": "object",
+      "description": "One asset the pledging side offers to deliver, with the valuation it is offered at.",
+      "properties": {
+        "assetId": {
+          "type": "string",
+          "description": "FinP2P asset identifier.",
+          "minLength": 1
+        },
+        "quantity": {
+          "type": "string",
+          "description": "Units offered, as a decimal string.",
+          "minLength": 1
+        },
+        "metadata": { "$ref": "#/definitions/metadata" }
+      },
+      "required": ["assetId", "quantity", "metadata"],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "reportId": {
+      "type": "string",
+      "description": "The report this list would satisfy. The event also references the authoring margin-report event, which is the protocol-level counterpart of this field.",
+      "minLength": 1
+    },
+    "proposalId": {
+      "type": "string",
+      "description": "This proposal. A later proposal on the same report is a fresh list, not a revision of this one.",
+      "minLength": 1
+    },
+    "round": {
+      "type": "integer",
+      "description": "1 on the first proposal for a report, incrementing when a refused list is followed by another.",
+      "minimum": 1
+    },
+    "lines": {
+      "type": "array",
+      "description": "The offered list. An empty list is not a proposal.",
+      "items": { "$ref": "#/definitions/line" },
+      "minItems": 1
+    }
+  },
+  "required": ["reportId", "proposalId", "round", "lines"],
+  "additionalProperties": false
+}

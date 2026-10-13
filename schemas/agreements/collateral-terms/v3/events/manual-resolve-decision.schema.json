@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/events/manual-resolve-decision.schema.json",
+  "title": "Manual Resolve Decision",
+  "description": "The document carried by manual-resolve-accepted/v1 and manual-resolve-rejected/v1 — the counterparty's answer to a manual resolve. ONE document, TWO event types: a transition edge is chosen by event type and may never read a payload field, so the two outcomes cannot share a type. The requester may not answer their own request. An acceptance resolves every exception the request cited and the valuation engine then completes the report; a refusal must say why, as a report rejection must, so the requester can answer it. The event cites the request and its exceptions in its reference list.",
+  "type": "object",
+  "properties": {
+    "reportId": {
+      "type": "string",
+      "description": "The report this answer is about.",
+      "minLength": 1
+    },
+    "manualResolveId": {
+      "type": "string",
+      "description": "The request being answered.",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "description": "Whether the request was accepted or refused. Carried in the document, as report-status carries its own: the two event types exist so a transition edge can be chosen without reading a payload, and the document still has to say which answer it is for every other reader.",
+      "enum": [
+        "accepted",
+        "rejected"
+      ]
+    },
+    "exceptionIds": {
+      "type": "array",
+      "description": "The exceptions the request cited, carried here so a reader need not walk back through the request. Mirrors the event's own reference list.",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "decidedBy": {
+      "type": "string",
+      "description": "The organization answering. Events carry roles rather than organizations, so the document pins the organization.",
+      "minLength": 1
+    },
+    "reason": {
+      "type": "string",
+      "description": "Required when refusing, so the requester can answer it. Optional on an acceptance."
+    }
+  },
+  "required": [
+    "reportId",
+    "manualResolveId",
+    "status",
+    "decidedBy"
+  ],
+  "additionalProperties": false
+}

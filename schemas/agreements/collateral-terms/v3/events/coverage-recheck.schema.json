@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/events/coverage-recheck.schema.json",
+  "title": "Coverage Recheck",
+  "description": "coverage-recheck/v1 — a party asking the valuation engine to evaluate the report again, because collateral arrived after its deadline. The engine owns evaluation, so a party cannot change a report's status; it can state on the log that the facts have moved and let the engine look. The claim is signed and durable, which a nudge outside the platform would not be.",
+  "type": "object",
+  "properties": {
+    "reportId": {
+      "type": "string",
+      "description": "The report to evaluate again.",
+      "minLength": 1
+    },
+    "requestedBy": {
+      "type": "string",
+      "description": "The organization asking. Events carry roles rather than organizations, so the document pins the organization.",
+      "minLength": 1
+    },
+    "reason": {
+      "type": "string",
+      "description": "Why the engine should look again, in the requester's own words.",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "reportId",
+    "requestedBy",
+    "reason"
+  ],
+  "additionalProperties": false
+}
