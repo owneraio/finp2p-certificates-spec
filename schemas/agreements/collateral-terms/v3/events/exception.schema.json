@@ -58,6 +58,11 @@
       "description": "Why the leg cannot complete, in the raiser's own words. Shown to the counterparty, who decides what to do about it.",
       "minLength": 1
     },
+    "raisedBy": {
+      "type": "string",
+      "description": "The organization raising it. Events carry roles rather than organizations, so the document pins the organization for readers and authority checks.",
+      "minLength": 1
+    },
     "details": {
       "type": "array",
       "description": "The legs this exception is about, one entry each. A failure spanning several legs is ONE exception rather than one per leg, so the counterparty answers the whole thing once. Absent when the exception is about the report as a whole — a deadline that can no longer be met names no leg.",
@@ -69,7 +74,8 @@
     "reportId",
     "status",
     "blame",
-    "reason"
+    "reason",
+    "raisedBy"
   ],
   "additionalProperties": false
 }
