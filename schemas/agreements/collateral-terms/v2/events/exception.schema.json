@@ -37,11 +37,6 @@
       "description": "Why the leg cannot complete, in the raiser's own words. Shown to the counterparty, who decides what to do about it.",
       "minLength": 1
     },
-    "raisedBy": {
-      "type": "string",
-      "description": "The organization raising it. Events carry roles rather than organizations, so the document pins the organization for readers and authority checks.",
-      "minLength": 1
-    },
     "executionPlanId": {
       "type": "string",
       "description": "The plan that failed, when there was one. Diagnostic: the raiser is the only party that can see its own execution records."
@@ -60,8 +55,7 @@
     "reportId",
     "status",
     "blame",
-    "reason",
-    "raisedBy"
+    "reason"
   ],
   "additionalProperties": false
 }

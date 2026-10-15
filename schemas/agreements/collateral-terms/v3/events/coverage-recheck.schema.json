@@ -10,11 +10,6 @@
       "description": "The report to evaluate again.",
       "minLength": 1
     },
-    "requestedBy": {
-      "type": "string",
-      "description": "The organization asking. Events carry roles rather than organizations, so the document pins the organization.",
-      "minLength": 1
-    },
     "reason": {
       "type": "string",
       "description": "Why the engine should look again, in the requester's own words.",
@@ -23,7 +18,6 @@
   },
   "required": [
     "reportId",
-    "requestedBy",
     "reason"
   ],
   "additionalProperties": false
