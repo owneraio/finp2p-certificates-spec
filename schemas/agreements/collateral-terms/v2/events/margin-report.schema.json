@@ -136,10 +136,6 @@
       "description": "Organization the collateral is owed to."
     },
     "receiverProfileId": { "type": "string" },
-    "reportCreatorId": {
-      "type": "string",
-      "description": "Organization that authored the report — the valuation engine."
-    },
     "nominalMarginAmount": {
       "type": "string",
       "description": "Total value called for, as a decimal string. Coverage is complete when the earmarked holdings reach it at currency precision."
