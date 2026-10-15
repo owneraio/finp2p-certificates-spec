@@ -24,11 +24,6 @@
         "minLength": 1
       }
     },
-    "requestedBy": {
-      "type": "string",
-      "description": "The organization asking. Events carry roles rather than organizations, so the document pins the organization.",
-      "minLength": 1
-    },
     "reason": {
       "type": "string",
       "description": "Why closing without collateral is appropriate — not a restatement of why the leg failed, which the exception already carries.",
@@ -39,7 +34,6 @@
     "manualResolveId",
     "reportId",
     "exceptionIds",
-    "requestedBy",
     "reason"
   ],
   "additionalProperties": false
