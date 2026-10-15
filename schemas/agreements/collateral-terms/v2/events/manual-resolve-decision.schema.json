@@ -31,11 +31,6 @@
         "minLength": 1
       }
     },
-    "decidedBy": {
-      "type": "string",
-      "description": "The organization answering. Events carry roles rather than organizations, so the document pins the organization.",
-      "minLength": 1
-    },
     "reason": {
       "type": "string",
       "description": "Required when refusing, so the requester can answer it. Optional on an acceptance."
@@ -44,8 +39,7 @@
   "required": [
     "reportId",
     "manualResolveId",
-    "status",
-    "decidedBy"
+    "status"
   ],
   "additionalProperties": false
 }
