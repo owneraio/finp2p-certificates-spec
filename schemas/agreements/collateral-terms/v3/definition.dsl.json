@@ -319,7 +319,7 @@
           "format": "json-schema"
         }
       },
-      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole == 'pledger' && agreement.events.allExistByIdAndType(event.referencedEventIds, 'vm-report')"
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver'] && agreement.events.allExistByIdAndType(event.referencedEventIds, 'vm-report')"
     },
     {
       "type": "attribution-proposal-approval",
@@ -355,7 +355,7 @@
           "format": "json-schema"
         }
       },
-      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole == 'pledger' && event.referencedEventIds.exists(id, agreement.events.existsByIdAndType(id, 'attribution-proposal-approval') && !agreement.events.isReferencedBy(id, 'attribution-completed'))"
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver'] && event.referencedEventIds.exists(id, agreement.events.existsByIdAndType(id, 'attribution-proposal-approval') && !agreement.events.isReferencedBy(id, 'attribution-completed'))"
     },
     {
       "type": "settlement-attribution",
