@@ -61,12 +61,8 @@
     "reason": {
       "type": "string",
       "description": "Free-text explanation for the round."
-    },
-    "by": {
-      "type": "string",
-      "description": "The emitting ORGANIZATION. Agreement events carry a role rather than an org, so authority checks and the read model rely on this field."
     }
   },
-  "required": ["reportId", "negotiationId", "kind", "round", "action", "by"],
+  "required": ["reportId", "negotiationId", "kind", "round", "action"],
   "additionalProperties": false
 }
