@@ -36,14 +36,6 @@
         "finalUnits": {
           "type": "string",
           "description": "Units after the haircut, as a decimal string."
-        },
-        "haircutApplyMethod": {
-          "type": "string",
-          "description": "How the haircut was applied when this line's valuation was calculated. reduce-from-price = the haircut was taken off the unit price, leaving the units unchanged; add-to-total = the haircut was covered by calling for more units. Recorded for display and audit only — no reader applies it, and readers must not treat this list as closed: further methods are expected and will extend it. Stated per line because each line carries its own valuation.",
-          "enum": [
-            "reduce-from-price",
-            "add-to-total"
-          ]
         }
       },
       "required": [
@@ -53,8 +45,7 @@
         "baseUnits",
         "finalUnitPrice",
         "finalValue",
-        "finalUnits",
-        "haircutApplyMethod"
+        "finalUnits"
       ],
       "additionalProperties": false
     },
