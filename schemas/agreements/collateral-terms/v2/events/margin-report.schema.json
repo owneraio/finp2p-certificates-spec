@@ -2,68 +2,9 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/events/margin-report.schema.json",
   "title": "Margin Report",
-  "description": "margin-report/v2 — the document a vm-report event carries. Authored by the valuation engine, it opens a report cycle by stating the obligation: how much collateral is called for and which assets may satisfy it. Every later status, attribution and negotiation event references this event.",
+  "description": "margin-report/v2 — the document a vm-report event carries. The valuation engine authors HOW MUCH must be transferred; it does not say which assets. Choosing the assets, and how much of each, belongs to the calculator role, whose output reaches the parties out of band and is committed by the posting party rather than by this document.",
   "type": "object",
   "definitions": {
-    "eligibleAssetMetadata": {
-      "type": "object",
-      "description": "The valuation for this asset, already calculated when the report was authored and recorded exactly as it was sent. The report builder derives none of it and checks none of it — not against haircutApplyMethod, not against the other fields. Every value is a decimal string; any rounding is the author's own.",
-      "properties": {
-        "appliedHaircut": {
-          "type": "string",
-          "description": "The haircut actually taken on this asset, as a decimal string, applied however haircutApplyMethod says it was applied."
-        },
-        "baseUnitPrice": {
-          "type": "string",
-          "description": "Unit price before the haircut, as a decimal string."
-        },
-        "baseValue": {
-          "type": "string",
-          "description": "Value of this asset's line before the haircut, as a decimal string."
-        },
-        "baseUnits": {
-          "type": "string",
-          "description": "Units of this asset before the haircut, as a decimal string."
-        },
-        "finalUnitPrice": {
-          "type": "string",
-          "description": "Unit price after the haircut, as a decimal string. Coverage values a holding at quantity × finalUnitPrice, so this is carried rather than divided out of finalValue."
-        },
-        "finalValue": {
-          "type": "string",
-          "description": "Value of this asset's line after the haircut, as a decimal string."
-        },
-        "finalUnits": {
-          "type": "string",
-          "description": "Units of this asset after the haircut, as a decimal string — and the amount transferred when this line is the one satisfied."
-        }
-      },
-      "required": [
-        "appliedHaircut",
-        "baseUnitPrice",
-        "baseValue",
-        "baseUnits",
-        "finalUnitPrice",
-        "finalValue",
-        "finalUnits"
-      ],
-      "additionalProperties": false
-    },
-    "eligibleAsset": {
-      "type": "object",
-      "description": "One asset that may satisfy this obligation. The name, ticker and identifier fields are serialized empty on purpose — every reading org overwrites them from its own asset registry.",
-      "properties": {
-        "assetIdType": { "type": "string" },
-        "assetId": { "type": "string", "minLength": 1 },
-        "name": { "type": "string" },
-        "ticker": { "type": "string" },
-        "assetIdentifierType": { "type": "string" },
-        "assetIdentifierValue": { "type": "string" },
-        "metadata": { "$ref": "#/definitions/eligibleAssetMetadata" }
-      },
-      "required": ["assetId", "metadata"],
-      "additionalProperties": false
-    },
     "recoveredAsset": {
       "type": "object",
       "description": "The exact posted position a substitution report returns to the pledger — the agreed thread's return leg. Substitution reports only.",
@@ -86,10 +27,6 @@
         "nominalAmount": {
           "type": "string",
           "description": "Value this line calls for, in the agreement's base currency, as a decimal string."
-        },
-        "eligibleAssets": {
-          "type": "array",
-          "items": { "$ref": "#/definitions/eligibleAsset" }
         },
         "recoveredAsset": { "$ref": "#/definitions/recoveredAsset" }
       },
@@ -162,13 +99,8 @@
       "type": "string",
       "description": "direct = the obligated side posts against the report as authored; negotiated = the lines are agreed through a negotiation thread first and are never auto-executed. Absent means derived.",
       "enum": ["direct", "negotiated"]
-    },
-    "haircutApplyMethod": {
-      "type": "string",
-      "description": "How the haircut was applied when the per-asset valuations were calculated. reduce-from-price = the haircut was taken off the unit price, leaving the units unchanged; add-to-total = the haircut was covered by calling for more units. Recorded for display and audit only — no reader applies it, and readers must not treat this list as closed: further methods are expected and will extend it.",
-      "enum": ["reduce-from-price", "add-to-total"]
     }
   },
-  "required": ["agreementId", "type", "nominalMarginAmount", "haircutApplyMethod", "actions"],
+  "required": ["agreementId", "type", "nominalMarginAmount", "actions"],
   "additionalProperties": false
 }
