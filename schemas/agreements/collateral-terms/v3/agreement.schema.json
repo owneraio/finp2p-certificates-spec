@@ -39,6 +39,14 @@
       "description": "The eligible collateral set. An empty or absent list means the agreement declares no eligibility constraint.",
       "items": { "$ref": "#/definitions/eligibleAsset" }
     },
+    "haircutApplyMethod": {
+      "type": "string",
+      "description": "How the haircuts this agreement declares are applied when a line is valued. reduce-from-price = the haircut is taken off the unit price, leaving the units unchanged; add-to-total = the haircut is covered by calling for more units. Stated once for the agreement, beside the haircuts it governs, rather than per report or per line: it is how the parties agreed to apply a discount, not a property of any one valuation. Recorded for display and audit only — no reader applies it, and readers must not treat this list as closed: further methods are expected and will extend it.",
+      "enum": [
+        "reduce-from-price",
+        "add-to-total"
+      ]
+    },
     "reportDeadline": {
       "type": "integer",
       "description": "The latest date any report on this agreement may run to, as a Unix timestamp in seconds. A report carries its own deadline and may not set one beyond this; the facade refuses it. Absent means the node's configured default applies."
