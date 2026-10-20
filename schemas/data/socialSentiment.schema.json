@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/data/socialSentiment.schema.json",
+  "title": "Social Sentiment",
+  "description": "A snapshot of social-intelligence observations for a single asset from a single producer (e.g. lunarcrush). The platform aggregates data items by (asset, dataType=socialSentiment, source); each subsequent record from the same source overwrites the producer's previous snapshot. Multi-producer aggregation falls out naturally — different producers contribute distinct (asset, dataType=socialSentiment, source) rows. A producer ships every metric it publishes for the asset in one snapshot via the `values` map keyed by semantic metric name, so consumers can look up a known metric across producers. All observations describe the trailing `window` (default 24h) ending at `timestamp`. Metrics are descriptive market-attention data, not recommendations.",
+  "type": "object",
+  "required": ["timestamp", "values"],
+  "properties": {
+    "timestamp": {
+      "type": "integer",
+      "description": "Producer timestamp at which the snapshot was emitted, epoch milliseconds. Used as the default for any value entry that omits its own `timestamp`."
+    },
+    "window": {
+      "type": "string",
+      "default": "24h",
+      "description": "Trailing observation window the metrics describe, ending at `timestamp`. ISO-8601-style duration shorthand: \"1h\", \"24h\", \"7d\", \"30d\"."
+    },
+    "topic": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "Producer-side topic or symbol the asset was resolved to (e.g. \"bitcoin\", \"$coin\"). Lets consumers audit the identifier mapping from ISIN or CAIP-19 to the producer's namespace."
+    },
+    "symbol": {
+      "type": "string",
+      "maxLength": 20,
+      "description": "Ticker or coin symbol at the producer (e.g. \"COIN\", \"BTC\")."
+    },
+    "methodology": {
+      "type": "string",
+      "format": "uri",
+      "description": "Link to the producer's published metric definitions and methodology."
+    },
+    "values": {
+      "type": "object",
+      "minProperties": 1,
+      "description": "Map of metricType → observation. Keys are semantic metric names so consumers can look up a known metric across producers. Expected vocabulary: \"sentiment\" (share of positive posts, 0–100 %), \"engagements\" (interactions on posts about the asset), \"mentions\" (posts about the asset), \"creators\" (unique accounts posting), \"socialDominance\" (share of all tracked social volume, %), \"marketDominance\" (share of total market capitalisation, %), \"galaxyScore\" (producer composite health score, 0–100), \"altRank\" (producer rank across assets; lower is stronger), \"topicRank\" (producer rank across all social topics), \"socialVolume\", \"newsMentions\". New keys may be added as use cases arise; consumers should ignore unrecognised keys.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["value"],
+        "properties": {
+          "value": {
+            "type": ["number", "string"],
+            "description": "Raw value, scaled by `decimal`. Strings are permitted to preserve precision for values that overflow IEEE 754 (~2^53)."
+          },
+          "decimal": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 30,
+            "default": 0,
+            "description": "Scale factor — human-readable value = value / 10^decimal. 0 for integer values (counts, ranks)."
+          },
+          "unit": {
+            "type": "string",
+            "enum": ["count", "percent", "score", "rank"],
+            "description": "Optional. How to read the value: a count of events, a percentage (0–100), a bounded score, or an ordinal rank."
+          },
+          "change": {
+            "type": "object",
+            "description": "Optional. Relative change versus the previous period of the same `window`, as a percentage (e.g. 27.03 for +27.03 %). Lets consumers act on momentum without keeping their own history.",
+            "properties": {
+              "previousPeriodPct": { "type": "number" }
+            }
+          },
+          "timestamp": {
+            "type": "integer",
+            "description": "Optional. Per-value timestamp in epoch milliseconds. Falls back to the snapshot's top-level `timestamp` if absent."
+          },
+          "signature": {
+            "type": "string",
+            "description": "Optional. DER-encoded signature over the observation, when the producer is a signing oracle. Passed through verbatim for downstream verification."
+          }
+        }
+      }
+    },
+    "networks": {
+      "type": "object",
+      "description": "Optional. Breakdown of `engagements` and `mentions` by social network for the same window. Keys are network names (\"x\", \"youtube\", \"reddit\", \"tiktok\", \"instagram\", \"news\").",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "engagements": { "type": "integer", "minimum": 0 },
+          "mentions": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "themes": {
+      "type": "array",
+      "description": "Optional. Producer-derived narrative themes for the window, each with its share of the conversation. Supportive and critical themes are distinguished by `stance` so a consumer can render them separately.",
+      "items": {
+        "type": "object",
+        "required": ["theme", "stance"],
+        "properties": {
+          "theme": { "type": "string", "maxLength": 120, "description": "Short theme label, e.g. \"FXRP collateral expands\"." },
+          "stance": { "type": "string", "enum": ["supportive", "critical", "neutral"] },
+          "weight": { "type": "number", "minimum": 0, "maximum": 100, "description": "Share of the window's conversation attributed to this theme, in percent." },
+          "summary": { "type": "string", "maxLength": 500, "description": "One or two sentence producer summary of the theme." }
+        }
+      }
+    },
+    "sampleSize": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Optional. Number of posts underlying the snapshot. Consumers should treat snapshots with a small sample as low confidence."
+    }
+  }
+}
