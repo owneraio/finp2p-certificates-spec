@@ -1,0 +1,214 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/data/assetCapabilities.schema.json",
+  "title": "Asset Capabilities",
+  "description": "Catalog of the on-chain contracts through which an asset can be issued, redeemed or swapped, grouped by execution-plan instruction. One document describes one asset and replaces that asset's whole capability list on ingest; to retire a contract, keep its entry and set its status to DEPRECATED. The router sets the entry's source and update time itself, so neither appears in the document. Enum values are the names used by the platform protocol definitions; amounts are decimal strings.",
+  "type": "object",
+  "required": ["capabilities"],
+  "additionalProperties": false,
+  "properties": {
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Capability groups, one per instruction.",
+      "items": { "$ref": "#/definitions/instructionCapabilities" }
+    }
+  },
+  "definitions": {
+    "amount": {
+      "type": "string",
+      "pattern": "^[0-9]+(\\.[0-9]+)?$",
+      "description": "Non-negative decimal amount written as a string, e.g. \"1000000\" or \"0.5\". No sign and no exponent."
+    },
+    "caip10Account": {
+      "type": "object",
+      "description": "CAIP-10 account: a chain-native address on a chain.",
+      "required": ["network", "address"],
+      "additionalProperties": false,
+      "properties": {
+        "network": {
+          "type": "string",
+          "description": "CAIP-2 chain identifier, e.g. \"eip155:1\"."
+        },
+        "address": {
+          "type": "string",
+          "description": "Chain-native account address."
+        }
+      }
+    },
+    "counterAsset": {
+      "type": "object",
+      "description": "CAIP-19 identifier of an asset the contract releases or accepts in exchange.",
+      "required": ["network", "standard", "tokenId"],
+      "additionalProperties": false,
+      "properties": {
+        "network": {
+          "type": "string",
+          "description": "CAIP-2 chain identifier of the asset, e.g. \"eip155:1\"."
+        },
+        "standard": {
+          "type": "string",
+          "description": "Token standard, e.g. \"erc20\"."
+        },
+        "tokenId": {
+          "type": "string",
+          "description": "Token identifier on that chain, e.g. the token contract address."
+        }
+      }
+    },
+    "rateLimit": {
+      "type": "object",
+      "description": "Maximum amount allowed within a rolling time window.",
+      "required": ["amount", "windowSeconds"],
+      "additionalProperties": false,
+      "properties": {
+        "amount": { "$ref": "#/definitions/amount" },
+        "windowSeconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Window length in seconds."
+        }
+      }
+    },
+    "accessGate": {
+      "type": "object",
+      "description": "Who may use the contract.",
+      "required": ["kind"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["NONE", "ALLOWLIST", "KYC_REGISTRY"],
+          "description": "NONE: open to anyone. ALLOWLIST: only accounts the contract has allowlisted. KYC_REGISTRY: only accounts registered in the KYC registry named by `registry`."
+        },
+        "registry": {
+          "$ref": "#/definitions/caip10Account",
+          "description": "Registry contract the gate consults. Set it when the registry is a separate contract."
+        }
+      }
+    },
+    "restrictions": {
+      "type": "object",
+      "description": "Static limits of the contract. They apply to both directions; live per-direction limits come from the precheck.",
+      "required": ["pricing", "gate"],
+      "additionalProperties": false,
+      "properties": {
+        "pricing": {
+          "type": "string",
+          "enum": ["FIXED_PAR", "NAV_ORACLE", "CONTINUOUS_ORACLE", "POOL"],
+          "description": "How the contract prices the exchange. FIXED_PAR: one-to-one. NAV_ORACLE: net asset value from an oracle. CONTINUOUS_ORACLE: continuously updated oracle price. POOL: liquidity-pool pricing."
+        },
+        "minAmount": {
+          "$ref": "#/definitions/amount",
+          "description": "Smallest amount the contract accepts per operation."
+        },
+        "maxAmount": {
+          "$ref": "#/definitions/amount",
+          "description": "Largest amount the contract accepts per operation."
+        },
+        "perInvestor": {
+          "$ref": "#/definitions/rateLimit",
+          "description": "Limit per investor within the window."
+        },
+        "global": {
+          "$ref": "#/definitions/rateLimit",
+          "description": "Limit across all investors within the window."
+        },
+        "gate": { "$ref": "#/definitions/accessGate" },
+        "offchainFallback": {
+          "type": "boolean",
+          "description": "True when the contract falls back to an off-chain redemption path (e.g. Superstate offchainRedeem). Absent means false."
+        }
+      }
+    },
+    "allowanceRequirement": {
+      "type": "object",
+      "description": "Token allowance the investor must grant before the contract can pull the asset.",
+      "additionalProperties": false,
+      "properties": {
+        "required": {
+          "type": "boolean",
+          "description": "Whether an allowance is required. Absent means required; only an explicit false removes the requirement."
+        },
+        "spender": {
+          "$ref": "#/definitions/caip10Account",
+          "description": "Account that receives the allowance. Set it only when it differs from the contract."
+        }
+      }
+    },
+    "requirements": {
+      "type": "object",
+      "description": "Preconditions for using the contract.",
+      "additionalProperties": false,
+      "properties": {
+        "allowance": { "$ref": "#/definitions/allowanceRequirement" }
+      }
+    },
+    "contractCapability": {
+      "type": "object",
+      "description": "One contract through which the asset can be used for the instruction. Identified by its network and address.",
+      "required": ["contract", "kind", "counterAssets", "restrictions", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "contract": {
+          "$ref": "#/definitions/caip10Account",
+          "description": "The contract. Its network must equal the asset's network."
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "erc20-asset-pull",
+            "circle-buidl-offramp",
+            "ondo-ousg-instant-manager",
+            "superstate-ustb",
+            "uniswap-v2",
+            "curve-stableswap"
+          ],
+          "description": "Ledger adapter integration the contract is driven through."
+        },
+        "counterAssets": {
+          "type": "array",
+          "description": "Assets the contract releases or accepts in exchange for the asset, e.g. USDC.",
+          "items": { "$ref": "#/definitions/counterAsset" }
+        },
+        "restrictions": { "$ref": "#/definitions/restrictions" },
+        "requires": { "$ref": "#/definitions/requirements" },
+        "status": {
+          "type": "string",
+          "enum": ["ACTIVE", "DEPRECATED"],
+          "description": "ACTIVE: usable by new intents. DEPRECATED: refused for new intents; plans already in flight finish."
+        }
+      }
+    },
+    "instructionCapabilities": {
+      "type": "object",
+      "description": "Contracts available for one instruction.",
+      "required": ["instruction", "contracts"],
+      "additionalProperties": false,
+      "properties": {
+        "instruction": {
+          "type": "string",
+          "enum": [
+            "INSTRUCTION_HOLD",
+            "INSTRUCTION_TRANSFER",
+            "INSTRUCTION_RELEASE",
+            "INSTRUCTION_AWAIT",
+            "INSTRUCTION_ISSUE",
+            "INSTRUCTION_REVERT_HOLD",
+            "INSTRUCTION_REDEEM",
+            "INSTRUCTION_MOVE",
+            "INSTRUCTION_SWAP"
+          ],
+          "description": "Execution-plan instruction the contracts serve, e.g. INSTRUCTION_SWAP."
+        },
+        "contracts": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Contracts listed under the instruction.",
+          "items": { "$ref": "#/definitions/contractCapability" }
+        }
+      }
+    }
+  }
+}
