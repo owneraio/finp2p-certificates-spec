@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/repo-trade.schema.json",
+  "title": "Repo Trade",
+  "description": "repo-trade/v1 \u2014 the document a trade-booked (venue) or trade-proposed (party, in-app) event carries: the affirmed economics of one repo trade. The event's own id is the trade's key; every later event about the trade cites it.",
+  "type": "object",
+  "properties": {
+    "tradeRef": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Venue or app reference of the trade."
+    },
+    "agreementVersion": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Agreement version whose terms the trade was booked under."
+    },
+    "purchasePrice": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "pattern": "^-?[0-9]+(\\.[0-9]+)?$",
+          "description": "Decimal string, never a float."
+        },
+        "assetId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "FinP2P asset id of the currency."
+        }
+      },
+      "required": [
+        "amount",
+        "assetId"
+      ],
+      "additionalProperties": false,
+      "description": "Leg 1: cash B pays A."
+    },
+    "repurchasePrice": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "pattern": "^-?[0-9]+(\\.[0-9]+)?$",
+          "description": "Decimal string, never a float."
+        },
+        "assetId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "FinP2P asset id of the currency."
+        }
+      },
+      "required": [
+        "amount",
+        "assetId"
+      ],
+      "additionalProperties": false,
+      "description": "Leg 2: cash A pays B at maturity."
+    },
+    "rate": {
+      "type": "string",
+      "pattern": "^-?[0-9]+(\\.[0-9]+)?$",
+      "description": "Repo rate as a decimal string (0.0425 = 4.25%)."
+    },
+    "openDate": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 calendar date (YYYY-MM-DD)."
+    },
+    "closeDate": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 calendar date (YYYY-MM-DD)."
+    },
+    "collateral": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "haircut": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Fraction (0.02 = 2%)."
+          }
+        },
+        "required": [
+          "assetId",
+          "haircut"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Eligible securities and haircuts for THIS trade; a subset of the agreement's eligible list."
+    }
+  },
+  "required": [
+    "tradeRef",
+    "agreementVersion",
+    "purchasePrice",
+    "repurchasePrice",
+    "rate",
+    "openDate",
+    "closeDate",
+    "collateral"
+  ],
+  "additionalProperties": false
+}

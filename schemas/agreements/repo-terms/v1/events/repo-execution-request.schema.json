@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/repo-execution-request.schema.json",
+  "title": "Repo Execution Request",
+  "description": "repo-execution-request/v1 \u2014 the document an execution-requested event carries. Once admitted the trade can no longer be cancelled; the executor then creates and executes the repo loan intent.",
+  "type": "object",
+  "properties": {
+    "executor": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Org id that will create and execute the intent (the venue, or B)."
+    }
+  },
+  "required": [
+    "executor"
+  ],
+  "additionalProperties": false
+}

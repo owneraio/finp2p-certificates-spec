@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/repo-note.schema.json",
+  "title": "Repo Note",
+  "description": "repo-note/v1 \u2014 the document default-notice, default-revocation, closeout-default and termination carry. All four are decided from the log by the guards (who emits, what is outstanding); the document is a free-text reason for the audit trail.",
+  "type": "object",
+  "properties": {
+    "reason": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}

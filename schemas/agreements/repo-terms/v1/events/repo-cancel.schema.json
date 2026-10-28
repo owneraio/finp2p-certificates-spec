@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/repo-cancel.schema.json",
+  "title": "Repo Cancellation",
+  "description": "repo-cancel/v1 \u2014 the document a trade-cancelled event carries. Admissible only before execution-requested; the guard decides, the reason is for the audit trail.",
+  "type": "object",
+  "properties": {
+    "reason": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}
