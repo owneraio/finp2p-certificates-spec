@@ -65,7 +65,7 @@
         "amount": { "$ref": "#/definitions/amount" },
         "windowSeconds": {
           "type": "integer",
-          "minimum": 0,
+          "minimum": 1,
           "maximum": 4294967295,
           "description": "Window length in seconds."
         }
@@ -170,6 +170,7 @@
         "counterAssets": {
           "type": "array",
           "description": "Assets the contract releases or accepts in exchange for the asset, e.g. USDC.",
+          "minItems": 1,
           "items": { "$ref": "#/definitions/counterAsset" }
         },
         "restrictions": { "$ref": "#/definitions/restrictions" },
