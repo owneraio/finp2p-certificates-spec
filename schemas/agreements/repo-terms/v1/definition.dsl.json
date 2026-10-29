@@ -40,12 +40,20 @@
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && event.emitterRole in agreement.events.outstandingRoles(t, ['trade-affirmed', 'trade-rejected'], ['pledger', 'receiver']))"
     },
     {
+      "type": "container-declared",
+      "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole in ['receiver', 'agent'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && agreement.events.outstandingRoles(t, 'trade-affirmed', ['pledger', 'receiver']).size() == 0 && !agreement.events.isReferencedBy(t, 'container-declared'))"
+    },
+    {
+      "type": "container-provisioned",
+      "guard": "agreement.businessState == 'active' && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(d, agreement.events.existsByIdAndType(d, 'container-declared') && !agreement.events.isReferencedBy(d, 'container-provisioned'))"
+    },
+    {
       "type": "basket-registered",
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole in ['receiver', 'agent'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && agreement.events.outstandingRoles(t, 'trade-affirmed', ['pledger', 'receiver']).size() == 0 && !agreement.events.isReferencedBy(t, 'basket-registered'))"
     },
     {
       "type": "vm-report",
-      "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole == 'valuation-engine' && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && agreement.events.isReferencedBy(t, 'basket-registered'))"
+      "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole == 'valuation-engine' && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && agreement.events.findReferrers(t, 'container-declared').allReferencedBy('container-provisioned'))"
     },
     {
       "type": "attribution-proposal",
@@ -85,7 +93,7 @@
     },
     {
       "type": "trade-collateralised",
-      "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole in ['receiver', 'agent'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && agreement.events.isReferencedBy(t, 'basket-registered') && !agreement.events.isReferencedBy(t, 'trade-collateralised') && agreement.events.findReferrers(t, 'vm-report').allReferencedBy('report-status-completed'))"
+      "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole in ['receiver', 'agent'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && agreement.events.findReferrers(t, 'container-declared').allReferencedBy('container-provisioned') && !agreement.events.isReferencedBy(t, 'trade-collateralised') && agreement.events.findReferrers(t, 'vm-report').allReferencedBy('report-status-completed'))"
     },
     {
       "type": "execution-requested",
@@ -113,7 +121,7 @@
     },
     {
       "type": "basket-closed",
-      "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole == 'receiver' && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(b, agreement.events.existsByIdAndType(b, 'basket-registered') && !agreement.events.isReferencedBy(b, 'basket-closed'))"
+      "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole == 'receiver' && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(b, agreement.events.allExistByIdAndType(b, ['basket-registered', 'container-declared']) && !agreement.events.isReferencedBy(b, 'basket-closed'))"
     },
     {
       "type": "default-notice",
@@ -129,7 +137,7 @@
     },
     {
       "type": "termination",
-      "guard": "(agreement.businessState == 'closingOut' || (agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')))) && event.emitterRole in ['pledger', 'receiver'] && event.referencedEventIds.size() == 0 && agreement.events.findByType(['trade-booked', 'trade-proposed']).allReferencedByOrAbsent(['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && agreement.events.findByType('basket-registered').allReferencedByOrAbsent('basket-closed')"
+      "guard": "(agreement.businessState == 'closingOut' || (agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')))) && event.emitterRole in ['pledger', 'receiver'] && event.referencedEventIds.size() == 0 && agreement.events.findByType(['trade-booked', 'trade-proposed']).allReferencedByOrAbsent(['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && agreement.events.findByType(['basket-registered', 'container-declared']).allReferencedByOrAbsent('basket-closed')"
     }
   ],
   "transitions": [

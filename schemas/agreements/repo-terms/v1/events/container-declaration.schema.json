@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/container-declaration.schema.json",
+  "title": "container-declaration/v1",
+  "description": "A container declared by event: the authored ContainerSpec (protojson) a container-declared event adds to the agreement's whitelist. The engine validates the spec itself; this document only pins the envelope.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["containerSpec"],
+  "properties": {
+    "containerSpec": {
+      "type": "object",
+      "required": ["key"],
+      "properties": {
+        "key": { "type": "string", "minLength": 1 },
+        "servesRoles": { "type": "array", "items": { "type": "string" } },
+        "provisionerRole": { "type": "string" },
+        "provisionerParty": { "type": "string" },
+        "boundParty": { "type": "string" },
+        "policyTemplate": { "type": "object" },
+        "eligibleAssets": { "type": "array", "items": { "type": "object" } }
+      }
+    }
+  }
+}
