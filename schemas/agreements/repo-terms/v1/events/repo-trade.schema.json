@@ -201,6 +201,16 @@
         "matchedAt"
       ],
       "additionalProperties": false
+    },
+    "settlementTime": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Epoch milliseconds the open leg settles at; the settlement plan is built from it. openDate is the calendar day for the record."
+    },
+    "maturityTime": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Epoch milliseconds the close leg runs at; closeDate is the calendar day for the record."
     }
   },
   "required": [
