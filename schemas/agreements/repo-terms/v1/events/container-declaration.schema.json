@@ -5,20 +5,54 @@
   "description": "A container declared by event: the authored ContainerSpec (protojson) a container-declared event adds to the agreement's whitelist. The engine validates the spec itself; this document only pins the envelope.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["containerSpec"],
+  "required": [
+    "containerSpec"
+  ],
   "properties": {
     "containerSpec": {
       "type": "object",
-      "required": ["key"],
+      "required": [
+        "key"
+      ],
       "properties": {
-        "key": { "type": "string", "minLength": 1 },
-        "servesRoles": { "type": "array", "items": { "type": "string" } },
-        "provisionerRole": { "type": "string" },
-        "provisionerParty": { "type": "string" },
-        "boundParty": { "type": "string" },
-        "policyTemplate": { "type": "object" },
-        "eligibleAssets": { "type": "array", "items": { "type": "object" } }
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "servesRoles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "provisionerRole": {
+          "type": "string"
+        },
+        "provisionerParty": {
+          "type": "string"
+        },
+        "boundParty": {
+          "type": "string"
+        },
+        "policyTemplate": {
+          "type": "object"
+        },
+        "eligibleAssets": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
       }
+    },
+    "collateralMode": {
+      "type": "string",
+      "enum": [
+        "lender-account",
+        "segregated",
+        "controlled"
+      ],
+      "description": "Where the collateral sits for the term: delivered into the receiver's account by the loan plan (lender-account), held on the pledger's account with the receiver as beneficiary (segregated), or moved into the trade's provisioned container (controlled, the basket shape)."
     }
   }
 }

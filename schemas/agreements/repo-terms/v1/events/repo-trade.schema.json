@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/repo-trade.schema.json",
   "title": "Repo Trade",
-  "description": "repo-trade/v1 \u2014 the document a trade-booked (venue) or trade-proposed (party, in-app) event carries: the affirmed economics of one repo trade. The event's own id is the trade's key; every later event about the trade cites it.",
+  "description": "repo-trade/v1 — the document a trade-booked (venue) or trade-proposed (party, in-app) event carries: the affirmed economics of one repo trade. The event's own id is the trade's key; every later event about the trade cites it.",
   "type": "object",
   "properties": {
     "tradeRef": {
@@ -87,6 +87,11 @@
             "minimum": 0,
             "maximum": 1,
             "description": "Fraction (0.02 = 2%)."
+          },
+          "quantity": {
+            "type": "string",
+            "pattern": "^[0-9]+(\\.[0-9]+)?$",
+            "description": "Units of this line the trade pledges; absent when the booking carries the category only."
           }
         },
         "required": [
@@ -96,6 +101,106 @@
         "additionalProperties": false
       },
       "description": "Eligible securities and haircuts for THIS trade; a subset of the agreement's eligible list."
+    },
+    "collateralMode": {
+      "type": "string",
+      "enum": [
+        "lender-account",
+        "segregated",
+        "controlled"
+      ],
+      "description": "Where the collateral sits for the term: delivered into the receiver's account by the loan plan (lender-account), held on the pledger's account with the receiver as beneficiary (segregated), or moved into the trade's provisioned container (controlled, the basket shape)."
+    },
+    "settlement": {
+      "type": "object",
+      "description": "The cash accounts the legs settle on; what the settlement plan is built from.",
+      "properties": {
+        "pledgerAccount": {
+          "type": "object",
+          "properties": {
+            "finId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "orgId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "custodianOrgId": {
+              "type": "string"
+            },
+            "assetId": {
+              "type": "string",
+              "minLength": 1,
+              "description": "FinP2P asset id of the cash this side settles on."
+            }
+          },
+          "required": [
+            "finId",
+            "orgId",
+            "assetId"
+          ],
+          "additionalProperties": false
+        },
+        "receiverAccount": {
+          "type": "object",
+          "properties": {
+            "finId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "orgId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "custodianOrgId": {
+              "type": "string"
+            },
+            "assetId": {
+              "type": "string",
+              "minLength": 1,
+              "description": "FinP2P asset id of the cash this side settles on."
+            }
+          },
+          "required": [
+            "finId",
+            "orgId",
+            "assetId"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "pledgerAccount",
+        "receiverAccount"
+      ],
+      "additionalProperties": false
+    },
+    "venueAffirmation": {
+      "type": "object",
+      "description": "A venue booking's record of the match: documentary, the guards do not read it.",
+      "properties": {
+        "venueTradeId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "matchedAt": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Epoch milliseconds."
+        },
+        "pledgerRef": {
+          "type": "string"
+        },
+        "receiverRef": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "venueTradeId",
+        "matchedAt"
+      ],
+      "additionalProperties": false
     }
   },
   "required": [
