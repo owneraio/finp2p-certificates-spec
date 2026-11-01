@@ -107,9 +107,10 @@
       "enum": [
         "lender-account",
         "segregated",
-        "controlled"
+        "controlled",
+        "external"
       ],
-      "description": "Where the collateral sits for the term: delivered into the receiver's account by the loan plan (lender-account), held on the pledger's account with the receiver as beneficiary (segregated), or moved into the trade's provisioned container (controlled, the basket shape)."
+      "description": "Where the collateral sits for the term: delivered into the receiver's account by the loan plan (lender-account), held on the pledger's account with the receiver as beneficiary (segregated), or moved into the trade's provisioned container (controlled, the basket shape). An external pair (external) holds the collateral on the calculation agent's own platform: FinP2P sees only the basket token it registers and the cash."
     },
     "settlement": {
       "type": "object",
