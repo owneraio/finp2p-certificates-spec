@@ -125,7 +125,7 @@
     },
     {
       "type": "basket-closed",
-      "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole in ['receiver', 'agent'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(b, agreement.events.allExistByIdAndType(b, ['basket-registered', 'container-declared']) && !agreement.events.isReferencedBy(b, 'basket-closed'))"
+      "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole in ['receiver', 'agent', 'pledger'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(b, agreement.events.allExistByIdAndType(b, ['basket-registered', 'container-declared']) && (event.emitterRole != 'pledger' || agreement.events.existsByIdAndType(b, 'basket-registered')) && !agreement.events.isReferencedBy(b, 'basket-closed'))"
     },
     {
       "type": "default-notice",
