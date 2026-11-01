@@ -20,7 +20,8 @@
     "venue",
     "agent",
     "valuation-engine",
-    "approver"
+    "approver",
+    "calculation-agent"
   ],
   "allowedEvents": [
     {
@@ -57,7 +58,7 @@
     },
     {
       "type": "attribution-proposal",
-      "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole in ['pledger', 'receiver'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(r, agreement.events.existsByIdAndType(r, 'vm-report') && !agreement.events.isReferencedBy(r, ['report-status-completed', 'report-status-incomplete', 'report-status-rejected']))"
+      "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole in ['pledger', 'receiver', 'calculation-agent'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(r, agreement.events.existsByIdAndType(r, 'vm-report') && !agreement.events.isReferencedBy(r, ['report-status-completed', 'report-status-incomplete', 'report-status-rejected']))"
     },
     {
       "type": "attribution-proposal-approval",
