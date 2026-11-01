@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/events/margin-report.schema.json",
+  "title": "Margin Report",
+  "description": "margin-report/v2 — the document a vm-report event carries. The valuation engine authors HOW MUCH must be transferred; it does not say which assets. Which assets, how much of each and at what valuation are proposed by the pledging side in an attribution-proposal and taken or refused by the approver, so the prices this report once carried now sit on the list the approver signed. The engine still owns the verdict: it values what settled against that approved list.",
+  "type": "object",
+  "definitions": {
+    "recoveredAsset": {
+      "type": "object",
+      "description": "The exact posted position a substitution report returns to the pledger — the agreed thread's return leg. Substitution reports only.",
+      "properties": {
+        "assetId": { "type": "string", "minLength": 1 },
+        "quantity": { "type": "string", "minLength": 1 }
+      },
+      "required": ["assetId", "quantity"],
+      "additionalProperties": false
+    },
+    "action": {
+      "type": "object",
+      "description": "One obligation of the report. `keep` lines are declaratory and are excluded from coverage evaluation; only transfer-like lines are evaluable.",
+      "properties": {
+        "action": {
+          "type": "string",
+          "description": "keep = the position stays where it is and never counts toward coverage; transfer = collateral must move; swap = a substitution leg.",
+          "enum": ["keep", "transfer", "swap"]
+        },
+        "nominalAmount": {
+          "type": "string",
+          "description": "Value this line calls for, in the agreement's base currency, as a decimal string."
+        },
+        "recoveredAsset": { "$ref": "#/definitions/recoveredAsset" }
+      },
+      "required": ["action", "nominalAmount"],
+      "additionalProperties": false
+    },
+    "settlement": {
+      "type": "object",
+      "description": "The optional settlement leg — the asset the receiver pays back in.",
+      "properties": {
+        "assetId": { "type": "string", "minLength": 1 }
+      },
+      "required": ["assetId"],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "reportId": {
+      "type": "string",
+      "description": "Report identifier. When absent the authoring event's own id is used as the fallback."
+    },
+    "agreementId": {
+      "type": "string",
+      "description": "Resource id of the agreement this report belongs to."
+    },
+    "type": {
+      "type": "string",
+      "description": "initial = the opening margin call; variation = a periodic re-margin; substitution = a swap of posted collateral; closeout_default = the terminating call.",
+      "enum": ["initial", "variation", "substitution", "closeout_default"]
+    },
+    "status": {
+      "type": "string",
+      "description": "Always `new` on the authoring event. The report's live status is overlaid by report-status events, never by rewriting this field.",
+      "enum": ["new"]
+    },
+    "currency": { "type": "string", "description": "Currency of the nominal amounts." },
+    "senderOrgId": {
+      "type": "string",
+      "description": "Organization that owes the collateral on this report."
+    },
+    "senderProfileId": { "type": "string" },
+    "receiverOrgId": {
+      "type": "string",
+      "description": "Organization the collateral is owed to."
+    },
+    "receiverProfileId": { "type": "string" },
+    "nominalMarginAmount": {
+      "type": "string",
+      "description": "Total value called for, as a decimal string. Coverage is complete when the earmarked holdings reach it at currency precision."
+    },
+    "deadline": {
+      "type": "integer",
+      "description": "The date this report must be covered by, as a Unix timestamp in seconds. Past it and still uncovered, the report is settled incomplete. May not exceed the agreement's reportDeadline. Absent means the node's configured default, measured from the report's own creation."
+    },
+    "actions": {
+      "type": "array",
+      "description": "The obligations. A report whose only actions are `keep` has no evaluable obligation at all: dispositions are its whole lifecycle.",
+      "items": { "$ref": "#/definitions/action" }
+    },
+    "settlement": { "$ref": "#/definitions/settlement" },
+    "containerKey": {
+      "type": "string",
+      "description": "Which declared container this report draws on. Absent on pre-multi-container reports, where a single-container agreement is unambiguous."
+    },
+    "calledParty": {
+      "type": "string",
+      "description": "The party being called, when the agreement binds more than one candidate."
+    },
+    "fulfillmentMode": {
+      "type": "string",
+      "description": "direct = the obligated side posts against the report as authored; negotiated = the lines are agreed through a negotiation thread first and are never auto-executed. Absent means derived.",
+      "enum": ["direct", "negotiated"]
+    }
+  },
+  "required": ["agreementId", "type", "nominalMarginAmount", "actions"],
+  "additionalProperties": false
+}
