@@ -122,29 +122,6 @@
         }
       }
     },
-    "allowanceRequirement": {
-      "type": "object",
-      "description": "Token allowance the investor must grant before the contract can pull the asset.",
-      "additionalProperties": false,
-      "properties": {
-        "required": {
-          "type": "boolean",
-          "description": "Whether an allowance is required. Absent means required; only an explicit false removes the requirement."
-        },
-        "spender": {
-          "$ref": "#/definitions/caip10Account",
-          "description": "Account that receives the allowance. Set it only when it differs from the contract."
-        }
-      }
-    },
-    "requirements": {
-      "type": "object",
-      "description": "Preconditions for using the contract.",
-      "additionalProperties": false,
-      "properties": {
-        "allowance": { "$ref": "#/definitions/allowanceRequirement" }
-      }
-    },
     "contractCapability": {
       "type": "object",
       "description": "One contract through which the asset can be used for the instruction. Identified by its network and address.",
@@ -174,7 +151,6 @@
           "items": { "$ref": "#/definitions/counterAsset" }
         },
         "restrictions": { "$ref": "#/definitions/restrictions" },
-        "requires": { "$ref": "#/definitions/requirements" },
         "status": {
           "type": "string",
           "enum": ["ACTIVE", "DEPRECATED"],
