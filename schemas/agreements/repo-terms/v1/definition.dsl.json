@@ -116,6 +116,10 @@
       "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole in ['pledger', 'receiver', 'venue'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && !agreement.events.isReferencedBy(t, 'execution-requested'))"
     },
     {
+      "type": "trade-blocked",
+      "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole in ['pledger', 'receiver', 'venue'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']))"
+    },
+    {
       "type": "recovery-attribution",
       "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole in ['pledger', 'receiver'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && agreement.events.isReferencedBy(t, ['trade-settled', 'trade-cancelled']))"
     },
