@@ -90,7 +90,7 @@
     },
     "restrictions": {
       "type": "object",
-      "description": "Static limits of the contract. They apply to both directions; live per-direction limits come from the precheck.",
+      "description": "Static limits of the contract. They apply to both directions.",
       "required": ["pricing", "gate"],
       "additionalProperties": false,
       "properties": {
