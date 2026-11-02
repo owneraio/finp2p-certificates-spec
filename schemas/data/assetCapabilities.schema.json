@@ -56,49 +56,11 @@
         }
       }
     },
-    "rateLimit": {
-      "type": "object",
-      "description": "Maximum amount allowed within a rolling time window.",
-      "required": ["amount", "windowSeconds"],
-      "additionalProperties": false,
-      "properties": {
-        "amount": { "$ref": "#/definitions/amount" },
-        "windowSeconds": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 4294967295,
-          "description": "Window length in seconds."
-        }
-      }
-    },
-    "accessGate": {
-      "type": "object",
-      "description": "Who may use the contract.",
-      "required": ["kind"],
-      "additionalProperties": false,
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": ["NONE", "ALLOWLIST", "KYC_REGISTRY"],
-          "description": "NONE: open to anyone. ALLOWLIST: only accounts the contract has allowlisted. KYC_REGISTRY: only accounts registered in the KYC registry named by `registry`."
-        },
-        "registry": {
-          "$ref": "#/definitions/caip10Account",
-          "description": "Registry contract the gate consults. Set it when the registry is a separate contract."
-        }
-      }
-    },
     "restrictions": {
       "type": "object",
-      "description": "Static limits of the contract. They apply to both directions.",
-      "required": ["pricing", "gate"],
+      "description": "Bounds on the amount of the leg the investor gives. They apply to both directions.",
       "additionalProperties": false,
       "properties": {
-        "pricing": {
-          "type": "string",
-          "enum": ["FIXED_PAR", "NAV_ORACLE", "CONTINUOUS_ORACLE", "POOL"],
-          "description": "How the contract prices the exchange. FIXED_PAR: one-to-one. NAV_ORACLE: net asset value from an oracle. CONTINUOUS_ORACLE: continuously updated oracle price. POOL: liquidity-pool pricing."
-        },
         "minAmount": {
           "$ref": "#/definitions/amount",
           "description": "Smallest amount the contract accepts per operation."
@@ -106,26 +68,13 @@
         "maxAmount": {
           "$ref": "#/definitions/amount",
           "description": "Largest amount the contract accepts per operation."
-        },
-        "perInvestor": {
-          "$ref": "#/definitions/rateLimit",
-          "description": "Limit per investor within the window."
-        },
-        "global": {
-          "$ref": "#/definitions/rateLimit",
-          "description": "Limit across all investors within the window."
-        },
-        "gate": { "$ref": "#/definitions/accessGate" },
-        "offchainFallback": {
-          "type": "boolean",
-          "description": "True when the contract falls back to an off-chain redemption path (e.g. Superstate offchainRedeem). Absent means false."
         }
       }
     },
     "contractCapability": {
       "type": "object",
       "description": "One contract through which the asset can be used for the instruction. Identified by its network and address.",
-      "required": ["contract", "kind", "counterAssets", "restrictions", "status"],
+      "required": ["contract", "kind", "counterAssets", "status"],
       "additionalProperties": false,
       "properties": {
         "contract": {
