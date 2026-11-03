@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/data/assetCapabilities.schema.json",
+  "title": "Asset Capabilities",
+  "description": "Catalog of the on-chain contracts through which an asset can be issued, redeemed or swapped, grouped by execution-plan instruction. One document describes one asset and replaces that asset's whole capability list on ingest; to retire a contract, keep its entry and set its status to DEPRECATED. The router sets the entry's source and update time itself, so neither appears in the document. Enum values are the names used by the platform protocol definitions; amounts are decimal strings.",
+  "type": "object",
+  "required": ["capabilities"],
+  "additionalProperties": false,
+  "properties": {
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Capability groups, one per instruction.",
+      "items": { "$ref": "#/definitions/instructionCapabilities" }
+    }
+  },
+  "definitions": {
+    "amount": {
+      "type": "string",
+      "pattern": "^[0-9]+(\\.[0-9]+)?$",
+      "description": "Non-negative decimal amount written as a string, e.g. \"1000000\" or \"0.5\". No sign and no exponent."
+    },
+    "caip10Account": {
+      "type": "object",
+      "description": "CAIP-10 account: a chain-native address on a chain.",
+      "required": ["network", "address"],
+      "additionalProperties": false,
+      "properties": {
+        "network": {
+          "type": "string",
+          "description": "CAIP-2 chain identifier, e.g. \"eip155:1\"."
+        },
+        "address": {
+          "type": "string",
+          "description": "Chain-native account address."
+        }
+      }
+    },
+    "restrictions": {
+      "type": "object",
+      "description": "Bounds on the amount of the leg the investor gives. They apply to both directions.",
+      "additionalProperties": false,
+      "properties": {
+        "minAmount": {
+          "$ref": "#/definitions/amount",
+          "description": "Smallest amount the contract accepts per operation."
+        },
+        "maxAmount": {
+          "$ref": "#/definitions/amount",
+          "description": "Largest amount the contract accepts per operation."
+        }
+      }
+    },
+    "allowance": {
+      "type": "object",
+      "description": "How the investor's allowance to the contract may be granted. Absent when the contract needs no allowance.",
+      "required": ["modes"],
+      "additionalProperties": false,
+      "properties": {
+        "modes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "Ways the allowance may be granted. The ledger adapter must support every mode listed. AUTHORIZE is a grant made before the swap through the AUTHORIZE instruction, PERMIT a signed EIP-2612 permit.",
+          "items": { "type": "string", "enum": ["AUTHORIZE", "PERMIT"] }
+        }
+      }
+    },
+    "contractCapability": {
+      "type": "object",
+      "description": "One contract through which the asset can be used for the instruction. Identified by its network and address.",
+      "required": ["contract", "kind", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "contract": {
+          "$ref": "#/definitions/caip10Account",
+          "description": "The contract. Its network must equal the asset's network."
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "erc20-asset-pull",
+            "circle-buidl-offramp",
+            "ondo-ousg-instant-manager",
+            "superstate-ustb",
+            "uniswap-v2",
+            "curve-stableswap"
+          ],
+          "description": "Ledger adapter integration the contract is driven through."
+        },
+        "restrictions": { "$ref": "#/definitions/restrictions" },
+        "allowance": { "$ref": "#/definitions/allowance" },
+        "status": {
+          "type": "string",
+          "enum": ["ACTIVE", "DEPRECATED"],
+          "description": "ACTIVE: usable by new intents. DEPRECATED: refused for new intents; plans already in flight finish."
+        }
+      }
+    },
+    "instructionCapabilities": {
+      "type": "object",
+      "description": "Contracts available for one instruction.",
+      "required": ["instruction", "contracts"],
+      "additionalProperties": false,
+      "properties": {
+        "instruction": {
+          "type": "string",
+          "enum": [
+            "INSTRUCTION_HOLD",
+            "INSTRUCTION_TRANSFER",
+            "INSTRUCTION_RELEASE",
+            "INSTRUCTION_AWAIT",
+            "INSTRUCTION_ISSUE",
+            "INSTRUCTION_REVERT_HOLD",
+            "INSTRUCTION_REDEEM",
+            "INSTRUCTION_MOVE",
+            "INSTRUCTION_SWAP"
+          ],
+          "description": "Execution-plan instruction the contracts serve, e.g. INSTRUCTION_SWAP."
+        },
+        "contracts": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Contracts listed under the instruction.",
+          "items": { "$ref": "#/definitions/contractCapability" }
+        }
+      }
+    }
+  }
+}
