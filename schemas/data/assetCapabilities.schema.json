@@ -61,7 +61,7 @@
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "description": "Ways the allowance may be granted; any one the ledger adapter also supports is enough. AUTHORIZE is a grant made before the swap through the AUTHORIZE instruction, PERMIT a signed EIP-2612 permit.",
+          "description": "Ways the allowance may be granted. The ledger adapter must support every mode listed. AUTHORIZE is a grant made before the swap through the AUTHORIZE instruction, PERMIT a signed EIP-2612 permit.",
           "items": { "type": "string", "enum": ["AUTHORIZE", "PERMIT"] }
         }
       }
