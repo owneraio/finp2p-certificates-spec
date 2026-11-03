@@ -51,8 +51,8 @@
         },
         "allowanceModes": {
           "type": "array",
-          "description": "Ways the investor may grant the allowance the contract pulls with; any one is enough. APPROVE is a separate ERC-20 approve, PERMIT a signed EIP-2612 permit. Absent or empty when the contract needs no allowance.",
-          "items": { "type": "string", "enum": ["APPROVE", "PERMIT"] }
+          "description": "Ways the investor may grant the allowance the contract pulls with; any one is enough. AUTHORIZE is a grant made before the swap through the AUTHORIZE instruction, PERMIT a signed EIP-2612 permit. Absent or empty when the contract needs no allowance.",
+          "items": { "type": "string", "enum": ["AUTHORIZE", "PERMIT"] }
         }
       }
     },
