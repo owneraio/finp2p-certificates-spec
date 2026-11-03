@@ -36,26 +36,6 @@
         }
       }
     },
-    "counterAsset": {
-      "type": "object",
-      "description": "CAIP-19 identifier of an asset the contract releases or accepts in exchange.",
-      "required": ["network", "standard", "tokenId"],
-      "additionalProperties": false,
-      "properties": {
-        "network": {
-          "type": "string",
-          "description": "CAIP-2 chain identifier of the asset, e.g. \"eip155:1\"."
-        },
-        "standard": {
-          "type": "string",
-          "description": "Token standard, e.g. \"erc20\"."
-        },
-        "tokenId": {
-          "type": "string",
-          "description": "Token identifier on that chain, e.g. the token contract address."
-        }
-      }
-    },
     "restrictions": {
       "type": "object",
       "description": "Bounds on the amount of the leg the investor gives. They apply to both directions.",
@@ -74,7 +54,7 @@
     "contractCapability": {
       "type": "object",
       "description": "One contract through which the asset can be used for the instruction. Identified by its network and address.",
-      "required": ["contract", "kind", "counterAssets", "status"],
+      "required": ["contract", "kind", "status"],
       "additionalProperties": false,
       "properties": {
         "contract": {
@@ -92,12 +72,6 @@
             "curve-stableswap"
           ],
           "description": "Ledger adapter integration the contract is driven through."
-        },
-        "counterAssets": {
-          "type": "array",
-          "description": "Assets the contract releases or accepts in exchange for the asset, e.g. USDC.",
-          "minItems": 1,
-          "items": { "$ref": "#/definitions/counterAsset" }
         },
         "restrictions": { "$ref": "#/definitions/restrictions" },
         "status": {
