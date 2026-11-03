@@ -38,7 +38,7 @@
     },
     "restrictions": {
       "type": "object",
-      "description": "Bounds on the amount of the leg the investor gives, and how the investor's allowance to the contract may be granted. They apply to both directions.",
+      "description": "Bounds on the amount of the leg the investor gives. They apply to both directions.",
       "additionalProperties": false,
       "properties": {
         "minAmount": {
@@ -48,10 +48,20 @@
         "maxAmount": {
           "$ref": "#/definitions/amount",
           "description": "Largest amount the contract accepts per operation."
-        },
-        "allowanceModes": {
+        }
+      }
+    },
+    "allowance": {
+      "type": "object",
+      "description": "How the investor's allowance to the contract may be granted. Absent when the contract needs no allowance.",
+      "required": ["modes"],
+      "additionalProperties": false,
+      "properties": {
+        "modes": {
           "type": "array",
-          "description": "Ways the investor may grant the allowance the contract pulls with; any one is enough. AUTHORIZE is a grant made before the swap through the AUTHORIZE instruction, PERMIT a signed EIP-2612 permit. Absent or empty when the contract needs no allowance.",
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "Ways the allowance may be granted; any one the ledger adapter also supports is enough. AUTHORIZE is a grant made before the swap through the AUTHORIZE instruction, PERMIT a signed EIP-2612 permit.",
           "items": { "type": "string", "enum": ["AUTHORIZE", "PERMIT"] }
         }
       }
@@ -79,6 +89,7 @@
           "description": "Ledger adapter integration the contract is driven through."
         },
         "restrictions": { "$ref": "#/definitions/restrictions" },
+        "allowance": { "$ref": "#/definitions/allowance" },
         "status": {
           "type": "string",
           "enum": ["ACTIVE", "DEPRECATED"],
