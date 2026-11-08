@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/data/capabilities.schema.json",
+  "title": "Capabilities",
+  "description": "A data provider's report of what an asset is meant to support on its ledger, keyed by the FinP2P asset id (identifierType ResourceId). It carries the same list shape as the ledger adapter's capability list. The router keeps only what both the adapter and every report list: a report can narrow the adapter's list, never add to it. Only instruction and contract address are read.",
+  "type": "object",
+  "required": ["capabilities"],
+  "properties": {
+    "capabilities": {
+      "type": "array",
+      "description": "The instructions the asset supports. An empty array means the asset supports nothing.",
+      "items": {
+        "type": "object",
+        "required": ["instruction"],
+        "properties": {
+          "instruction": {
+            "type": "string",
+            "pattern": "^INSTRUCTION_[A-Z_]+$",
+            "description": "Instruction capability id, e.g. INSTRUCTION_TRANSFER. INSTRUCTION_AWAIT and INSTRUCTION_UNSPECIFIED are rejected by the router."
+          },
+          "contracts": {
+            "type": "array",
+            "description": "Contract addresses the instruction may use. Omit or leave empty to keep all the adapter's contracts for the instruction.",
+            "items": {
+              "type": "object",
+              "required": ["address"],
+              "properties": {
+                "address": { "type": "string", "minLength": 1 },
+                "name": { "type": "string" },
+                "description": { "type": "string" },
+                "restrictions": {
+                  "type": "object",
+                  "properties": {
+                    "minAmount": { "type": "string" },
+                    "maxAmount": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
