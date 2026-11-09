@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/note.schema.json",
+  "title": "Note",
+  "description": "note/v1: the document termination and trade-blocked carry. The guards decide both from the log; the document is a free-text reason for the audit trail, and on trade-blocked also the step a router could not take.",
+  "type": "object",
+  "properties": {
+    "reason": {
+      "type": "string"
+    },
+    "step": {
+      "type": "string",
+      "description": "On trade-blocked: the step the router could not take (the reactor's step name)."
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}

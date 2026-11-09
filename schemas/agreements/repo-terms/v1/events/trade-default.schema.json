@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/repo-default.schema.json",
-  "title": "Repo Trade Default",
-  "description": "repo-default/v1 \u2014 the document a trade-defaulted event carries: the close-out amount B claims on the defaulted trade.",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/trade-default.schema.json",
+  "title": "Trade Default",
+  "description": "trade-default/v1: the document a trade-defaulted event carries, the close-out amount B claims on the defaulted trade.",
   "type": "object",
   "properties": {
     "closeOutAmount": {

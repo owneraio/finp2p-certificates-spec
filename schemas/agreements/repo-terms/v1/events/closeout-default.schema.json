@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/closeout-default.schema.json",
+  "title": "Closeout Default",
+  "description": "closeout-default/v1: the document a closeout-default event carries. The party that gave the pending notice closes the pair out; the reason is for the audit trail.",
+  "type": "object",
+  "properties": {
+    "reason": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}

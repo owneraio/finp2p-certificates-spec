@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/repo-basket.schema.json",
-  "title": "Repo Basket",
-  "description": "repo-basket/v1 \u2014 the document a basket-registered event carries. The basket is created FOR the trade the event cites: a DTCC collateral account plus the quantity-1 FinP2P basket asset in front of it, with the trade's dates and parties fixed at creation (design 3.4).",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/external-basket.schema.json",
+  "title": "External Basket",
+  "description": "external-basket/v1: the document a basket-registered event carries. The basket is created FOR the trade the event cites: a DTCC collateral account plus the quantity-1 FinP2P basket asset in front of it, with the trade's dates and parties fixed at creation (design 3.4).",
   "type": "object",
   "properties": {
     "basketKey": {

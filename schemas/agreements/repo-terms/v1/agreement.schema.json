@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/agreement.schema.json",
   "title": "Repo Terms",
-  "description": "repo-terms/v1 — the terms document carried in Agreement.terms for a per-pair repo agreement, base64 on the wire and identified by Agreement.termsType. Co-signed contract zone: fixed at proposal. Per-trade economics live on each trade-booked / trade-proposed event, not here.",
+  "description": "repo-terms/v1: the terms document carried in Agreement.terms for a per-pair repo agreement, base64 on the wire and identified by Agreement.termsType. Co-signed contract zone: fixed at proposal. Per-trade economics live on each trade-booked / trade-proposed event, not here.",
   "type": "object",
   "properties": {
     "borrower": {
@@ -20,7 +20,7 @@
       "minLength": 1,
       "description": "Optional. Informational only: the pair does not lock its trades to one cash asset. Each trade names its cash on its purchase and repurchase prices, and the receiver affirms it per trade."
     },
-    "eligible": {
+    "eligibleAssets": {
       "type": "array",
       "minItems": 1,
       "items": {
@@ -83,7 +83,7 @@
   "required": [
     "borrower",
     "lender",
-    "eligible",
+    "eligibleAssets",
     "haircutConvention"
   ],
   "additionalProperties": false

@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/repo-trade.schema.json",
-  "title": "Repo Trade",
-  "description": "repo-trade/v1 — the document a trade-booked (venue) or trade-proposed (party, in-app) event carries: the affirmed economics of one repo trade. The event's own id is the trade's key; every later event about the trade cites it.",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/trade.schema.json",
+  "title": "Trade",
+  "description": "trade/v1: the document a trade-booked (venue) or trade-proposed (party, in-app) event carries, the affirmed economics of one repo trade. The event's own id is the trade's key; every later event about the trade cites it.",
   "type": "object",
   "properties": {
     "tradeRef": {
@@ -100,7 +100,7 @@
         ],
         "additionalProperties": false
       },
-      "description": "Eligible securities and haircuts for THIS trade; a subset of the agreement's eligible list."
+      "description": "Eligible securities and haircuts for THIS trade; a subset of the agreement's eligibleAssets."
     },
     "collateralMode": {
       "type": "string",
