@@ -55,7 +55,7 @@
       "fromStates": [
         "reportProcessing"
       ],
-      "guard": "agreement.events.outstandingTargets('vm-report', ['report-status-resolved', 'report-status-rejected'], ['pledger', 'receiver']).size() == 0"
+      "guard": "agreement.events.outstandingTargets('vm-report', ['report-status-resolved', 'report-status-rejected'], ['pledger', 'receiver']).size() == 0 && agreement.events.findByType('report-status-rejected').allReferencedByOrAbsent('manual-resolve-accepted') && agreement.events.findByType('exception').allReferencedByOrAbsent('manual-resolve-accepted')"
     },
     {
       "event": "report-status-rejected",
@@ -63,7 +63,7 @@
       "fromStates": [
         "reportProcessing"
       ],
-      "guard": "agreement.events.outstandingTargets('vm-report', ['report-status-resolved', 'report-status-rejected'], ['pledger', 'receiver']).size() == 0"
+      "guard": "agreement.events.outstandingTargets('vm-report', ['report-status-resolved', 'report-status-rejected'], ['pledger', 'receiver']).size() == 0 && agreement.events.findByType('report-status-rejected').allReferencedByOrAbsent('manual-resolve-accepted') && agreement.events.findByType('exception').allReferencedByOrAbsent('manual-resolve-accepted')"
     },
     {
       "event": "closeout",
@@ -79,6 +79,14 @@
         "active",
         "reportProcessing"
       ]
+    },
+    {
+      "event": "manual-resolve-accepted",
+      "toState": "active",
+      "fromStates": [
+        "reportProcessing"
+      ],
+      "guard": "agreement.events.outstandingTargets('vm-report', ['report-status-resolved', 'report-status-rejected'], ['pledger', 'receiver']).size() == 0 && agreement.events.findByType('report-status-rejected').allReferencedByOrAbsent('manual-resolve-accepted') && agreement.events.findByType('exception').allReferencedByOrAbsent('manual-resolve-accepted')"
     }
   ],
   "allowedEvents": [
