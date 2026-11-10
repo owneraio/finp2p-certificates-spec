@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/demo/default-notice.event.schema.json",
+  "title": "Default Notice",
+  "description": "default-notice/v2 — the document a default-notice event carries. Asserted by the non-defaulting side's role (whichever of pledger/receiver the account policy names as the asserter of its container's 'default' condition — see the policy templates) to activate the unilateral seizure authorization on the OTHER side's container, independent of whether the agreement itself is later interrupted by closeout-default. Sticky in the event log until a matching default-revocation from the same role.\n\nThe document is informational: the definition's guard asks only who is emitting and when.",
+  "type": "object",
+  "properties": {
+    "conditionName": {
+      "type": "string",
+      "description": "The account policy condition this notice activates — 'default' for every container the facade provisions today."
+    },
+    "reason": {
+      "type": "string",
+      "description": "What triggered the assertion, e.g. a missed margin call. Free text for the audit trail."
+    }
+  },
+  "required": ["conditionName"],
+  "additionalProperties": false
+}
