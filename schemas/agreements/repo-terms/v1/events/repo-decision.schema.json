@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/repo-decision.schema.json",
+  "title": "Repo Decision",
+  "description": "repo-decision/v1 \u2014 the document a trade-affirmed or trade-rejected event carries. Which it is lives on the event type, so the guards can read it; the document is an audit note.",
+  "type": "object",
+  "properties": {
+    "reason": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}

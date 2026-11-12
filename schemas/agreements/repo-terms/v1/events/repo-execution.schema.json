@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/repo-execution.schema.json",
+  "title": "Repo Execution",
+  "description": "repo-execution/v1 \u2014 the document an execution-started event carries: the link from the trade to the orchestration plan that settles it. The legs are tracked by the plan, not by the agreement (design 3.3).",
+  "type": "object",
+  "properties": {
+    "intentId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "orchestrationPlanId": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "intentId",
+    "orchestrationPlanId"
+  ],
+  "additionalProperties": false
+}

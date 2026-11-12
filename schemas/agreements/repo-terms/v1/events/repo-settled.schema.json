@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/repo-settled.schema.json",
+  "title": "Repo Settled",
+  "description": "repo-settled/v1 \u2014 the document a trade-settled event carries, emitted by B's app after it checked the plan completed leg 2.",
+  "type": "object",
+  "properties": {
+    "orchestrationPlanId": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "orchestrationPlanId"
+  ],
+  "additionalProperties": false
+}
