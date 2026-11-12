@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/default-revocation.schema.json",
+  "title": "Default Revocation",
+  "description": "default-revocation/v1: the document a default-revocation event carries. Only the party that gave the pending notice may revoke it, which the guard checks; the reason is for the audit trail.",
+  "type": "object",
+  "properties": {
+    "reason": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}
