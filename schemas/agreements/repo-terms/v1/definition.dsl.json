@@ -147,6 +147,10 @@
     {
       "type": "termination",
       "guard": "(agreement.businessState == 'closingOut' || (agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')))) && event.emitterRole in ['pledger', 'receiver'] && event.referencedEventIds.size() == 0 && agreement.events.findByType(['trade-booked', 'trade-proposed']).allReferencedByOrAbsent(['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && agreement.events.findByType(['basket-registered', 'container-declared']).allReferencedByOrAbsent('basket-closed')"
+    },
+    {
+      "type": "venue-verified",
+      "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole == 'venue' && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(e, agreement.events.allExistByIdAndType(e, ['basket-registered', 'trade-collateralised', 'execution-started', 'trade-settled']) && !agreement.events.isReferencedBy(e, 'venue-verified'))"
     }
   ],
   "transitions": [
