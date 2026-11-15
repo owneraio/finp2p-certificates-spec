@@ -11,6 +11,39 @@
     "step": {
       "type": "string",
       "description": "On trade-blocked: the step the router could not take (the reactor's step name)."
+    },
+    "code": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "On trade-blocked: a stable code for the reason, for machines to match (settlement-time-passed: the receiver refuses a late trade before allocation, and the booker may withdraw it)."
+    },
+    "collateralAccount": {
+      "type": "object",
+      "description": "On trade-blocked: what the collateral account reported when the collateral platform refused the pledger's deposit (the ratio it fell short at), when the platform answered one.",
+      "properties": {
+        "status": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The account's status as the platform reported it (e.g. ACTIVE)."
+        },
+        "ratio": {
+          "type": "string",
+          "pattern": "^-?[0-9]+(\\.[0-9]+)?$",
+          "description": "Collateral value over liability, after haircuts, as the platform computed it, as a decimal string."
+        },
+        "txHashes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "The transactions that counted the collateral to the borrower."
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false
     }
   },
   "required": [],

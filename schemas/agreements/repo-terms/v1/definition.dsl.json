@@ -41,6 +41,10 @@
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.existsByIdAndType(t, 'trade-proposed') && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && event.emitterRole in agreement.events.outstandingRoles(t, ['trade-affirmed', 'trade-rejected'], ['pledger', 'receiver']))"
     },
     {
+      "type": "collateral-account-requested",
+      "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole in ['venue', 'pledger', 'receiver'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && (agreement.events.existsByIdAndType(t, 'trade-booked') || agreement.events.outstandingRoles(t, 'trade-affirmed', ['pledger', 'receiver']).size() == 0) && !agreement.events.isReferencedBy(t, ['collateral-account-requested', 'container-declared', 'basket-registered']))"
+    },
+    {
       "type": "container-declared",
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole in ['receiver', 'agent'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && (agreement.events.existsByIdAndType(t, 'trade-booked') || agreement.events.outstandingRoles(t, 'trade-affirmed', ['pledger', 'receiver']).size() == 0) && !agreement.events.isReferencedBy(t, 'container-declared'))"
     },

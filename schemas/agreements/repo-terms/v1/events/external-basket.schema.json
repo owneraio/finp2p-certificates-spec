@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/external-basket.schema.json",
   "title": "External Basket",
-  "description": "external-basket/v1: the document a basket-registered event carries. The basket is created FOR the trade the event cites: a DTCC collateral account plus the quantity-1 FinP2P basket asset in front of it, with the trade's dates and parties fixed at creation (design 3.4).",
+  "description": "external-basket/v1: the document a basket-registered event carries. The basket is created FOR the trade the event cites: a platform's collateral account plus the quantity-1 FinP2P basket asset in front of it, with the trade's dates and parties fixed at creation (design 3.4).",
   "type": "object",
   "properties": {
     "basketKey": {
@@ -13,12 +13,12 @@
     "chainId": {
       "type": "string",
       "minLength": 1,
-      "description": "CAIP-2 chain id of the DTCC collateral account."
+      "description": "CAIP-2 chain id of the platform's collateral account."
     },
     "account": {
       "type": "string",
       "minLength": 1,
-      "description": "DTCC collateral account address."
+      "description": "The platform's collateral account address."
     },
     "basketAssetId": {
       "type": "string",

@@ -8,17 +8,22 @@
     "borrower": {
       "type": "string",
       "minLength": 1,
-      "description": "Party id of the cash borrower (pledger role, A)."
+      "description": "The cash borrower (pledger role, A): the borrowing investor's finId, or the org id of the pledger. Every trade's pledger account must match it, by finId when this is a finId, by org when it is an org id; a trade whose accounts disagree is refused."
     },
     "lender": {
       "type": "string",
       "minLength": 1,
-      "description": "Party id of the cash lender (receiver role, B; the agreement owner)."
+      "description": "The cash lender (receiver role, B; the agreement owner): the lending investor's finId, or the org id of the receiver. Every trade's receiver account must match it, as for borrower."
     },
     "cashAssetId": {
       "type": "string",
       "minLength": 1,
       "description": "Optional. Informational only: the pair does not lock its trades to one cash asset. Each trade names its cash on its purchase and repurchase prices, and the receiver affirms it per trade."
+    },
+    "cashCurrency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$",
+      "description": "ISO 4217 code of the cash the pair settles in, consented with the terms. A venue checks a booking's currency against it, since it may not see the cash asset itself."
     },
     "eligibleAssets": {
       "type": "array",
@@ -78,6 +83,107 @@
         "external"
       ],
       "description": "The pair's default collateral mode; a booking may override it. lender-account when absent. An external pair (external) holds the collateral on the calculation agent's own platform: FinP2P sees only the basket token it registers and the cash."
+    },
+    "collateralPlatform": {
+      "type": "object",
+      "description": "The platform that holds a controlled trade's collateral, when it is not the container's own ledger accounts. Needs a bound agent and collateralMode controlled.",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "ledger",
+        "network",
+        "standard"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "account"
+          ],
+          "description": "account: the agent's router creates a collateral account on the platform for each trade, by creating the trade's basket asset under the platform's ledger standard; the pledger moves the lines into that account, and its deposit on the basket asset has the platform count them."
+        },
+        "ledger": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The ledger name the agent's router binds the platform's chain under (the basket asset's ledgerAssetBinding.ledger)."
+        },
+        "network": {
+          "type": "string",
+          "minLength": 1,
+          "description": "CAIP-2 chain of the platform's collateral accounts, e.g. eip155:2026041002."
+        },
+        "standard": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The ledger standard the basket asset is created under: the one the platform's plugin is installed as on the agent's ledger adapter (e.g. a collateral platform plugin's account standard)."
+        },
+        "currency": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the account is valued in; the cash asset's denomination code when absent."
+        },
+        "parameters": {
+          "type": "object",
+          "description": "The platform plugin's own settings (e.g. a grace buffer, price and haircut contexts), passed through untouched when the account is created."
+        }
+      }
+    },
+    "addressBook": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The parties' wallet addresses per chain, shared on the agreement like their finIds and consented with the terms. Address book data only: no custody is implied. A platform pair's agent reads the borrower's wallet as the collateral account's owner, and the lender's facade puts its own wallet on the loan's basket leg.",
+      "properties": {
+        "borrower": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "network",
+              "address"
+            ],
+            "properties": {
+              "network": {
+                "type": "string",
+                "pattern": "^[-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32}$",
+                "description": "CAIP-2 chain id, e.g. eip155:2026."
+              },
+              "address": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "description": "The party's wallet address on that chain."
+              }
+            }
+          },
+          "description": "The borrower's (pledger's) wallets."
+        },
+        "lender": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "network",
+              "address"
+            ],
+            "properties": {
+              "network": {
+                "type": "string",
+                "pattern": "^[-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32}$",
+                "description": "CAIP-2 chain id, e.g. eip155:2026."
+              },
+              "address": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "description": "The party's wallet address on that chain."
+              }
+            }
+          },
+          "description": "The lender's (receiver's) wallets."
+        }
+      }
     }
   },
   "required": [

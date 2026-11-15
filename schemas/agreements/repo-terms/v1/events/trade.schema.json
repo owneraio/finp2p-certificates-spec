@@ -92,6 +92,11 @@
             "type": "string",
             "pattern": "^[0-9]+(\\.[0-9]+)?$",
             "description": "Units of this line the trade pledges; absent when the booking carries the category only."
+          },
+          "price": {
+            "type": "string",
+            "pattern": "^[0-9]+(\\.[0-9]+)?$",
+            "description": "Unit price of this line before the haircut, in the trade's cash currency, as the venue booked it. Required on every line of a platform booking with several lines, which are valued per line."
           }
         },
         "required": [

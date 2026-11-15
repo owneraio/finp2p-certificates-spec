@@ -53,6 +53,88 @@
         "controlled"
       ],
       "description": "Where the collateral sits for the term: delivered into the receiver's account by the loan plan (lender-account), held on the pledger's account with the receiver as beneficiary (segregated), or moved into the trade's provisioned container (controlled, the basket shape)."
+    },
+    "collateralPlatform": {
+      "type": "object",
+      "description": "The pair's collateral platform, carried on the declaration so every router reads it off the log.",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "ledger",
+        "network",
+        "standard"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "account"
+          ],
+          "description": "account: the agent's router creates a collateral account on the platform for each trade, by creating the trade's basket asset under the platform's ledger standard; the pledger moves the lines into that account, and its deposit on the basket asset has the platform count them."
+        },
+        "ledger": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The ledger name the agent's router binds the platform's chain under (the basket asset's ledgerAssetBinding.ledger)."
+        },
+        "network": {
+          "type": "string",
+          "minLength": 1,
+          "description": "CAIP-2 chain of the platform's collateral accounts, e.g. eip155:2026041002."
+        },
+        "standard": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The ledger standard the basket asset is created under: the one the platform's plugin is installed as on the agent's ledger adapter (e.g. a collateral platform plugin's account standard)."
+        },
+        "currency": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the account is valued in; the cash asset's denomination code when absent."
+        },
+        "parameters": {
+          "type": "object",
+          "description": "The platform plugin's own settings (e.g. a grace buffer, price and haircut contexts), passed through untouched when the account is created."
+        }
+      }
+    },
+    "networkAccount": {
+      "type": "object",
+      "description": "An account that already exists on the lines' network for the container to be bound to (protojson NetworkAccount): a platform trade's collateral account, which the agent's basket asset created. The router binds the container finId to it for each line on that network instead of having the line's adapter create a wallet.",
+      "additionalProperties": false,
+      "required": [
+        "caip10"
+      ],
+      "properties": {
+        "caip10": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "network",
+            "address"
+          ],
+          "properties": {
+            "network": {
+              "type": "string",
+              "minLength": 1,
+              "description": "CAIP-2 chain, e.g. eip155:2026."
+            },
+            "address": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The account's address on the chain: the platform's collateral account."
+            }
+          }
+        }
+      }
+    },
+    "eligibleAssetIds": {
+      "type": "array",
+      "description": "The trade's line asset ids, in the order of the container spec's eligible assets: the assets the router provisions the container for, by id.",
+      "items": {
+        "type": "string",
+        "pattern": "^[^:]+:102:[^:]+$"
+      }
     }
   }
 }

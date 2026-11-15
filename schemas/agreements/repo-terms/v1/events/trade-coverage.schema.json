@@ -8,7 +8,7 @@
     "accountStatus": {
       "type": "string",
       "minLength": 1,
-      "description": "DTCC account status at declaration, e.g. HEALTHY."
+      "description": "The account's status at declaration, as the container or the collateral platform reports it."
     },
     "holdings": {
       "type": "array",
