@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/trade-settlement.schema.json",
   "title": "Trade Settlement",
-  "description": "trade-settlement/v1: the document a trade-settled event carries, emitted by B's app after it checked the plan completed leg 2.",
+  "description": "trade-settlement/v1: the document a trade-settled event carries, emitted by the receiver once the execution's last leg has run.",
   "type": "object",
   "properties": {
     "orchestrationPlanId": {

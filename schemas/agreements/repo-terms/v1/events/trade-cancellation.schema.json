@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/trade-cancellation.schema.json",
   "title": "Trade Cancellation",
-  "description": "trade-cancellation/v1: the document a trade-cancelled event carries. Admissible only before execution-requested; the guard decides, the reason is for the audit trail.",
+  "description": "trade-cancellation/v1: the document a trade-cancelled event carries. Admissible only until the receiver approves an execution proposal; the guard decides, the reason is for the audit trail.",
   "type": "object",
   "properties": {
     "reason": {

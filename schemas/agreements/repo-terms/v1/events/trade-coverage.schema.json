@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/trade-coverage.schema.json",
   "title": "Trade Coverage",
-  "description": "trade-coverage/v1: the document a trade-collateralised event carries, what the basket's account reported when B declared the trade covered.",
+  "description": "trade-coverage/v1: the document a trade-collateralised event carries, what the basket's account reported when the collateral was in place. The pledger declares it once its lines are in the container or the platform account; a calculation agent declares it for an external basket.",
   "type": "object",
   "properties": {
     "accountStatus": {

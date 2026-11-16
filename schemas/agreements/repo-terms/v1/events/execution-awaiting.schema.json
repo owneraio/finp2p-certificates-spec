@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/execution-awaiting.schema.json",
+  "title": "Execution Awaiting",
+  "description": "execution-awaiting/v1: the document an execution-awaiting event carries. The execution is waiting between two legs: inside one plan (a loan intent's own await) or between two plans the facade times (two DvPs).",
+  "type": "object",
+  "properties": {
+    "until": {
+      "type": "integer",
+      "description": "When the wait ends, epoch ms."
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "plan",
+        "facade"
+      ],
+      "description": "Who holds the wait: the plan's await instruction, or the facade between two plans."
+    },
+    "orchestrationPlanId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The plan holding the wait, when source is plan."
+    }
+  },
+  "required": [
+    "until",
+    "source"
+  ],
+  "additionalProperties": false
+}

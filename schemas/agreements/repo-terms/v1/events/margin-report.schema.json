@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/events/margin-report.schema.json",
   "title": "Margin Report",
-  "description": "margin-report/v2 — the document a vm-report event carries. The valuation engine authors HOW MUCH must be transferred; it does not say which assets. Which assets, how much of each and at what valuation are proposed by the pledging side in an attribution-proposal and taken or refused by the approver, so the prices this report once carried now sit on the list the approver signed. The engine still owns the verdict: it values what settled against that approved list.",
+  "description": "margin-report/v2: the document a vm-report event carries, a margin call during a trade's term. The valuation engine authors how much must be transferred; it does not say which assets. No flow raises one when a trade opens: the opening collateral comes from the booked trade.",
   "type": "object",
   "definitions": {
     "recoveredAsset": {

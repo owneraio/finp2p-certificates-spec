@@ -72,7 +72,7 @@
     "cutOffMinutes": {
       "type": "integer",
       "minimum": 0,
-      "description": "Minutes before leg 1 after which a trade may no longer be cancelled in the apps; the guard's own cut-off is execution-requested."
+      "description": "Minutes before leg 1 after which a trade may no longer be cancelled in the apps; the guard's own cut-off is the receiver's approval of an execution proposal."
     },
     "collateralMode": {
       "type": "string",

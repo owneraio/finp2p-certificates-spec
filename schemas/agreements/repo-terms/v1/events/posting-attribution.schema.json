@@ -2,12 +2,12 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/events/posting-attribution.schema.json",
   "title": "Posting Attribution",
-  "description": "posting-attribution/v2 — the document a posting-attribution event carries. It joins a live ledger movement to the report it satisfies, which is what lets every organization's earmark fold attribute the movement to the right obligation from the shared log alone. Declared by the posting party as part of the same operation that started the transfer, so it can exist before the transfer settles.",
+  "description": "posting-attribution/v3: the document posting-attribution and recovery-attribution events carry. It joins a live ledger movement to the trade it serves: a line moved into the trade's container before the trade is collateralised, or returned after it ended. Declared by the posting party as part of the same operation that started the transfer, so it can exist before the transfer settles.",
   "type": "object",
   "properties": {
     "reportId": {
       "type": "string",
-      "description": "The report this posting satisfies.",
+      "description": "The report the posting satisfies, when it answers a margin call during the term. Absent on a posting for the trade's opening collateral.",
       "minLength": 1
     },
     "executionPlanId": {
@@ -33,6 +33,6 @@
       "enum": ["settlement"]
     }
   },
-  "required": ["reportId", "executionPlanId"],
+  "required": ["executionPlanId"],
   "additionalProperties": false
 }

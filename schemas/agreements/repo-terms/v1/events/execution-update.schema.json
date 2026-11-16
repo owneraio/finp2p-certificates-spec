@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/execution-update.schema.json",
+  "title": "Execution Update",
+  "description": "execution-update/v1: the document an execution-updated event carries. One per leg of the trade's execution, whatever runs it: the first and second leg of one loan intent today, or two DvPs later. A guard cannot read the leg, so the facade decides who reports which leg and when the last one has run.",
+  "type": "object",
+  "properties": {
+    "orchestrationPlanId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The plan the leg ran in."
+    },
+    "leg": {
+      "type": "object",
+      "properties": {
+        "index": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "This leg, starting at 1."
+        },
+        "of": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "How many legs the execution has."
+        }
+      },
+      "required": [
+        "index",
+        "of"
+      ],
+      "additionalProperties": false
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "failed"
+      ]
+    },
+    "completedAt": {
+      "type": "integer",
+      "description": "When the leg finished, epoch ms."
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quantity": {
+            "type": "string",
+            "pattern": "^-?[0-9]+(\\.[0-9]+)?$"
+          }
+        },
+        "required": [
+          "assetId",
+          "quantity"
+        ],
+        "additionalProperties": false
+      },
+      "description": "What the leg moved, when the reporter knows it."
+    }
+  },
+  "required": [
+    "orchestrationPlanId",
+    "leg",
+    "status"
+  ],
+  "additionalProperties": false
+}
