@@ -151,7 +151,7 @@
           "format": "json-schema"
         }
       },
-      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in agreement.events.outstandingRoles(event.referencedEventIds, ['manual-resolve', 'manual-resolve-accepted', 'manual-resolve-rejected'], ['pledger', 'receiver'])"
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in agreement.events.outstandingRoles(event.referencedEventIds, ['manual-resolve', 'manual-resolve-accepted'], ['pledger', 'receiver'])"
     },
     {
       "type": "manual-resolve-rejected",
@@ -163,7 +163,7 @@
           "format": "json-schema"
         }
       },
-      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in agreement.events.outstandingRoles(event.referencedEventIds, ['manual-resolve', 'manual-resolve-accepted', 'manual-resolve-rejected'], ['pledger', 'receiver'])"
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in agreement.events.outstandingRoles(event.referencedEventIds, ['manual-resolve', 'manual-resolve-accepted'], ['pledger', 'receiver'])"
     },
     {
       "type": "coverage-recheck",
