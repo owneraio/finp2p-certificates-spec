@@ -1,6 +1,14 @@
 {
   "name": "repo-v1",
   "version": "1.0.0",
+  "schema": {
+    "name": "repo-terms",
+    "version": "1",
+    "documentReference": {
+      "key": "repo-terms/v1",
+      "format": "json-schema"
+    }
+  },
   "states": {
     "onCreation": "proposed",
     "onApproval": "active",
@@ -26,130 +34,418 @@
   "allowedEvents": [
     {
       "type": "trade-booked",
+      "description": "The venue books a trade it has already matched and affirmed off the pair. The trade opens affirmed, and the event's id becomes the trade's key that every later event about it cites.",
+      "schema": {
+        "name": "trade",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole == 'venue' && event.referencedEventIds.size() == 0"
     },
     {
       "type": "trade-proposed",
+      "description": "A pledger or receiver proposes a trade in-app. It opens the trade, but nothing else may happen to it until both parties affirm it or one rejects it.",
+      "schema": {
+        "name": "trade",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole in ['pledger', 'receiver'] && event.referencedEventIds.size() == 0"
     },
     {
       "type": "trade-affirmed",
+      "description": "A party affirms a proposed trade. Once every party has affirmed, the trade can be collateralised.",
+      "schema": {
+        "name": "trade-decision",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.existsByIdAndType(t, 'trade-proposed') && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && event.emitterRole in agreement.events.outstandingRoles(t, ['trade-affirmed', 'trade-rejected'], ['pledger', 'receiver']))"
     },
     {
       "type": "trade-rejected",
+      "description": "A party rejects a proposed trade, which ends it before anything is posted.",
+      "schema": {
+        "name": "trade-decision",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.existsByIdAndType(t, 'trade-proposed') && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && event.emitterRole in agreement.events.outstandingRoles(t, ['trade-affirmed', 'trade-rejected'], ['pledger', 'receiver']))"
     },
     {
       "type": "collateral-account-requested",
+      "description": "A party or the venue asks for the collateral account an affirmed trade will be held in, once per trade.",
+      "schema": {
+        "name": "collateral-account-request",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole in ['venue', 'pledger', 'receiver'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && (agreement.events.existsByIdAndType(t, 'trade-booked') || agreement.events.outstandingRoles(t, 'trade-affirmed', ['pledger', 'receiver']).size() == 0) && !agreement.events.isReferencedBy(t, ['collateral-account-requested', 'container-declared', 'basket-registered']))"
     },
     {
       "type": "container-declared",
+      "description": "The receiver or agent declares the container that holds an affirmed trade's collateral. The router provisions it from this declaration.",
+      "schema": {
+        "name": "container-declaration",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole in ['receiver', 'agent'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && (agreement.events.existsByIdAndType(t, 'trade-booked') || agreement.events.outstandingRoles(t, 'trade-affirmed', ['pledger', 'receiver']).size() == 0) && !agreement.events.isReferencedBy(t, 'container-declared'))"
     },
     {
       "type": "container-provisioned",
+      "description": "The router reports that a declared container exists and is ready to hold collateral. Routers emit it, applications never do.",
+      "schema": {
+        "name": "container-info",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(d, agreement.events.existsByIdAndType(d, 'container-declared') && !agreement.events.isReferencedBy(d, 'container-provisioned'))"
     },
     {
       "type": "basket-registered",
+      "description": "Registers the basket created for an affirmed trade: a platform's collateral account and the quantity-1 basket asset in front of it.",
+      "schema": {
+        "name": "external-basket",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole in ['pledger', 'receiver', 'agent', 'calculation-agent'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && (agreement.events.existsByIdAndType(t, 'trade-booked') || agreement.events.outstandingRoles(t, 'trade-affirmed', ['pledger', 'receiver']).size() == 0) && !agreement.events.isReferencedBy(t, 'basket-registered'))"
     },
     {
       "type": "vm-report",
+      "description": "The valuation engine states how much collateral the trade needs, and in which direction. It does not say which assets.",
+      "schema": {
+        "name": "margin-report",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole == 'valuation-engine' && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && agreement.events.findReferrers(t, 'container-declared').allReferencedBy('container-provisioned'))"
     },
     {
       "type": "attribution-proposal",
+      "description": "The pledging side proposes which assets, in what quantities and at what valuation, will satisfy a report.",
+      "schema": {
+        "name": "attribution-proposal",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole in ['pledger', 'receiver', 'calculation-agent'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(r, agreement.events.existsByIdAndType(r, 'vm-report') && !agreement.events.isReferencedBy(r, ['report-status-completed', 'report-status-incomplete', 'report-status-rejected']))"
     },
     {
       "type": "attribution-proposal-approval",
+      "description": "The approver accepts a proposed list as a whole. Postings may then be made against it.",
+      "schema": {
+        "name": "attribution-proposal-approval",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole == 'approver' && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(p, agreement.events.existsByIdAndType(p, 'attribution-proposal') && !agreement.events.isReferencedBy(p, ['attribution-proposal-approval', 'attribution-proposal-rejection']))"
     },
     {
       "type": "attribution-proposal-rejection",
+      "description": "The approver refuses a proposed list as a whole. The pledging side answers with a new proposal.",
+      "schema": {
+        "name": "attribution-proposal-rejection",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole == 'approver' && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(p, agreement.events.existsByIdAndType(p, 'attribution-proposal') && !agreement.events.isReferencedBy(p, ['attribution-proposal-approval', 'attribution-proposal-rejection']))"
     },
     {
       "type": "posting-attribution",
+      "description": "Ties one ledger movement to the approved list it delivers against, so every organization can attribute it from the log.",
+      "schema": {
+        "name": "posting-attribution",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole in ['pledger', 'receiver'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(a, agreement.events.existsByIdAndType(a, 'attribution-proposal-approval') && !agreement.events.isReferencedBy(a, 'attribution-completed'))"
     },
     {
       "type": "attribution-completed",
+      "description": "The pledging side declares it has posted everything it will post against an approved list, which ends the round.",
+      "schema": {
+        "name": "attribution-completed",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole in ['pledger', 'receiver'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(a, agreement.events.existsByIdAndType(a, 'attribution-proposal-approval') && !agreement.events.isReferencedBy(a, 'attribution-completed'))"
     },
     {
       "type": "report-status-completed",
+      "description": "The valuation engine finds a report fully met by what was posted.",
+      "schema": {
+        "name": "report-status",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole == 'valuation-engine' && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(r, agreement.events.existsByIdAndType(r, 'vm-report') && !agreement.events.isReferencedBy(r, ['report-status-completed', 'report-status-incomplete', 'report-status-rejected']))"
     },
     {
       "type": "report-status-incomplete",
+      "description": "The valuation engine finds a report not fully met by what was posted.",
+      "schema": {
+        "name": "report-status",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole == 'valuation-engine' && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(r, agreement.events.existsByIdAndType(r, 'vm-report') && !agreement.events.isReferencedBy(r, ['report-status-completed', 'report-status-incomplete', 'report-status-rejected']))"
     },
     {
       "type": "report-status-resolved",
+      "description": "A party accepts how a report ended, once per party.",
+      "schema": {
+        "name": "report-status",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(r, agreement.events.existsByIdAndType(r, 'vm-report') && event.emitterRole in agreement.events.outstandingRoles(r, ['report-status-resolved', 'report-status-rejected'], ['pledger', 'receiver']))"
     },
     {
       "type": "report-status-rejected",
+      "description": "A party disputes how a report ended.",
+      "schema": {
+        "name": "report-status",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(r, agreement.events.existsByIdAndType(r, 'vm-report') && event.emitterRole in agreement.events.outstandingRoles(r, ['report-status-resolved', 'report-status-rejected'], ['pledger', 'receiver']))"
     },
     {
       "type": "trade-collateralised",
+      "description": "Declares the trade fully covered by its collateral, so it can move to execution.",
+      "schema": {
+        "name": "trade-coverage",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole in ['receiver', 'agent', 'calculation-agent'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && !agreement.events.isReferencedBy(t, 'trade-collateralised') && ((agreement.events.findReferrers(t, 'container-declared').allReferencedBy('container-provisioned') && agreement.events.findReferrers(t, 'vm-report').allReferencedBy('report-status-completed')) || (event.emitterRole == 'calculation-agent' && agreement.events.isReferencedBy(t, 'basket-registered'))))"
     },
     {
       "type": "execution-requested",
+      "description": "The receiver or venue asks for a collateralised trade to be executed. From here the trade can no longer be cancelled.",
+      "schema": {
+        "name": "execution-request",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole in ['receiver', 'venue'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && agreement.events.isReferencedBy(t, 'trade-collateralised') && !agreement.events.isReferencedBy(t, 'execution-requested'))"
     },
     {
       "type": "execution-started",
+      "description": "Links the trade to the orchestration plan that settles it. The plan tracks the legs, not the agreement.",
+      "schema": {
+        "name": "execution",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole in ['receiver', 'venue'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && agreement.events.isReferencedBy(t, 'execution-requested') && !agreement.events.isReferencedBy(t, 'execution-started'))"
     },
     {
       "type": "trade-settled",
+      "description": "The receiver confirms the plan completed the trade's return leg. This closes the trade.",
+      "schema": {
+        "name": "trade-settlement",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "(agreement.businessState == 'closingOut' || (agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')))) && event.emitterRole == 'receiver' && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && agreement.events.isReferencedBy(t, 'execution-started'))"
     },
     {
       "type": "trade-defaulted",
+      "description": "The receiver records the close-out amount it claims on a trade that defaulted. This closes the trade.",
+      "schema": {
+        "name": "trade-default",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole == 'receiver' && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && agreement.events.isReferencedBy(t, 'execution-started'))"
     },
     {
       "type": "trade-cancelled",
+      "description": "A party or the venue cancels a trade before execution is requested. This closes the trade.",
+      "schema": {
+        "name": "trade-cancellation",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole in ['pledger', 'receiver', 'venue'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && !agreement.events.isReferencedBy(t, 'execution-requested'))"
     },
     {
       "type": "trade-blocked",
+      "description": "A participant records that its router could not take a step on an open trade, and why, for the audit trail.",
+      "schema": {
+        "name": "note",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole in ['pledger', 'receiver', 'venue', 'agent'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']))"
     },
     {
       "type": "recovery-attribution",
+      "description": "Ties a ledger movement made after a trade settled or was cancelled, such as collateral coming back, to that trade.",
+      "schema": {
+        "name": "posting-attribution",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole in ['pledger', 'receiver'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && agreement.events.isReferencedBy(t, ['trade-settled', 'trade-cancelled']))"
     },
     {
       "type": "basket-closed",
+      "description": "Records the final status of a trade's basket or container, closed or defaulted, and the transaction that produced it.",
+      "schema": {
+        "name": "basket-closure",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole in ['receiver', 'agent', 'pledger', 'calculation-agent'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(b, agreement.events.allExistByIdAndType(b, ['basket-registered', 'container-declared']) && (event.emitterRole != 'pledger' || agreement.events.existsByIdAndType(b, 'basket-registered')) && !agreement.events.isReferencedBy(b, 'basket-closed'))"
     },
     {
       "type": "default-notice",
+      "description": "A party gives notice of default on the pair. While it is pending, no new trade or step may start.",
+      "schema": {
+        "name": "default-notice",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole in ['pledger', 'receiver'] && event.referencedEventIds.size() == 0"
     },
     {
       "type": "default-revocation",
+      "description": "The party that gave a pending default notice withdraws it, and the pair carries on.",
+      "schema": {
+        "name": "default-revocation",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice') && event.emitterRole in ['pledger', 'receiver'] && event.referencedEventIds.size() == 0 && agreement.events.lastByType('default-notice').exists(n, n.emitterRole == event.emitterRole)"
     },
     {
       "type": "closeout-default",
+      "description": "The party that gave a pending default notice closes the pair out.",
+      "schema": {
+        "name": "closeout-default",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState == 'active' && agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice') && event.emitterRole in ['pledger', 'receiver'] && event.referencedEventIds.size() == 0 && agreement.events.lastByType('default-notice').exists(n, n.emitterRole == event.emitterRole)"
     },
     {
       "type": "termination",
+      "description": "A party ends the pair once every trade is closed and every basket is closed.",
+      "schema": {
+        "name": "note",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "(agreement.businessState == 'closingOut' || (agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')))) && event.emitterRole in ['pledger', 'receiver'] && event.referencedEventIds.size() == 0 && agreement.events.findByType(['trade-booked', 'trade-proposed']).allReferencedByOrAbsent(['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && agreement.events.findByType(['basket-registered', 'container-declared']).allReferencedByOrAbsent('basket-closed')"
     },
     {
       "type": "venue-verified",
+      "description": "The venue records its own check of a trade milestone, once per milestone.",
+      "schema": {
+        "name": "verification",
+        "version": "1",
+        "documentReference": {
+          "key": "repo-terms/v1",
+          "format": "json-schema"
+        }
+      },
       "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole == 'venue' && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(e, agreement.events.allExistByIdAndType(e, ['basket-registered', 'trade-collateralised', 'execution-started', 'trade-settled']) && !agreement.events.isReferencedBy(e, 'venue-verified'))"
     }
   ],
