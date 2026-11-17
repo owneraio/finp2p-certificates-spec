@@ -7,7 +7,7 @@
   "properties": {
     "reportId": {
       "type": "string",
-      "description": "The margin call the posting answers: the trade's initial call for its opening collateral, or a variation call during the term.",
+      "description": "The initial margin call the posting answers: the trade's im-report.",
       "minLength": 1
     },
     "executionPlanId": {
@@ -30,9 +30,13 @@
     "purpose": {
       "type": "string",
       "description": "`settlement` marks the receiver's counter-payment leg. Absent means a collateral leg — the settlement asset may equal an eligible line's asset, so (reportId, assetId) alone would be ambiguous without this.",
-      "enum": ["settlement"]
+      "enum": [
+        "settlement"
+      ]
     }
   },
-  "required": ["executionPlanId"],
+  "required": [
+    "executionPlanId"
+  ],
   "additionalProperties": false
 }
