@@ -7,7 +7,7 @@
   "properties": {
     "reportId": {
       "type": "string",
-      "description": "The report the posting satisfies, when it answers a margin call during the term. Absent on a posting for the trade's opening collateral.",
+      "description": "The margin call the posting answers: the trade's initial call for its opening collateral, or a variation call during the term.",
       "minLength": 1
     },
     "executionPlanId": {
