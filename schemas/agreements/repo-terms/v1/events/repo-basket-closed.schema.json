@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/repo-basket-closed.schema.json",
+  "title": "Repo Basket Closed",
+  "description": "repo-basket-closed/v1 \u2014 the document a basket-closed event carries: the terminal DTCC account status (release() \u2192 CLOSED, forward() \u2192 DEFAULTED) and the transaction that produced it.",
+  "type": "object",
+  "properties": {
+    "accountStatus": {
+      "type": "string",
+      "enum": [
+        "CLOSED",
+        "DEFAULTED"
+      ]
+    },
+    "txHash": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "accountStatus",
+    "txHash"
+  ],
+  "additionalProperties": false
+}

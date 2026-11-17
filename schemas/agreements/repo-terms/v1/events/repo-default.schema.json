@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/repo-default.schema.json",
+  "title": "Repo Trade Default",
+  "description": "repo-default/v1 \u2014 the document a trade-defaulted event carries: the close-out amount B claims on the defaulted trade.",
+  "type": "object",
+  "properties": {
+    "closeOutAmount": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "pattern": "^-?[0-9]+(\\.[0-9]+)?$",
+          "description": "Decimal string, never a float."
+        },
+        "assetId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "FinP2P asset id of the currency."
+        }
+      },
+      "required": [
+        "amount",
+        "assetId"
+      ],
+      "additionalProperties": false,
+      "description": "What the non-defaulting party is owed after close-out netting of this trade."
+    }
+  },
+  "required": [
+    "closeOutAmount"
+  ],
+  "additionalProperties": false
+}

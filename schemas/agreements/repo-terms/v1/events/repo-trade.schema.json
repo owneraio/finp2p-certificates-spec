@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/repo-trade.schema.json",
+  "title": "Repo Trade",
+  "description": "repo-trade/v1 — the document a trade-booked (venue) or trade-proposed (party, in-app) event carries: the affirmed economics of one repo trade. The event's own id is the trade's key; every later event about the trade cites it.",
+  "type": "object",
+  "properties": {
+    "tradeRef": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Venue or app reference of the trade."
+    },
+    "agreementVersion": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Agreement version whose terms the trade was booked under."
+    },
+    "purchasePrice": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "pattern": "^-?[0-9]+(\\.[0-9]+)?$",
+          "description": "Decimal string, never a float."
+        },
+        "assetId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "FinP2P asset id of the currency."
+        }
+      },
+      "required": [
+        "amount",
+        "assetId"
+      ],
+      "additionalProperties": false,
+      "description": "Leg 1: cash B pays A."
+    },
+    "repurchasePrice": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "pattern": "^-?[0-9]+(\\.[0-9]+)?$",
+          "description": "Decimal string, never a float."
+        },
+        "assetId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "FinP2P asset id of the currency."
+        }
+      },
+      "required": [
+        "amount",
+        "assetId"
+      ],
+      "additionalProperties": false,
+      "description": "Leg 2: cash A pays B at maturity."
+    },
+    "rate": {
+      "type": "string",
+      "pattern": "^-?[0-9]+(\\.[0-9]+)?$",
+      "description": "Repo rate as a decimal string (0.0425 = 4.25%)."
+    },
+    "openDate": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 calendar date (YYYY-MM-DD)."
+    },
+    "closeDate": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 calendar date (YYYY-MM-DD)."
+    },
+    "collateral": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "haircut": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Fraction (0.02 = 2%)."
+          },
+          "quantity": {
+            "type": "string",
+            "pattern": "^[0-9]+(\\.[0-9]+)?$",
+            "description": "Units of this line the trade pledges; absent when the booking carries the category only."
+          }
+        },
+        "required": [
+          "assetId",
+          "haircut"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Eligible securities and haircuts for THIS trade; a subset of the agreement's eligible list."
+    },
+    "collateralMode": {
+      "type": "string",
+      "enum": [
+        "lender-account",
+        "segregated",
+        "controlled",
+        "external"
+      ],
+      "description": "Where the collateral sits for the term: delivered into the receiver's account by the loan plan (lender-account), held on the pledger's account with the receiver as beneficiary (segregated), or moved into the trade's provisioned container (controlled, the basket shape). An external pair (external) holds the collateral on the calculation agent's own platform: FinP2P sees only the basket token it registers and the cash."
+    },
+    "settlement": {
+      "type": "object",
+      "description": "The cash accounts the legs settle on; what the settlement plan is built from.",
+      "properties": {
+        "pledgerAccount": {
+          "type": "object",
+          "properties": {
+            "finId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "orgId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "custodianOrgId": {
+              "type": "string"
+            },
+            "assetId": {
+              "type": "string",
+              "minLength": 1,
+              "description": "FinP2P asset id of the cash this side settles on."
+            }
+          },
+          "required": [
+            "finId",
+            "orgId",
+            "assetId"
+          ],
+          "additionalProperties": false
+        },
+        "receiverAccount": {
+          "type": "object",
+          "properties": {
+            "finId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "orgId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "custodianOrgId": {
+              "type": "string"
+            },
+            "assetId": {
+              "type": "string",
+              "minLength": 1,
+              "description": "FinP2P asset id of the cash this side settles on."
+            }
+          },
+          "required": [
+            "finId",
+            "orgId",
+            "assetId"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "pledgerAccount",
+        "receiverAccount"
+      ],
+      "additionalProperties": false
+    },
+    "venueAffirmation": {
+      "type": "object",
+      "description": "A venue booking's record of the match: documentary, the guards do not read it.",
+      "properties": {
+        "venueTradeId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "matchedAt": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Epoch milliseconds."
+        },
+        "pledgerRef": {
+          "type": "string"
+        },
+        "receiverRef": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "venueTradeId",
+        "matchedAt"
+      ],
+      "additionalProperties": false
+    },
+    "settlementTime": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Epoch milliseconds the open leg settles at; the settlement plan is built from it. openDate is the calendar day for the record."
+    },
+    "maturityTime": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Epoch milliseconds the close leg runs at; closeDate is the calendar day for the record."
+    }
+  },
+  "required": [
+    "tradeRef",
+    "agreementVersion",
+    "purchasePrice",
+    "repurchasePrice",
+    "rate",
+    "openDate",
+    "closeDate",
+    "collateral"
+  ],
+  "additionalProperties": false
+}

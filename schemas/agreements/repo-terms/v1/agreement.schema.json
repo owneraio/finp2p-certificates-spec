@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/agreement.schema.json",
+  "title": "Repo Terms",
+  "description": "repo-terms/v1 — the terms document carried in Agreement.terms for a per-pair repo agreement, base64 on the wire and identified by Agreement.termsType. Co-signed contract zone: fixed at proposal. Per-trade economics live on each trade-booked / trade-proposed event, not here.",
+  "type": "object",
+  "properties": {
+    "borrower": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Party id of the cash borrower (pledger role, A)."
+    },
+    "lender": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Party id of the cash lender (receiver role, B; the agreement owner)."
+    },
+    "cashAssetId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Optional. Informational only: the pair does not lock its trades to one cash asset. Each trade names its cash on its purchase and repurchase prices, and the receiver affirms it per trade."
+    },
+    "eligible": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "haircut": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Fraction (0.02 = 2%)."
+          }
+        },
+        "required": [
+          "assetId",
+          "haircut"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Securities the lender accepts as collateral, each with its haircut schedule."
+    },
+    "haircutConvention": {
+      "type": "string",
+      "enum": [
+        "fraction"
+      ]
+    },
+    "limits": {
+      "type": "object",
+      "properties": {
+        "maxOpenTrades": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Checked by the apps, not by a guard: guards cannot count open trades cheaply."
+        }
+      },
+      "required": [],
+      "additionalProperties": false,
+      "description": "Operational limits. maxBaskets from the 5.5 draft is gone: a basket exists per trade."
+    },
+    "cutOffMinutes": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Minutes before leg 1 after which a trade may no longer be cancelled in the apps; the guard's own cut-off is execution-requested."
+    },
+    "collateralMode": {
+      "type": "string",
+      "enum": [
+        "lender-account",
+        "segregated",
+        "controlled",
+        "external"
+      ],
+      "description": "The pair's default collateral mode; a booking may override it. lender-account when absent. An external pair (external) holds the collateral on the calculation agent's own platform: FinP2P sees only the basket token it registers and the cash."
+    }
+  },
+  "required": [
+    "borrower",
+    "lender",
+    "eligible",
+    "haircutConvention"
+  ],
+  "additionalProperties": false
+}

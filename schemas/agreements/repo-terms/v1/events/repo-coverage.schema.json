@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/repo-coverage.schema.json",
+  "title": "Repo Coverage",
+  "description": "repo-coverage/v1 \u2014 the document a trade-collateralised event carries: what the basket's account reported when B declared the trade covered.",
+  "type": "object",
+  "properties": {
+    "accountStatus": {
+      "type": "string",
+      "minLength": 1,
+      "description": "DTCC account status at declaration, e.g. HEALTHY."
+    },
+    "holdings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quantity": {
+            "type": "string",
+            "pattern": "^-?[0-9]+(\\.[0-9]+)?$"
+          }
+        },
+        "required": [
+          "assetId",
+          "quantity"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "coverageRatio": {
+      "type": "string",
+      "pattern": "^-?[0-9]+(\\.[0-9]+)?$",
+      "description": "Collateral value over liability, after haircuts, as a decimal string."
+    }
+  },
+  "required": [
+    "accountStatus",
+    "holdings",
+    "coverageRatio"
+  ],
+  "additionalProperties": false
+}

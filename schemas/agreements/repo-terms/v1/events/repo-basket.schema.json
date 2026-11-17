@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/repo-basket.schema.json",
+  "title": "Repo Basket",
+  "description": "repo-basket/v1 \u2014 the document a basket-registered event carries. The basket is created FOR the trade the event cites: a DTCC collateral account plus the quantity-1 FinP2P basket asset in front of it, with the trade's dates and parties fixed at creation (design 3.4).",
+  "type": "object",
+  "properties": {
+    "basketKey": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable key the apps use for the basket; the event id is the key the guards use."
+    },
+    "chainId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "CAIP-2 chain id of the DTCC collateral account."
+    },
+    "account": {
+      "type": "string",
+      "minLength": 1,
+      "description": "DTCC collateral account address."
+    },
+    "basketAssetId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "FinP2P asset id of the basket asset (quantity 1)."
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1,
+      "description": "On-chain address collateral is deposited from (A's)."
+    },
+    "destination": {
+      "type": "string",
+      "minLength": 1,
+      "description": "On-chain address collateral is forwarded to on default (B's)."
+    },
+    "controller": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Org id of the account controller (B, or the tri-party agent)."
+    }
+  },
+  "required": [
+    "basketKey",
+    "chainId",
+    "account",
+    "basketAssetId",
+    "source",
+    "destination",
+    "controller"
+  ],
+  "additionalProperties": false
+}
