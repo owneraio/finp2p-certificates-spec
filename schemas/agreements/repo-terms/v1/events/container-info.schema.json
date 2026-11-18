@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/demo/container-info.event.schema.json",
   "title": "Container Info",
-  "description": "container-info/v2 — the document container-provisioned and container-retired events carry. Unlike every other event here it is authored by the ROUTER, not by an application: the provisioning engine materializes a container declared in the agreement's provisioningSpec and reports the account, policy and per-asset onboarding state it created.\n\nBeing protocol-level, these events are exempt from the definition's event-vocabulary and emitter-role checks — the container's effective provisioner role is a narrower authority drawn from provisioningSpec. A definition still declares the type so a transition can name it.",
+  "description": "container-info/v2: the document container-provisioned and container-retired events carry. The provisioning router writes it, never an application: its provisioning engine builds a declared container (a custody account at the provisioning organization, bound on each line's ledger, with the agreement's account policy) and reports the account, the policy and each asset's onboarding state.\n\nThe agreement owner does not run the definition's guards on these events. It checks them against the declaration instead: the embedded containerSpec must equal the declared one, the emitter role must be the container's provisioner role, and the policy id must recompute from the agreement and the container key. A definition still declares the type so a transition can name it.",
   "type": "object",
   "definitions": {
     "caip19": {
@@ -63,7 +63,7 @@
     },
     "assetFootprints": {
       "type": "array",
-      "description": "The container's per-asset network accounts — the wallets postings credit. One entry per onboarded asset; an asset still pending has none.",
+      "description": "The container's per-asset network accounts: the wallets postings credit. One entry per onboarded asset; an asset still pending has none.",
       "items": {
         "type": "object",
         "properties": {
@@ -81,7 +81,7 @@
     },
     "onboarding": {
       "type": "array",
-      "description": "Per-asset onboarding state. Assets start as pending-onboarding and flip through follow-up agreement events.",
+      "description": "Per-asset onboarding state: pending-onboarding until the bind lands, then onboarded or onboarding-failed. The router reports the container once every asset reached onboarded or onboarding-failed; a failed asset can be retried.",
       "items": {
         "type": "object",
         "properties": {
@@ -97,7 +97,7 @@
     },
     "containerSpec": {
       "type": "object",
-      "description": "The authored container declaration this event materializes, embedded VERBATIM as protojson. The fold accepts the event only when this copy byte-equals the declaration carrying the same key in the currently consented agreement version — the copy-and-verify binding that stops a router inventing a container the parties never agreed to. Left unconstrained here because it is a protobuf projection, not a document of this schema's own.",
+      "description": "The authored container declaration this event materializes, embedded verbatim as protojson. The agreement owner accepts the event only when this copy equals the declaration carrying the same key in the currently consented agreement version: the copy-and-verify binding that stops a router inventing a container the parties never agreed to. Left unconstrained here because it is a protobuf projection, not a document of this schema's own.",
       "additionalProperties": true
     }
   },

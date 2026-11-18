@@ -67,7 +67,7 @@
       },
       "required": [],
       "additionalProperties": false,
-      "description": "Operational limits. maxBaskets from the 5.5 draft is gone: a basket exists per trade."
+      "description": "Operational limits. There is no basket limit: each trade has its own basket."
     },
     "cutOffMinutes": {
       "type": "integer",
@@ -86,7 +86,7 @@
     },
     "collateralPlatform": {
       "type": "object",
-      "description": "The platform that holds a controlled trade's collateral, when it is not the container's own ledger accounts. Needs a bound agent and collateralMode controlled.",
+      "description": "The platform that holds a controlled trade's collateral, when it is not the container's own ledger accounts. The pair must settle in controlled mode. The pledger's router opens each trade's account on it, or a bound tri-party agent's router.",
       "additionalProperties": false,
       "required": [
         "kind",
@@ -100,12 +100,12 @@
           "enum": [
             "account"
           ],
-          "description": "account: the agent's router creates a collateral account on the platform for each trade, by creating the trade's basket asset under the platform's ledger standard; the pledger moves the lines into that account, and its deposit on the basket asset has the platform count them."
+          "description": "account: for each trade the pledger's router (or a bound tri-party agent's) opens a collateral account on the platform by creating the trade's basket asset under the platform's ledger standard; the pledger moves the lines into that account, and its deposit on the basket asset has the platform count them."
         },
         "ledger": {
           "type": "string",
           "minLength": 1,
-          "description": "The ledger name the agent's router binds the platform's chain under (the basket asset's ledgerAssetBinding.ledger)."
+          "description": "The ledger name the platform's chain is bound under on the router that opens the accounts (the basket asset's ledgerAssetBinding.ledger)."
         },
         "network": {
           "type": "string",
@@ -115,7 +115,7 @@
         "standard": {
           "type": "string",
           "minLength": 1,
-          "description": "The ledger standard the basket asset is created under: the one the platform's plugin is installed as on the agent's ledger adapter (e.g. a collateral platform plugin's account standard)."
+          "description": "The ledger standard the basket asset is created under: the one the platform's plugin is installed as on that router's ledger adapter (e.g. a collateral platform plugin's account standard)."
         },
         "currency": {
           "type": "string",
@@ -131,7 +131,7 @@
     "addressBook": {
       "type": "object",
       "additionalProperties": false,
-      "description": "The parties' wallet addresses per chain, shared on the agreement like their finIds and consented with the terms. Address book data only: no custody is implied. A platform pair's agent reads the borrower's wallet as the collateral account's owner, and the lender's facade puts its own wallet on the loan's basket leg.",
+      "description": "The parties' wallet addresses per chain, shared on the agreement like their finIds and consented with the terms. Address book data only: no custody is implied. On a platform pair the borrower's wallet owns the trade's collateral account and is bound to its basket asset so leg 2 pays it back; the lender's wallet is bound so leg 1 pays it.",
       "properties": {
         "borrower": {
           "type": "array",

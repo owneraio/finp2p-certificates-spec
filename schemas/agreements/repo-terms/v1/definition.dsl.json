@@ -86,7 +86,7 @@
     },
     {
       "type": "collateral-account-requested",
-      "description": "A party or the venue asks for the collateral account an affirmed trade will be held in, once per trade.",
+      "description": "A party or the venue asks for the collateral account an affirmed trade will be held in, once per trade. An external basket waits for it: the calculation agent answers with basket-registered. A platform account needs none, since the pledger (or a bound tri-party agent) opens it once the trade is affirmed; a request that comes first only sets the account's parameters.",
       "schema": {
         "name": "collateral-account-request",
         "version": "1",
@@ -99,7 +99,7 @@
     },
     {
       "type": "container-declared",
-      "description": "The pledger, the receiver or a tri-party agent declares the container that holds an affirmed trade's collateral. The router provisions it from this declaration. On a collateral platform the pledger declares it on the platform account it opened.",
+      "description": "The pledger, the receiver or a tri-party agent declares the container that holds an affirmed trade's collateral, once per trade. It is the instruction to provision: the router of the container's provisioner role builds it from this declaration and answers with container-provisioned. That role is the declaring one when the declaration names an existing account, as on a collateral platform, where the pledger declares the container on the account it opened; otherwise a bound agent, else the receiver.",
       "schema": {
         "name": "container-declaration",
         "version": "1",
@@ -112,7 +112,7 @@
     },
     {
       "type": "container-provisioned",
-      "description": "The router reports that a declared container exists and is ready to hold collateral. Routers emit it, applications never do.",
+      "description": "The provisioning router reports that a declared container exists and can hold collateral: a custody account at its organization, bound on each line's ledger, with the agreement's account policy. Routers write it, applications never do. The agreement owner checks it against the declaration (the same spec, the container's provisioner role as emitter) instead of running this guard.",
       "schema": {
         "name": "container-info",
         "version": "1",
@@ -125,7 +125,7 @@
     },
     {
       "type": "basket-registered",
-      "description": "Registers the basket created for an affirmed trade: a platform's collateral account and the quantity-1 basket asset in front of it.",
+      "description": "Registers the quantity-1 basket asset that stands for a trade's collateral, and the account behind it: a collateral platform's account the pledger (or a bound tri-party agent) opened, the token the pledger minted over a ledger container, or a calculation agent's external basket.",
       "schema": {
         "name": "external-basket",
         "version": "1",
@@ -476,7 +476,7 @@
     },
     {
       "type": "default-notice",
-      "description": "A party gives notice of default on the pair. While it is pending, no new trade or step may start.",
+      "description": "A party gives notice of default on the pair. While it is pending no new trade, collateral, margin call or execution step may start; what is already running still reports, and trades can still be cancelled, defaulted and their baskets closed.",
       "schema": {
         "name": "default-notice",
         "version": "1",

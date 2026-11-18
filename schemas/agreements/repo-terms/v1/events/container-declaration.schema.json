@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/container-declaration.schema.json",
   "title": "container-declaration/v1",
-  "description": "A container declared by event: the authored ContainerSpec (protojson) a container-declared event adds to the agreement's whitelist. The engine validates the spec itself; this document only pins the envelope.",
+  "description": "The document a container-declared event carries: the authored ContainerSpec (protojson) that adds the trade's container to the agreement's whitelist, and where it sits. The agreement owner validates the spec itself; this schema only pins the envelope. The router of the spec's provisionerRole builds the container and answers with container-provisioned: the declaring role when networkAccount names an existing account, else a bound agent, else the receiver.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -70,12 +70,12 @@
           "enum": [
             "account"
           ],
-          "description": "account: the agent's router creates a collateral account on the platform for each trade, by creating the trade's basket asset under the platform's ledger standard; the pledger moves the lines into that account, and its deposit on the basket asset has the platform count them."
+          "description": "account: for each trade the pledger's router (or a bound tri-party agent's) opens a collateral account on the platform by creating the trade's basket asset under the platform's ledger standard; the pledger moves the lines into that account, and its deposit on the basket asset has the platform count them."
         },
         "ledger": {
           "type": "string",
           "minLength": 1,
-          "description": "The ledger name the agent's router binds the platform's chain under (the basket asset's ledgerAssetBinding.ledger)."
+          "description": "The ledger name the platform's chain is bound under on the router that opens the accounts (the basket asset's ledgerAssetBinding.ledger)."
         },
         "network": {
           "type": "string",
@@ -85,7 +85,7 @@
         "standard": {
           "type": "string",
           "minLength": 1,
-          "description": "The ledger standard the basket asset is created under: the one the platform's plugin is installed as on the agent's ledger adapter (e.g. a collateral platform plugin's account standard)."
+          "description": "The ledger standard the basket asset is created under: the one the platform's plugin is installed as on that router's ledger adapter (e.g. a collateral platform plugin's account standard)."
         },
         "currency": {
           "type": "string",
@@ -100,7 +100,7 @@
     },
     "networkAccount": {
       "type": "object",
-      "description": "An account that already exists on the lines' network for the container to be bound to (protojson NetworkAccount): a platform trade's collateral account, which the agent's basket asset created. The router binds the container finId to it for each line on that network instead of having the line's adapter create a wallet.",
+      "description": "An account that already exists on the lines' network for the container to be bound to (protojson NetworkAccount): on a platform trade, the collateral account that creating the basket asset opened. The provisioning router binds the container finId to it for each line on that network instead of having the line's adapter create a wallet. The facade refuses an account on another network than a line.",
       "additionalProperties": false,
       "required": [
         "caip10"

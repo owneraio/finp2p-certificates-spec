@@ -15,7 +15,7 @@
     "code": {
       "type": "string",
       "pattern": "^[a-z][a-z0-9-]*$",
-      "description": "On trade-blocked: a stable code for the reason, for machines to match (settlement-time-passed: the receiver refuses a late trade before allocation, and the booker may withdraw it)."
+      "description": "On trade-blocked: a stable code for the reason, for machines to match (settlement-time-passed: the receiver refuses a late trade before any line is posted, and the booker may withdraw it)."
     },
     "collateralAccount": {
       "type": "object",

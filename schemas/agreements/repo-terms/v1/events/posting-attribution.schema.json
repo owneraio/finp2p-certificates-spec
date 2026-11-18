@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/events/posting-attribution.schema.json",
   "title": "Posting Attribution",
-  "description": "posting-attribution/v3: the document posting-attribution and recovery-attribution events carry. It joins a live ledger movement to the trade it serves: a line moved into the trade's container before the trade is collateralised, or returned after it ended. Declared by the posting party as part of the same operation that started the transfer, so it can exist before the transfer settles.",
+  "description": "posting-attribution/v3: the document posting-attribution and recovery-attribution events carry. It joins a live ledger movement to the trade it serves: a line moved into the trade's container or platform account in answer to its margin call, or a line returned out of it after the trade ended or to correct a refused declaration. Declared by the moving party as part of the same operation that started the transfer, so it can exist before the transfer settles.",
   "type": "object",
   "properties": {
     "reportId": {
@@ -25,11 +25,11 @@
     },
     "negotiationId": {
       "type": "string",
-      "description": "The agreed negotiation thread this posting executes, when the report is fulfilled through negotiation rather than directly."
+      "description": "Reserved: no repo-terms/v1 flow sets it."
     },
     "purpose": {
       "type": "string",
-      "description": "`settlement` marks the receiver's counter-payment leg. Absent means a collateral leg — the settlement asset may equal an eligible line's asset, so (reportId, assetId) alone would be ambiguous without this.",
+      "description": "Reserved: no repo-terms/v1 flow sets it. settlement would mark a counter-payment leg rather than a collateral line.",
       "enum": [
         "settlement"
       ]
