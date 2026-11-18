@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/default-notice.schema.json",
+  "title": "Default Notice",
+  "description": "default-notice/v1: the document a default-notice event carries. The guards decide the notice from the log (who emits, whether one is pending); the reason is for the audit trail. Unlike collateral-terms, a repo notice names no condition.",
+  "type": "object",
+  "properties": {
+    "reason": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}

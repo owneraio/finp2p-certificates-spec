@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/events/posting-attribution.schema.json",
+  "title": "Posting Attribution",
+  "description": "posting-attribution/v3: the document posting-attribution and recovery-attribution events carry. It joins a live ledger movement to the trade it serves: a line moved into the trade's container or platform account in answer to its margin call, or a line returned out of it after the trade ended or to correct a refused declaration. Declared by the moving party as part of the same operation that started the transfer, so it can exist before the transfer settles.",
+  "type": "object",
+  "properties": {
+    "reportId": {
+      "type": "string",
+      "description": "The initial margin call the posting answers: the trade's im-report.",
+      "minLength": 1
+    },
+    "executionPlanId": {
+      "type": "string",
+      "description": "The execution plan carrying the movement. The join key: the fold matches receipts to reports through it.",
+      "minLength": 1
+    },
+    "assetId": {
+      "type": "string",
+      "description": "Asset moved. Absent on attributions that name only the plan."
+    },
+    "quantity": {
+      "type": "string",
+      "description": "Quantity moved, as a decimal string."
+    },
+    "negotiationId": {
+      "type": "string",
+      "description": "Reserved: no repo-terms/v1 flow sets it."
+    },
+    "purpose": {
+      "type": "string",
+      "description": "Reserved: no repo-terms/v1 flow sets it. settlement would mark a counter-payment leg rather than a collateral line.",
+      "enum": [
+        "settlement"
+      ]
+    }
+  },
+  "required": [
+    "executionPlanId"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/attribution-completion.schema.json",
+  "title": "Attribution Completion",
+  "description": "attribution-completion/v1: the document an attribution-completed event carries. The pledger reports how the plan behind one posting ended. The event cites the posting; the plan id is repeated so a reader can join it without the posting.",
+  "type": "object",
+  "properties": {
+    "executionPlanId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The posting's execution plan."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["completed", "failed"],
+      "description": "How the plan ended. A failed movement delivered nothing and is posted again."
+    },
+    "reason": {
+      "type": "string",
+      "description": "Why the plan failed, as the router reported it."
+    }
+  },
+  "required": ["executionPlanId", "status"],
+  "additionalProperties": false
+}

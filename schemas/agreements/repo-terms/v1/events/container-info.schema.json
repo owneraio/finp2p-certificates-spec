@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/demo/container-info.event.schema.json",
+  "title": "Container Info",
+  "description": "container-info/v2: the document container-provisioned and container-retired events carry. The provisioning router writes it, never an application: its provisioning engine builds a declared container (a custody account at the provisioning organization, bound on each line's ledger, with the agreement's account policy) and reports the account, the policy and each asset's onboarding state.\n\nThe agreement owner does not run the definition's guards on these events. It checks them against the declaration instead: the embedded containerSpec must equal the declared one, the emitter role must be the container's provisioner role, and the policy id must recompute from the agreement and the container key. A definition still declares the type so a transition can name it.",
+  "type": "object",
+  "definitions": {
+    "caip19": {
+      "type": "object",
+      "description": "CAIP-19 identity of an on-chain asset.",
+      "properties": {
+        "network": { "type": "string" },
+        "standard": { "type": "string" },
+        "tokenId": { "type": "string" }
+      },
+      "required": ["network", "standard", "tokenId"],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "containerAccount": {
+      "type": "object",
+      "description": "The account that IS the container.",
+      "properties": {
+        "finId": {
+          "type": "string",
+          "description": "The container account's FinID.",
+          "minLength": 1
+        },
+        "profileId": {
+          "type": "string",
+          "description": "Owner-profile resource carrying the container account at the provisioning org."
+        },
+        "orgId": {
+          "type": "string",
+          "description": "Organization that provisioned the container."
+        },
+        "custodian": {
+          "type": "object",
+          "properties": {
+            "orgId": { "type": "string", "description": "Organization holding custody of the container account." }
+          },
+          "required": ["orgId"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["finId", "orgId", "custodian"],
+      "additionalProperties": false
+    },
+    "policy": {
+      "type": "object",
+      "description": "The account policy installed on the container, derived deterministically from the agreement id and container key.",
+      "properties": {
+        "policyId": { "type": "string", "minLength": 1 },
+        "version": {
+          "type": "integer",
+          "description": "Agreement version the policy was instantiated from.",
+          "minimum": 0
+        }
+      },
+      "required": ["policyId", "version"],
+      "additionalProperties": false
+    },
+    "assetFootprints": {
+      "type": "array",
+      "description": "The container's per-asset network accounts: the wallets postings credit. One entry per onboarded asset; an asset still pending has none.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "caip19": { "$ref": "#/definitions/caip19" },
+          "networkAccount": { "type": "string", "minLength": 1 }
+        },
+        "required": ["caip19", "networkAccount"],
+        "additionalProperties": false
+      }
+    },
+    "servesRoles": {
+      "type": "array",
+      "description": "Agreement roles this container serves, copied from its declaration.",
+      "items": { "type": "string" }
+    },
+    "onboarding": {
+      "type": "array",
+      "description": "Per-asset onboarding state: pending-onboarding until the bind lands, then onboarded or onboarding-failed. The router reports the container once every asset reached onboarded or onboarding-failed; a failed asset can be retried.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "caip19": { "$ref": "#/definitions/caip19" },
+          "status": {
+            "type": "string",
+            "enum": ["pending-onboarding", "onboarded", "onboarding-failed"]
+          }
+        },
+        "required": ["caip19", "status"],
+        "additionalProperties": false
+      }
+    },
+    "containerSpec": {
+      "type": "object",
+      "description": "The authored container declaration this event materializes, embedded verbatim as protojson. The agreement owner accepts the event only when this copy equals the declaration carrying the same key in the currently consented agreement version: the copy-and-verify binding that stops a router inventing a container the parties never agreed to. Left unconstrained here because it is a protobuf projection, not a document of this schema's own.",
+      "additionalProperties": true
+    }
+  },
+  "required": ["containerAccount", "policy"],
+  "additionalProperties": false
+}

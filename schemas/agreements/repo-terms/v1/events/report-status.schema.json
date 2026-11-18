@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/events/report-status.schema.json",
+  "title": "Report Status",
+  "description": "report-status/v2: the document every report-status event carries, on all four event types (report-status-completed, -incomplete, -resolved, -rejected). It records progress on the margin call an earlier im-report event raised, which the event cites.\n\nThe document spans two independent axes, and the status value says which one applies. Evaluation statuses (completed, incomplete) are the valuation engine's verdict on the call; they overlay the report's single status. Dispositions (resolved, rejected) are declared per organization and accumulate: one report can be completed and still carry a rejection from each party. The event type mirrors the value so a guard can act on it without reading this document.",
+  "type": "object",
+  "properties": {
+    "reportId": {
+      "type": "string",
+      "description": "The report this status is about. The event also references the im-report event, which is the protocol-level counterpart of this field.",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "description": "Evaluation: completed = the call is met (the facade writes it once the execution's first leg delivered the collateral, or once the execution's exception was resolved by hand); incomplete = the call was not fully met. new and in_progress describe a report before any verdict; no event writes them. Disposition: resolved = this organization considers the report closed; rejected = this organization disputes it. in_complete is an older spelling of incomplete.",
+      "enum": [
+        "new",
+        "in_progress",
+        "completed",
+        "incomplete",
+        "in_complete",
+        "resolved",
+        "rejected"
+      ]
+    },
+    "note": {
+      "type": "string",
+      "description": "Free-text explanation. Carried by dispositions; evaluation transitions leave it empty."
+    }
+  },
+  "required": [
+    "reportId",
+    "status"
+  ],
+  "additionalProperties": false
+}

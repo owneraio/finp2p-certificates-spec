@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/external-basket.schema.json",
+  "title": "External Basket",
+  "description": "external-basket/v1: the document a basket-registered event carries: a quantity-1 FinP2P basket asset that stands for a trade's collateral, and the account behind it, created for the trade the event cites. It has three uses: a collateral platform's account, registered by the router that opened it; the token the pledger mints over a ledger container, where chainId is finp2p and account is the container's finId; and a calculation agent's external basket, filled off FinP2P.",
+  "type": "object",
+  "properties": {
+    "basketKey": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable key the apps use for the basket; the event id is the key the guards use."
+    },
+    "chainId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "CAIP-2 chain id of the platform's collateral account."
+    },
+    "account": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The platform's collateral account address."
+    },
+    "basketAssetId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "FinP2P asset id of the basket asset (quantity 1)."
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Where the collateral comes from: the pledger's account (its finId on a basket a router registered)."
+    },
+    "destination": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Where the collateral goes on default: the receiver's account (its finId on a basket a router registered)."
+    },
+    "controller": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Org id of the organization that controls the account: the one that opened a platform account, the receiver for a container's token, or as the calculation agent states it for an external basket."
+    }
+  },
+  "required": [
+    "basketKey",
+    "chainId",
+    "account",
+    "basketAssetId",
+    "source",
+    "destination",
+    "controller"
+  ],
+  "additionalProperties": false
+}

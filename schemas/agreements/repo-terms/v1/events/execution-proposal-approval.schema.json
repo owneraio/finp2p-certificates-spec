@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/execution-proposal-approval.schema.json",
+  "title": "Execution Proposal Approval",
+  "description": "execution-proposal-approval/v1: the receiver taking a proposed execution as a whole. The verdict is the event type, not a field, because a guard reads types and never payloads. Once a proposal is approved the trade can no longer be cancelled, and the pledger executes the proposed intents.",
+  "type": "object",
+  "properties": {
+    "proposalId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The proposal approved. The event also references the proposal event itself."
+    },
+    "note": {
+      "type": "string",
+      "description": "Free-text remark. An approval needs no justification."
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}
