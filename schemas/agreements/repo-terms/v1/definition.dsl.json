@@ -177,7 +177,7 @@
     },
     {
       "type": "collateral-accepted",
-      "description": "The receiver accepts the pledger's declaration, citing it: what the postings delivered into the container matches the trade's margin call and its booked lines. It also cites the open exceptions it answers, the ones raised on the trade's earlier declarations, which resolves them. The pledger proposes the execution only after this.",
+      "description": "The receiver accepts the pledger's declaration, citing it: what the postings delivered into the container matches the trade's margin call and its booked lines. It also cites the open exceptions it answers, which resolves them: only exceptions raised on the same trade's earlier declarations, never an exception on another trade or on an execution. The pledger proposes the execution only after this.",
       "schema": {
         "name": "collateral-acceptance",
         "version": "1",
@@ -186,7 +186,7 @@
           "format": "json-schema"
         }
       },
-      "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole == 'receiver' && event.referencedEventIds.exists_one(c, agreement.events.existsByIdAndType(c, 'trade-collateralised')) && event.referencedEventIds.all(c, (agreement.events.existsByIdAndType(c, 'trade-collateralised') && !agreement.events.isReferencedBy(c, ['collateral-accepted', 'exception'])) || (agreement.events.existsByIdAndType(c, 'exception') && !agreement.events.isReferencedBy(c, ['manual-resolve-accepted', 'collateral-accepted', 'execution-updated'])))"
+      "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole == 'receiver' && event.referencedEventIds.exists_one(c, agreement.events.existsByIdAndType(c, 'trade-collateralised')) && event.referencedEventIds.all(c, (agreement.events.existsByIdAndType(c, 'trade-collateralised') && !agreement.events.isReferencedBy(c, ['collateral-accepted', 'exception'])) || (agreement.events.existsByIdAndType(c, 'exception') && !agreement.events.isReferencedBy(c, ['manual-resolve-accepted', 'collateral-accepted', 'execution-updated']) && agreement.events.findByType(['trade-booked', 'trade-proposed']).exists(t, agreement.events.findReferrers(t.id, 'trade-collateralised').exists(d, event.referencedEventIds.exists(q, q == d.id)) && agreement.events.findReferrers(t.id, 'trade-collateralised').exists(d, agreement.events.findReferrers(d.id, 'exception').exists(x, x.id == c)))))"
     },
     {
       "type": "exception",
@@ -216,7 +216,7 @@
     },
     {
       "type": "manual-resolve-accepted",
-      "description": "The counterparty accepts a manual resolve, citing the request and the exceptions it answers, which resolves them. A declaration whose exception is resolved this way counts as accepted; a trade whose execution exception is resolved this way settles.",
+      "description": "The counterparty accepts a manual resolve, citing the request and every exception the request names, which resolves them. A declaration whose exception is resolved this way counts as accepted; a trade whose execution exception is resolved this way settles.",
       "schema": {
         "name": "manual-resolve-decision",
         "version": "1",
@@ -225,7 +225,7 @@
           "format": "json-schema"
         }
       },
-      "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole in ['pledger', 'receiver'] && event.referencedEventIds.exists_one(m, agreement.events.existsByIdAndType(m, 'manual-resolve')) && event.referencedEventIds.all(m, (agreement.events.existsByIdAndType(m, 'manual-resolve') && !agreement.events.isReferencedBy(m, ['manual-resolve-accepted', 'manual-resolve-rejected']) && agreement.events.findByType('manual-resolve').exists(r, r.id == m && r.emitterRole != event.emitterRole)) || (agreement.events.existsByIdAndType(m, 'exception') && agreement.events.findReferrers(m, 'manual-resolve').exists(r, event.referencedEventIds.exists(q, q == r.id))))"
+      "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole in ['pledger', 'receiver'] && event.referencedEventIds.exists_one(m, agreement.events.existsByIdAndType(m, 'manual-resolve')) && event.referencedEventIds.all(m, (agreement.events.existsByIdAndType(m, 'manual-resolve') && !agreement.events.isReferencedBy(m, ['manual-resolve-accepted', 'manual-resolve-rejected']) && agreement.events.findByType('manual-resolve').exists(r, r.id == m && r.emitterRole != event.emitterRole) && agreement.events.findByType('exception').all(x, !agreement.events.findReferrers(x.id, 'manual-resolve').exists(r, r.id == m) || event.referencedEventIds.exists(q, q == x.id))) || (agreement.events.existsByIdAndType(m, 'exception') && agreement.events.findReferrers(m, 'manual-resolve').exists(r, event.referencedEventIds.exists(q, q == r.id))))"
     },
     {
       "type": "manual-resolve-rejected",
@@ -333,7 +333,7 @@
     },
     {
       "type": "trade-settled",
-      "description": "The receiver confirms the trade closed well: every leg of the execution ran, or the parties resolved its exception by hand. Every margin call on the trade must be closed and no exception on it open. Its unhappy twin is an exception on the trade, which a reset of the plan or a manual resolve answers.",
+      "description": "The receiver confirms the trade closed well: every leg of the execution ran, or the parties resolved its exception by hand. Every margin call on the trade must have the valuation engine's verdict (a party's dispute does not close it) and no exception on it may be open. Its unhappy twin is an exception on the trade, which a reset of the plan or a manual resolve answers.",
       "schema": {
         "name": "trade-settlement",
         "version": "1",
@@ -342,7 +342,7 @@
           "format": "json-schema"
         }
       },
-      "guard": "(agreement.businessState == 'closingOut' || (agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')))) && event.emitterRole == 'receiver' && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && agreement.events.isReferencedBy(t, 'execution-started') && agreement.events.isReferencedBy(t, 'execution-updated') && agreement.events.findReferrers(t, 'im-report').all(r, agreement.events.isReferencedBy(r.id, ['report-status-completed', 'report-status-incomplete', 'report-status-rejected'])) && agreement.events.findReferrers(t, 'exception').all(x, agreement.events.isReferencedBy(x.id, ['manual-resolve-accepted', 'collateral-accepted', 'execution-updated'])) && agreement.events.findReferrers(t, 'trade-collateralised').all(c, agreement.events.findReferrers(c.id, 'exception').all(x, agreement.events.isReferencedBy(x.id, ['manual-resolve-accepted', 'collateral-accepted', 'execution-updated']))))"
+      "guard": "(agreement.businessState == 'closingOut' || (agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')))) && event.emitterRole == 'receiver' && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && agreement.events.isReferencedBy(t, 'execution-started') && agreement.events.isReferencedBy(t, 'execution-updated') && agreement.events.findReferrers(t, 'im-report').all(r, agreement.events.isReferencedBy(r.id, ['report-status-completed', 'report-status-incomplete'])) && agreement.events.findReferrers(t, 'exception').all(x, agreement.events.isReferencedBy(x.id, ['manual-resolve-accepted', 'collateral-accepted', 'execution-updated'])) && agreement.events.findReferrers(t, 'trade-collateralised').all(c, agreement.events.findReferrers(c.id, 'exception').all(x, agreement.events.isReferencedBy(x.id, ['manual-resolve-accepted', 'collateral-accepted', 'execution-updated']))))"
     },
     {
       "type": "trade-defaulted",
@@ -359,7 +359,7 @@
     },
     {
       "type": "trade-cancelled",
-      "description": "A party or the venue cancels a trade until the receiver approves an execution proposal. This closes the trade.",
+      "description": "A party or the venue cancels a trade until the receiver approves an execution proposal. In close-out, a trade whose approved execution never started can still be cancelled, since it can no longer start. This closes the trade.",
       "schema": {
         "name": "trade-cancellation",
         "version": "1",
@@ -368,7 +368,7 @@
           "format": "json-schema"
         }
       },
-      "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole in ['pledger', 'receiver', 'venue'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && !agreement.events.findReferrers(t, 'execution-proposal').exists(p, agreement.events.isReferencedBy(p.id, 'execution-proposal-approval')))"
+      "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole in ['pledger', 'receiver', 'venue'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && (!agreement.events.findReferrers(t, 'execution-proposal').exists(p, agreement.events.isReferencedBy(p.id, 'execution-proposal-approval')) || (agreement.businessState == 'closingOut' && !agreement.events.isReferencedBy(t, 'execution-started'))))"
     },
     {
       "type": "trade-blocked",
@@ -398,7 +398,7 @@
     },
     {
       "type": "report-status-completed",
-      "description": "The valuation engine finds the trade's initial margin call met. The facade closes it once the execution's first leg has run and the collateral has reached the receiver, or once the parties resolved the execution's exception by hand.",
+      "description": "The valuation engine finds the trade's initial margin call met. It answers an open call, so a default notice or the close-out does not stop it, and a party's dispute does not replace it. The facade closes it once the execution's first leg has run and the collateral has reached the receiver, or once the parties resolved the execution's exception by hand.",
       "schema": {
         "name": "report-status",
         "version": "1",
@@ -407,11 +407,11 @@
           "format": "json-schema"
         }
       },
-      "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole == 'valuation-engine' && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(r, agreement.events.existsByIdAndType(r, 'im-report') && !agreement.events.isReferencedBy(r, ['report-status-completed', 'report-status-incomplete', 'report-status-rejected']))"
+      "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole == 'valuation-engine' && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(r, agreement.events.existsByIdAndType(r, 'im-report') && !agreement.events.isReferencedBy(r, ['report-status-completed', 'report-status-incomplete']))"
     },
     {
       "type": "report-status-incomplete",
-      "description": "The valuation engine finds a report not fully met by what was posted.",
+      "description": "The valuation engine finds a report not fully met by what was posted. Like the completion, it is admitted while a default notice stands and in close-out.",
       "schema": {
         "name": "report-status",
         "version": "1",
@@ -420,7 +420,7 @@
           "format": "json-schema"
         }
       },
-      "guard": "agreement.businessState == 'active' && !(agreement.events.lastByType(['default-notice', 'default-revocation']).exists(n, n.eventType == 'default-notice')) && event.emitterRole == 'valuation-engine' && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(r, agreement.events.existsByIdAndType(r, 'im-report') && !agreement.events.isReferencedBy(r, ['report-status-completed', 'report-status-incomplete', 'report-status-rejected']))"
+      "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole == 'valuation-engine' && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(r, agreement.events.existsByIdAndType(r, 'im-report') && !agreement.events.isReferencedBy(r, ['report-status-completed', 'report-status-incomplete']))"
     },
     {
       "type": "report-status-resolved",
@@ -437,7 +437,7 @@
     },
     {
       "type": "report-status-rejected",
-      "description": "A party disputes how a report ended.",
+      "description": "A party disputes a report, once per party. It is a record: it neither closes the call nor stops the valuation engine's verdict.",
       "schema": {
         "name": "report-status",
         "version": "1",
@@ -472,7 +472,7 @@
           "format": "json-schema"
         }
       },
-      "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole in ['receiver', 'agent', 'pledger', 'calculation-agent'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(b, agreement.events.allExistByIdAndType(b, ['basket-registered', 'container-declared']) && (event.emitterRole != 'pledger' || agreement.events.existsByIdAndType(b, 'basket-registered')) && !agreement.events.isReferencedBy(b, 'basket-closed') && agreement.events.findByType(['basket-registered', 'container-declared']).exists(x, x.id == b && has(x.reference) && ((has(x.reference.event) && has(x.reference.event.eventId) && agreement.events.isReferencedBy(x.reference.event.eventId, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted'])) || (has(x.reference.events) && has(x.reference.events.event) && x.reference.events.event.exists(r, has(r.eventId) && agreement.events.isReferencedBy(r.eventId, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']))))))"
+      "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole in ['receiver', 'agent', 'pledger', 'calculation-agent'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(b, agreement.events.allExistByIdAndType(b, ['basket-registered', 'container-declared']) && (event.emitterRole != 'pledger' || agreement.events.findByType('basket-registered').exists(x, x.id == b && x.emitterRole == 'pledger')) && !agreement.events.isReferencedBy(b, 'basket-closed') && agreement.events.findByType(['basket-registered', 'container-declared']).exists(x, x.id == b && has(x.reference) && ((has(x.reference.event) && has(x.reference.event.eventId) && agreement.events.isReferencedBy(x.reference.event.eventId, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted'])) || (has(x.reference.events) && has(x.reference.events.event) && x.reference.events.event.exists(r, has(r.eventId) && agreement.events.isReferencedBy(r.eventId, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']))))))"
     },
     {
       "type": "default-notice",
