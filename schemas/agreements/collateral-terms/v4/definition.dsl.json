@@ -55,15 +55,7 @@
       "fromStates": [
         "reportProcessing"
       ],
-      "guard": "agreement.events.outstandingTargets('vm-report', ['report-status-resolved', 'report-status-rejected'], ['pledger', 'receiver']).size() == 0"
-    },
-    {
-      "event": "report-status-rejected",
-      "toState": "active",
-      "fromStates": [
-        "reportProcessing"
-      ],
-      "guard": "agreement.events.outstandingTargets('vm-report', ['report-status-resolved', 'report-status-rejected'], ['pledger', 'receiver']).size() == 0"
+      "guard": "agreement.events.outstandingTargets('vm-report', ['report-status-resolved', 'report-status-rejected'], ['pledger', 'receiver']).size() == 0 && agreement.events.allOfTypeReferencedBy(['report-status-rejected', 'exception'], 'manual-resolve-accepted')"
     },
     {
       "event": "closeout",
@@ -79,6 +71,14 @@
         "active",
         "reportProcessing"
       ]
+    },
+    {
+      "event": "manual-resolve-accepted",
+      "toState": "active",
+      "fromStates": [
+        "reportProcessing"
+      ],
+      "guard": "agreement.events.outstandingTargets('vm-report', ['report-status-resolved', 'report-status-rejected'], ['pledger', 'receiver']).size() == 0 && agreement.events.allOfTypeReferencedBy(['report-status-rejected', 'exception'], 'manual-resolve-accepted')"
     }
   ],
   "allowedEvents": [
@@ -151,7 +151,7 @@
           "format": "json-schema"
         }
       },
-      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in agreement.events.outstandingRoles(event.referencedEventIds, ['manual-resolve', 'manual-resolve-accepted', 'manual-resolve-rejected'], ['pledger', 'receiver'])"
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in agreement.events.outstandingRoles(event.referencedEventIds, ['manual-resolve', 'manual-resolve-accepted'], ['pledger', 'receiver'])"
     },
     {
       "type": "manual-resolve-rejected",
@@ -163,7 +163,7 @@
           "format": "json-schema"
         }
       },
-      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in agreement.events.outstandingRoles(event.referencedEventIds, ['manual-resolve', 'manual-resolve-accepted', 'manual-resolve-rejected'], ['pledger', 'receiver'])"
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in agreement.events.outstandingRoles(event.referencedEventIds, ['manual-resolve', 'manual-resolve-accepted'], ['pledger', 'receiver'])"
     },
     {
       "type": "coverage-recheck",
