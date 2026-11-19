@@ -45,11 +45,11 @@
     },
     "blame": {
       "type": "string",
-      "description": "The role whose SIDE the problem is on — not an allocation of fault. A container ledger being unavailable is the controller's side without being anyone's mistake.",
+      "description": "The role whose SIDE the problem is on — not an allocation of fault. A container ledger being unavailable is the vault-controller's side without being anyone's mistake.",
       "enum": [
         "pledger",
         "receiver",
-        "controller",
+        "vault-controller",
         "valuation-engine"
       ]
     },
