@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/data/contracts.schema.json",
   "title": "Contracts",
-  "description": "Display names and descriptions for the contracts in an asset's capability list. Key the row by the asset itself (identifierType ResourceId): OSS links that straight to the asset. Display only: the router doesn't read these entries, and OSS shows each one next to the contract it matches. An entry matches a listed contract when the address formats are equal and the addresses are equal after both are normalized by that format, so a different spelling of the same address still matches.",
+  "description": "Display names and descriptions for the contracts in an asset's capability list. Key the row by the asset itself (identifierType ResourceId): OSS links that straight to the asset. Display only: the router doesn't read these entries, and OSS shows each one next to the contract it matches. An entry matches a listed contract when the address formats are equal and the addresses are equal after both are normalized by that format, so a different spelling of the same address still matches. Fields beyond those listed are allowed and ignored.",
   "type": "object",
   "required": ["contracts"],
   "properties": {
@@ -35,10 +35,8 @@
             "maxLength": 256,
             "description": "Optional longer text shown with the name."
           }
-        },
-        "additionalProperties": false
+        }
       }
     }
-  },
-  "additionalProperties": false
+  }
 }
