@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/exception.schema.json",
   "title": "Exception",
-  "description": "exception/v1: the document an exception event carries. A party declares that what a trade needs cannot complete as it stands: the receiver on a declaration of the collateral its check refuses, or on a trade whose execution failed. The event cites the declaration or the trade. The exception never changes on the log; it is resolved by what cites it afterwards: the receiver's acceptance of a corrected declaration, the pledger's report of a reset plan, or an accepted manual resolve. One exception may name several lines or legs, so the counterparty answers the whole finding once.",
+  "description": "exception/v1: the document an exception event carries. A party declares that what a trade needs cannot complete as it stands: the receiver on a declaration of the collateral its check refuses, or on a trade whose execution failed; the pledger on a posting whose movement failed and that it will not move again on its own. The event cites the declaration, the trade or the posting. The exception never changes on the log; it is resolved by what cites it afterwards: the receiver's acceptance of a corrected declaration or of the collateral, the pledger's report of a reset plan, the pledger's retry of the line, or an accepted manual resolve. One exception may name several lines or legs, so the counterparty answers the whole finding once.",
   "type": "object",
   "properties": {
     "exceptionId": {
@@ -17,7 +17,7 @@
     },
     "reportId": {
       "type": "string",
-      "description": "The margin call the collateral answers, on an exception about a declaration."
+      "description": "The margin call the collateral answers, on an exception about a declaration or a posting."
     },
     "status": {
       "type": "string",
@@ -26,8 +26,8 @@
     },
     "code": {
       "type": "string",
-      "enum": ["collateral-incomplete", "collateral-incorrect", "execution-failed"],
-      "description": "What kind of finding this is. collateral-incomplete: booked lines are short, posting the rest fixes it. collateral-incorrect: a line arrived that was not booked, a movement went elsewhere or did not complete. execution-failed: a leg of the execution failed."
+      "enum": ["collateral-incomplete", "collateral-incorrect", "posting-failed", "execution-failed"],
+      "description": "What kind of finding this is. collateral-incomplete: booked lines are short, posting the rest fixes it. collateral-incorrect: a line arrived that was not booked, a movement went elsewhere or did not complete. posting-failed: the movements of a line into the container kept failing, and the pledger moves it again only once it retries. execution-failed: a leg of the execution failed."
     },
     "blame": {
       "type": "string",
