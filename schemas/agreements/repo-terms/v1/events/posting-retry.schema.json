@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/posting-retry.schema.json",
+  "title": "Posting Retry",
+  "description": "posting-retry/v1: the pledger answering the exception on a failed posting by moving the line again, once what failed it is fixed (the source account funded, a ledger back). The event cites the exception, which resolves it; the next posting of the line is the new movement, and if that fails too a new exception follows.",
+  "type": "object",
+  "properties": {
+    "tradeId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The trade whose line is moved again."
+    },
+    "exceptionId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The exception event the retry answers, as the event cites it."
+    },
+    "reportId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The trade's initial margin call, the reportId of its im-report, which the line answers, so a reader can group the retry with the trade's movements."
+    },
+    "assetId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The line moved again."
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What changed since the movement failed, in the pledger's own words."
+    }
+  },
+  "required": ["tradeId", "exceptionId", "reportId", "assetId"],
+  "additionalProperties": false
+}
