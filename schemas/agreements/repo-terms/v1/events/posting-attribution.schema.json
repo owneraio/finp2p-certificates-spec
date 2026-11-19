@@ -7,7 +7,7 @@
   "properties": {
     "reportId": {
       "type": "string",
-      "description": "The initial margin call the posting answers: the trade's im-report.",
+      "description": "The trade's initial margin call, the reportId of its im-report. A posting answers it; a recovery returns collateral posted against it. Every attribution names it so a reader can group a trade's movements by the call they serve.",
       "minLength": 1
     },
     "executionPlanId": {
@@ -36,6 +36,7 @@
     }
   },
   "required": [
+    "reportId",
     "executionPlanId"
   ],
   "additionalProperties": false
