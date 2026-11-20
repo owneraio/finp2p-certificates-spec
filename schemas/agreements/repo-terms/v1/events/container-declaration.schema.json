@@ -92,11 +92,6 @@
           "minLength": 1,
           "description": "What the account is valued in; the cash asset's denomination code when absent."
         },
-        "tokenId": {
-          "type": "string",
-          "minLength": 1,
-          "description": "The pair's pre-created collateral account, when it names one: the trade's basket asset binds to it instead of opening a new account."
-        },
         "parameters": {
           "type": "object",
           "description": "The platform plugin's own settings (e.g. a grace buffer, price and haircut contexts), passed through untouched when the account is created."
