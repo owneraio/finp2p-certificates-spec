@@ -463,7 +463,7 @@
     },
     {
       "type": "recovery-attribution",
-      "description": "Ties a ledger movement out of the trade's container to the trade: collateral coming back after the trade settled or was cancelled, or, while the receiver's exception on its collateral is open, a line returned to correct it. The agent writes it for the account it controls; attribution-completed reports how the movement ended.",
+      "description": "Ties a ledger movement out of the trade's container to the trade: collateral coming back after the trade settled or was cancelled, collateral going to the receiver after the trade defaulted, or, while the receiver's exception on its collateral is open, a line returned to correct it. The agent writes it for the account it controls; attribution-completed reports how the movement ended.",
       "schema": {
         "name": "posting-attribution",
         "version": "1",
@@ -472,7 +472,7 @@
           "format": "json-schema"
         }
       },
-      "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole in ['pledger', 'receiver', 'agent'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && (agreement.events.isReferencedBy(t, ['trade-settled', 'trade-cancelled']) || (!agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && agreement.events.isReferencedBy(t, 'trade-collateralised') && agreement.events.findReferrers(t, 'trade-collateralised').all(c, agreement.events.isReferencedBy(c.id, 'exception') && !(agreement.events.isReferencedBy(c.id, 'collateral-accepted') || agreement.events.findReferrers(c.id, 'exception').exists(x, agreement.events.isReferencedBy(x.id, 'manual-resolve-accepted')))))))"
+      "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole in ['pledger', 'receiver', 'agent'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && (agreement.events.isReferencedBy(t, ['trade-settled', 'trade-cancelled', 'trade-defaulted']) || (!agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']) && agreement.events.isReferencedBy(t, 'trade-collateralised') && agreement.events.findReferrers(t, 'trade-collateralised').all(c, agreement.events.isReferencedBy(c.id, 'exception') && !(agreement.events.isReferencedBy(c.id, 'collateral-accepted') || agreement.events.findReferrers(c.id, 'exception').exists(x, agreement.events.isReferencedBy(x.id, 'manual-resolve-accepted')))))))"
     },
     {
       "type": "basket-closed",
