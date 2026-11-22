@@ -122,6 +122,11 @@
           "minLength": 1,
           "description": "What the account is valued in; the cash asset's denomination code when absent."
         },
+        "collateralAgreementAddress": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The address of a collateral agreement created on the platform before the pair, e.g. one the platform operator has already whitelisted. When set, each trade's basket asset binds to this agreement instead of opening a new one, and the pair runs one platform trade at a time: a booking is refused while an earlier trade still holds the agreement. When absent, each trade opens its own."
+        },
         "parameters": {
           "type": "object",
           "description": "The platform plugin's own settings (e.g. a grace buffer, price and haircut contexts), passed through untouched when the account is created."
