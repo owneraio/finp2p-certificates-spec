@@ -86,11 +86,10 @@
     },
     "collateralPlatform": {
       "type": "object",
-      "description": "The platform that holds a controlled trade's collateral, when it is not the container's own ledger accounts. The pair must settle in controlled mode. The pledger's router opens each trade's account on it, or a bound tri-party agent's router.",
+      "description": "The platform that holds a controlled trade's collateral, when it is not the container's own ledger accounts. The pair must settle in controlled mode. The bound agent's router opens each trade's account on it, else the pledger's. No ledger is named: the router that opens an account uses the ledger it binds the trade's lines on the platform's chain to.",
       "additionalProperties": false,
       "required": [
         "kind",
-        "ledger",
         "network",
         "standard"
       ],
@@ -101,11 +100,6 @@
             "account"
           ],
           "description": "account: for each trade the bound agent's router (else the pledger's) opens a collateral account on the platform by creating the trade's basket token under the platform's ledger standard; the pledger moves the lines into that account, and the token's issue to the pledger has the platform count them."
-        },
-        "ledger": {
-          "type": "string",
-          "minLength": 1,
-          "description": "The ledger name the platform's chain is bound under on the router that opens the accounts (the basket asset's ledgerAssetBinding.ledger)."
         },
         "network": {
           "type": "string",
