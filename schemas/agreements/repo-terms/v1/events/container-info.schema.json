@@ -5,6 +5,16 @@
   "description": "container-info/v2: the document container-provisioned and container-retired events carry. The provisioning router writes it, never an application: its provisioning engine builds a declared container (a custody account at the provisioning organization, bound on each line's ledger, with the agreement's account policy) and reports the account, the policy and each asset's onboarding state.\n\nThe agreement owner does not run the definition's guards on these events. It checks them against the declaration instead: the embedded containerSpec must equal the declared one, the emitter role must be the container's provisioner role, and the policy id must recompute from the agreement and the container key. A definition still declares the type so a transition can name it.",
   "type": "object",
   "definitions": {
+    "error": {
+      "type": "object",
+      "description": "Reason a provisioning step failed, as the failing system reported it.",
+      "properties": {
+        "code": { "type": "integer", "description": "Error code; absent when none was reported." },
+        "message": { "type": "string" }
+      },
+      "required": ["message"],
+      "additionalProperties": false
+    },
     "caip19": {
       "type": "object",
       "description": "CAIP-19 identity of an on-chain asset.",
@@ -92,6 +102,42 @@
           }
         },
         "required": ["caip19", "status"],
+        "additionalProperties": false
+      }
+    },
+    "onboardingAttempt": {
+      "type": "integer",
+      "description": "Provisioning attempt this event reports, 0 (absent) for the first. A retry re-runs the failed steps under the next attempt without an amendment.",
+      "minimum": 0
+    },
+    "issues": {
+      "type": "array",
+      "description": "Every provisioning step that failed for the container, each with its reason. This is the list a provisioning retry re-runs, whether an operator or an application triggers it.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "step": {
+            "type": "string",
+            "description": "The provisioning step that failed. Open on purpose, so a new step is reported without a new bundle; readers must accept values they do not know. Current steps: asset-onboarding (the asset's network account could not be created), profile-share (the container profile could not be shared with a participant).",
+            "minLength": 1
+          },
+          "subject": {
+            "type": "string",
+            "description": "What the step failed for: the asset id (the asset's CAIP-19 when it resolved to no asset) for asset-onboarding, the participant organization id for profile-share.",
+            "minLength": 1
+          },
+          "caip19": {
+            "$ref": "#/definitions/caip19",
+            "description": "The failed asset, naming its network. Set for asset-onboarding only."
+          },
+          "status": {
+            "type": "string",
+            "description": "The step's outcome. Open on purpose, like step; currently always failed.",
+            "minLength": 1
+          },
+          "error": { "$ref": "#/definitions/error" }
+        },
+        "required": ["step", "subject", "status"],
         "additionalProperties": false
       }
     },
