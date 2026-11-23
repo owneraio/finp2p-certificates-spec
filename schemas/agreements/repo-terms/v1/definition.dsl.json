@@ -385,7 +385,7 @@
     },
     {
       "type": "trade-blocked",
-      "description": "A participant records that its router could not take a step on an open trade, and why, for the audit trail.",
+      "description": "A participant records that its router could not take a step on a trade, and why, for the audit trail: while the trade runs, or while it winds down after it ended (its basket token redeemed, its bonds returned, its baskets closed).",
       "schema": {
         "name": "note",
         "version": "1",
@@ -394,7 +394,7 @@
           "format": "json-schema"
         }
       },
-      "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole in ['pledger', 'receiver', 'venue', 'agent'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']) && !agreement.events.isReferencedBy(t, ['trade-rejected', 'trade-cancelled', 'trade-settled', 'trade-defaulted']))"
+      "guard": "agreement.businessState in ['active', 'closingOut'] && event.emitterRole in ['pledger', 'receiver', 'venue', 'agent'] && event.referencedEventIds.size() == 1 && event.referencedEventIds.all(t, agreement.events.allExistByIdAndType(t, ['trade-booked', 'trade-proposed']))"
     },
     {
       "type": "im-report",
