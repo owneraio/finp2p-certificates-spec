@@ -60,7 +60,6 @@
       "additionalProperties": false,
       "required": [
         "kind",
-        "ledger",
         "network",
         "standard"
       ],
@@ -70,12 +69,7 @@
           "enum": [
             "account"
           ],
-          "description": "account: for each trade the pledger's router (or a bound tri-party agent's) opens a collateral account on the platform by creating the trade's basket asset under the platform's ledger standard; the pledger moves the lines into that account, and its deposit on the basket asset has the platform count them."
-        },
-        "ledger": {
-          "type": "string",
-          "minLength": 1,
-          "description": "The ledger name the platform's chain is bound under on the router that opens the accounts (the basket asset's ledgerAssetBinding.ledger)."
+          "description": "account: for each trade the bound agent's router (else the pledger's) opens a collateral account on the platform by creating the trade's basket token under the platform's ledger standard; the pledger moves the lines into that account, and the token's issue to the pledger has the platform count them."
         },
         "network": {
           "type": "string",
