@@ -178,18 +178,6 @@
       "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver'] && agreement.events.allExistByIdAndType(event.referencedEventIds, 'vm-report')"
     },
     {
-      "type": "substitution-plan",
-      "schema": {
-        "name": "substitution-plan",
-        "version": "1",
-        "documentReference": {
-          "key": "collateral-terms/v4",
-          "format": "json-schema"
-        }
-      },
-      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver', 'vault-controller', 'valuation-engine'] && agreement.events.allExistByIdAndType(event.referencedEventIds, 'vm-report')"
-    },
-    {
       "type": "report-status-completed",
       "schema": {
         "name": "report-status",
@@ -248,18 +236,6 @@
         }
       },
       "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver'] && event.referencedEventIds.exists(id, agreement.events.existsByIdAndType(id, 'attribution-proposal-approval') && !agreement.events.isReferencedBy(id, 'attribution-completed'))"
-    },
-    {
-      "type": "negotiation",
-      "schema": {
-        "name": "negotiation",
-        "version": "1",
-        "documentReference": {
-          "key": "collateral-terms/v4",
-          "format": "json-schema"
-        }
-      },
-      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver']"
     },
     {
       "type": "closeout",
@@ -359,18 +335,6 @@
     },
     {
       "type": "settlement-attribution",
-      "schema": {
-        "name": "posting-attribution",
-        "version": "1",
-        "documentReference": {
-          "key": "collateral-terms/v4",
-          "format": "json-schema"
-        }
-      },
-      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver']"
-    },
-    {
-      "type": "recovery-attribution",
       "schema": {
         "name": "posting-attribution",
         "version": "1",
