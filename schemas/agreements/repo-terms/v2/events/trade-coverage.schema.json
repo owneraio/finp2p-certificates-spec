@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v2/events/trade-coverage.schema.json",
+  "title": "Trade Coverage",
+  "description": "trade-coverage/v1: the document a trade-collateralised event carries, the pledger's declaration that the trade's collateral is assembled: the lines it posted and, for a platform account, what the platform reported when it counted them. A calculation agent declares it for an external basket. The receiver checks the declaration against what arrived and answers with collateral-accepted or an exception on it.",
+  "type": "object",
+  "properties": {
+    "accountStatus": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The account's status at declaration, as the container or the collateral platform reports it."
+    },
+    "holdings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quantity": {
+            "type": "string",
+            "pattern": "^-?[0-9]+(\\.[0-9]+)?$"
+          }
+        },
+        "required": [
+          "assetId",
+          "quantity"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "coverageRatio": {
+      "type": "string",
+      "pattern": "^-?[0-9]+(\\.[0-9]+)?$",
+      "description": "Collateral value over liability, after haircuts, as a decimal string."
+    }
+  },
+  "required": [
+    "accountStatus",
+    "holdings",
+    "coverageRatio"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v2/events/manual-resolve-decision.schema.json",
+  "title": "Manual Resolve Decision",
+  "description": "manual-resolve-decision/v1: the document manual-resolve-accepted and manual-resolve-rejected carry, the counterparty's answer to a manual resolve. One document for two event types, because a guard chooses on the type and never reads a payload. The requester cannot answer its own request. The event cites the request and the exceptions it answers; an acceptance resolves them, a rejection says why so the requester can answer it.",
+  "type": "object",
+  "properties": {
+    "manualResolveId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The request answered."
+    },
+    "tradeId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": ["accepted", "rejected"]
+    },
+    "exceptionIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "The exceptions the request answers, as the event cites them."
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Required on a rejection, so the requester can answer it."
+    }
+  },
+  "required": ["manualResolveId", "tradeId", "status"],
+  "if": {
+    "properties": {
+      "status": {
+        "const": "rejected"
+      }
+    }
+  },
+  "then": {
+    "required": ["reason"]
+  },
+  "additionalProperties": false
+}

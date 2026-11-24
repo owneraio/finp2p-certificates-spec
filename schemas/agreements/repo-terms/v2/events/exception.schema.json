@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v2/events/exception.schema.json",
+  "title": "Exception",
+  "description": "exception/v1: the document an exception event carries. A party declares that what a trade needs cannot complete as it stands: the receiver on a declaration of the collateral its check refuses, or on a trade whose execution failed; the pledger on a posting whose movement failed and that it will not move again on its own. The event cites the declaration, the trade or the posting. The exception never changes on the log; it is resolved by what cites it afterwards: the receiver's acceptance of a corrected declaration or of the collateral, the pledger's report of a reset plan, the pledger's retry of the line, or an accepted manual resolve. One exception may name several lines or legs, so the counterparty answers the whole finding once.",
+  "type": "object",
+  "properties": {
+    "exceptionId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identity of this exception, minted by the facade."
+    },
+    "tradeId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The trade the exception is about: its trade-booked or trade-proposed event."
+    },
+    "reportId": {
+      "type": "string",
+      "description": "The margin call the collateral answers, on an exception about a declaration or a posting."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["open"],
+      "description": "Always open as written. Every organization derives whether it is resolved from what cites it, so all of them read the same answer."
+    },
+    "code": {
+      "type": "string",
+      "enum": ["collateral-incomplete", "collateral-incorrect", "posting-failed", "execution-failed"],
+      "description": "What kind of finding this is. collateral-incomplete: booked lines are short, posting the rest fixes it. collateral-incorrect: a line arrived that was not booked, a movement went elsewhere or did not complete. posting-failed: the movements of a line into the container kept failing, and the pledger moves it again only once it retries. execution-failed: a leg of the execution failed."
+    },
+    "blame": {
+      "type": "string",
+      "enum": ["pledger", "receiver", "valuation-engine"],
+      "description": "The role whose side the problem is on. Not an allocation of fault: a ledger being unavailable is a side, not a mistake."
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The finding in the raiser's own words, for the counterparty to act on."
+    },
+    "details": {
+      "type": "array",
+      "description": "One finding per line, posting or leg.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "assetId": {
+            "type": "string"
+          },
+          "executionPlanId": {
+            "type": "string"
+          },
+          "leg": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The leg of the execution, on an execution finding."
+          },
+          "expected": {
+            "type": "string",
+            "description": "The booked quantity, or what the posting said."
+          },
+          "found": {
+            "type": "string",
+            "description": "What the raiser found."
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["message"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["exceptionId", "tradeId", "status", "code", "blame", "reason"],
+  "additionalProperties": false
+}

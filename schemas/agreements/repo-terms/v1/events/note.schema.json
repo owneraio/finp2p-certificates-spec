@@ -19,7 +19,7 @@
     },
     "collateralAccount": {
       "type": "object",
-      "description": "On trade-blocked: what the collateral account reported when the collateral platform refused the pledger's basket token issue (the ratio it fell short at), when the platform answered one.",
+      "description": "On trade-blocked: what the collateral account reported when the collateral platform refused the pledger's deposit (the ratio it fell short at), when the platform answered one.",
       "properties": {
         "status": {
           "type": "string",

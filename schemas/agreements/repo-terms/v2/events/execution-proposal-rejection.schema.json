@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v2/events/execution-proposal-rejection.schema.json",
+  "title": "Execution Proposal Rejection",
+  "description": "execution-proposal-rejection/v1: the receiver refusing a proposed execution. A proposal is never partly refused; the pledger answers with a new proposal.",
+  "type": "object",
+  "properties": {
+    "proposalId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The proposal refused. The event also references the proposal event itself."
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Why the proposal was refused, for the pledger to correct."
+    },
+    "details": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The proposal field the objection is about, such as terms.cash."
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "field"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Objections per field, when the receiver's check produced them."
+    }
+  },
+  "required": [
+    "reason"
+  ],
+  "additionalProperties": false
+}

@@ -125,7 +125,7 @@
     },
     {
       "type": "basket-registered",
-      "description": "Registers the quantity-1 basket asset that stands for a trade's collateral, and the account behind it: a collateral platform's account the agent opened, the token issued over a ledger container, or a calculation agent's external basket.",
+      "description": "Registers the quantity-1 basket asset that stands for a trade's collateral, and the account behind it: a collateral platform's account the agent opened, the token the pledger minted over a ledger container, or a calculation agent's external basket.",
       "schema": {
         "name": "external-basket",
         "version": "1",

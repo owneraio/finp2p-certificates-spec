@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v2/events/collateral-account-request.schema.json",
+  "title": "Collateral Account Request",
+  "description": "collateral-account-request/v1: the document a collateral-account-requested event carries. It asks for the trade's collateral account. The trade it cites, and the pair, already name the lines, the parties and the platform, so they are not repeated here. An external request is answered by the calculation agent's basket-registered citing the same trade. A platform account needs no request: the pledger's router (or a bound tri-party agent's) opens it once the trade is affirmed, and a request that comes first only sets its parameters.",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "type": "string",
+      "enum": [
+        "platform-account",
+        "external"
+      ],
+      "description": "The answer expected. platform-account: the trade's account on the pair's collateral platform, opened by the pledger's router or a bound agent's, which then declares the trade's container bound to it. external: the calculation agent registers a basket on its own platform."
+    },
+    "parameters": {
+      "type": "object",
+      "description": "Optional settings for this trade's account, passed to the platform untouched. They override the pair's collateralPlatform.parameters key by key."
+    },
+    "note": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "description": "Optional free text for the record."
+    }
+  },
+  "required": [
+    "kind"
+  ],
+  "additionalProperties": false
+}

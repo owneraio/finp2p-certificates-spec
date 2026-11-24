@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v2/events/execution-update.schema.json",
+  "title": "Execution Update",
+  "description": "execution-update/v1: the document an execution-updated event carries. One per leg of the trade's execution, whatever runs it: the first and second leg of one loan intent today, or two DvPs later. A leg completed or failed, or the plan was reset to an earlier instruction and runs again: a reset names the leg that runs again, the sequences it went from and to, and the exceptions on the trade it answers, which the event also cites. A guard cannot read the status, so the facade decides who reports which leg and when the last one has run.",
+  "type": "object",
+  "properties": {
+    "orchestrationPlanId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The plan the leg ran in."
+    },
+    "leg": {
+      "type": "object",
+      "properties": {
+        "index": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "This leg, starting at 1."
+        },
+        "of": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "How many legs the execution has."
+        }
+      },
+      "required": [
+        "index",
+        "of"
+      ],
+      "additionalProperties": false
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "failed",
+        "reset"
+      ],
+      "description": "completed or failed for a leg that ran; reset when the plan was rewound to run this leg again."
+    },
+    "completedAt": {
+      "type": "integer",
+      "description": "When the leg finished, epoch ms."
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quantity": {
+            "type": "string",
+            "pattern": "^-?[0-9]+(\\.[0-9]+)?$"
+          }
+        },
+        "required": [
+          "assetId",
+          "quantity"
+        ],
+        "additionalProperties": false
+      },
+      "description": "What the leg moved, when the reporter knows it."
+    },
+    "reset": {
+      "type": "object",
+      "description": "Where the plan was reset, on a reset.",
+      "properties": {
+        "fromSequence": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "The instruction the reset was launched from."
+        },
+        "targetSequence": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "The instruction the plan runs again from."
+        }
+      },
+      "required": [
+        "targetSequence"
+      ],
+      "additionalProperties": false
+    },
+    "exceptionIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "On a reset, the open exceptions on the trade it answers, as the event cites them."
+    }
+  },
+  "required": [
+    "orchestrationPlanId",
+    "leg",
+    "status"
+  ],
+  "additionalProperties": false
+}
