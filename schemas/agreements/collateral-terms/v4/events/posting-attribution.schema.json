@@ -23,10 +23,6 @@
       "type": "string",
       "description": "Quantity moved, as a decimal string."
     },
-    "negotiationId": {
-      "type": "string",
-      "description": "The agreed negotiation thread this posting executes, when the report is fulfilled through negotiation rather than directly."
-    },
     "purpose": {
       "type": "string",
       "description": "`settlement` marks the receiver's counter-payment leg. Absent means a collateral leg — the settlement asset may equal an eligible line's asset, so (reportId, assetId) alone would be ambiguous without this.",
