@@ -2,13 +2,14 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/data/contracts.schema.json",
   "title": "Contracts",
-  "description": "Display names and descriptions for the contracts in an asset's capability list. Key the row by the asset itself (identifierType ResourceId): OSS links that straight to the asset. Display only: the router doesn't read these entries, and OSS shows each one next to the contract it matches. An entry matches a listed contract when the address formats are equal and the addresses are equal after both are normalized by that format, so a different spelling of the same address still matches. Fields beyond those listed are allowed and ignored.",
+  "description": "Display names and descriptions for the contracts in an asset's capability list. Key the row by the asset's ResourceId, the preferred key: OSS links it straight to the asset. OSS also reads rows keyed by the asset's ISIN and, through an assetHeader row, by its CAIP19. When several rows name the same contract, the most recently updated row wins. Display only: the router doesn't read these entries, and OSS shows each one next to the contract it matches. An entry matches a listed contract when the address formats are equal and the addresses are equal after both are normalized by that format, so a different spelling of the same address still matches. Fields beyond those listed are allowed and ignored.",
   "type": "object",
   "required": ["contracts"],
   "properties": {
     "contracts": {
       "type": "array",
-      "description": "One entry per contract. Two entries for the same contract are rejected at ingest.",
+      "maxItems": 200,
+      "description": "One entry per contract. Two entries for the same contract are rejected at ingest. One invalid entry rejects the whole row, and the asset's earlier row stays.",
       "items": {
         "type": "object",
         "required": ["address", "addressFormat", "name"],
@@ -16,6 +17,7 @@
           "address": {
             "type": "string",
             "minLength": 1,
+            "maxLength": 1024,
             "pattern": "^\\S(.*\\S)?$",
             "description": "The contract's address, in the format addressFormat names, with no leading or trailing spaces. The router rejects an address that doesn't parse under its format."
           },
