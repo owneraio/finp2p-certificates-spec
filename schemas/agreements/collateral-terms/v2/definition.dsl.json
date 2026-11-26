@@ -151,7 +151,7 @@
           "format": "json-schema"
         }
       },
-      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in agreement.events.outstandingRoles(event.referencedEventIds, ['manual-resolve', 'manual-resolve-accepted'], ['pledger', 'receiver'])"
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver'] && agreement.events.emitterRolesOf(event.referencedEventIds, 'manual-resolve').size() > 0 && !(event.emitterRole in agreement.events.emitterRolesOf(event.referencedEventIds, 'manual-resolve')) && agreement.events.referrerRoles(event.referencedEventIds, 'manual-resolve-accepted').size() == 0"
     },
     {
       "type": "manual-resolve-rejected",
@@ -163,7 +163,7 @@
           "format": "json-schema"
         }
       },
-      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in agreement.events.outstandingRoles(event.referencedEventIds, ['manual-resolve', 'manual-resolve-accepted'], ['pledger', 'receiver'])"
+      "guard": "agreement.businessState == 'reportProcessing' && event.emitterRole in ['pledger', 'receiver'] && agreement.events.emitterRolesOf(event.referencedEventIds, 'manual-resolve').size() > 0 && !(event.emitterRole in agreement.events.emitterRolesOf(event.referencedEventIds, 'manual-resolve')) && agreement.events.referrerRoles(event.referencedEventIds, 'manual-resolve-accepted').size() == 0"
     },
     {
       "type": "coverage-recheck",
