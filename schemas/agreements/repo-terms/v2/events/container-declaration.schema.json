@@ -1,0 +1,134 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v2/events/container-declaration.schema.json",
+  "title": "container-declaration/v2",
+  "description": "The document a container-declared event carries: the authored ContainerSpec (protojson) that adds the trade's container to the agreement's whitelist, and where it sits. The agreement owner validates the spec itself; this schema only pins the envelope. The router of the spec's provisionerRole builds the container and answers with container-provisioned: the declaring role when networkAccount names an existing account, else a bound agent, else the receiver.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "containerSpec"
+  ],
+  "properties": {
+    "containerSpec": {
+      "type": "object",
+      "required": [
+        "key"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "servesRoles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "provisionerRole": {
+          "type": "string"
+        },
+        "provisionerParty": {
+          "type": "string"
+        },
+        "boundParty": {
+          "type": "string"
+        },
+        "policyTemplate": {
+          "type": "object"
+        },
+        "eligibleAssets": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "collateralMode": {
+      "type": "string",
+      "enum": [
+        "lender-account",
+        "segregated",
+        "controlled"
+      ],
+      "description": "Where the collateral sits for the term: delivered into the receiver's account by the loan plan (lender-account), held on the pledger's account with the receiver as beneficiary (segregated), or moved into the trade's provisioned container (controlled, the basket shape)."
+    },
+    "collateralPlatform": {
+      "type": "object",
+      "description": "The pair's collateral platform, carried on the declaration so every router reads it off the log.",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "network",
+        "standard"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "account"
+          ],
+          "description": "account: for each trade the bound agent's router (else the pledger's) opens a collateral account on the platform by creating the trade's basket token under the platform's ledger standard; the pledger moves the lines into that account, and the token's issue to the pledger has the platform count them."
+        },
+        "network": {
+          "type": "string",
+          "minLength": 1,
+          "description": "CAIP-2 chain of the platform's collateral accounts, e.g. eip155:2026041002."
+        },
+        "standard": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The ledger standard the basket asset is created under: the one the platform's plugin is installed as on that router's ledger adapter (e.g. a collateral platform plugin's account standard)."
+        },
+        "currency": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the account is valued in; the cash asset's denomination code when absent."
+        },
+        "parameters": {
+          "type": "object",
+          "description": "The platform plugin's own settings (e.g. a grace buffer, price and haircut contexts), passed through untouched when the account is created."
+        }
+      }
+    },
+    "networkAccount": {
+      "type": "object",
+      "description": "An account that already exists on the lines' network for the container to be bound to (protojson NetworkAccount): on a platform trade, the collateral account that creating the basket asset opened. The provisioning router binds the container finId to it for each line on that network instead of having the line's adapter create a wallet. The facade refuses an account on another network than a line.",
+      "additionalProperties": false,
+      "required": [
+        "caip10"
+      ],
+      "properties": {
+        "caip10": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "network",
+            "address"
+          ],
+          "properties": {
+            "network": {
+              "type": "string",
+              "minLength": 1,
+              "description": "CAIP-2 chain, e.g. eip155:2026."
+            },
+            "address": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The account's address on the chain: the platform's collateral account."
+            }
+          }
+        }
+      }
+    },
+    "eligibleAssetIds": {
+      "type": "array",
+      "description": "The trade's line asset ids, in the order of the container spec's eligible assets: the assets the router provisions the container for, by id.",
+      "items": {
+        "type": "string",
+        "pattern": "^[^:]+:102:[^:]+$"
+      }
+    }
+  }
+}

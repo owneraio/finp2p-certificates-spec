@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v2/events/execution.schema.json",
+  "title": "Execution",
+  "description": "execution/v2: the document an execution-started event carries, the link from the trade to the orchestration plans that settle it, one per executed intent. The legs are reported by execution-updated; the plans hold the detail.",
+  "type": "object",
+  "properties": {
+    "plans": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "intentId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "orchestrationPlanId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "intentId",
+          "orchestrationPlanId"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "plans"
+  ],
+  "additionalProperties": false
+}

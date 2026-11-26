@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v2/events/im-report.schema.json",
+  "title": "Initial Margin Report",
+  "description": "im-report/v2: the document an im-report event carries, the initial margin call on a trade. The valuation engine, the receiver unless the pair binds another party, raises one per trade once its container is provisioned, or at once when the trade has none. It names how much collateral is called, from whom and where it goes; the booked trade says which assets. The report's status is overlaid by the report-status events that cite it, never by rewriting this document.",
+  "type": "object",
+  "properties": {
+    "reportId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identity of the report, minted by the facade. A posting names the call it answers by it."
+    },
+    "agreementId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The repo pair the trade belongs to."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["new"],
+      "description": "Always new as written; report-status events overlay it."
+    },
+    "currency": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The asset the nominal amount is in: the trade's cash asset."
+    },
+    "nominalMarginAmount": {
+      "type": "string",
+      "pattern": "^[0-9]+(\\.[0-9]+)?$",
+      "description": "The collateral value called for: the purchase price grossed up by the largest booked haircut, rounded up to the cent."
+    },
+    "calledParty": {
+      "type": "string",
+      "enum": ["pledger"],
+      "description": "The party called to post the collateral."
+    },
+    "containerKey": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The trade's container the collateral goes into. Absent when the collateral moves with the loan."
+    },
+    "deadline": {
+      "type": "integer",
+      "description": "When the call must be met, epoch seconds."
+    }
+  },
+  "required": ["reportId", "agreementId", "status", "currency", "nominalMarginAmount", "calledParty"],
+  "additionalProperties": false
+}
