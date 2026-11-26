@@ -7,12 +7,12 @@
   "properties": {
     "reportId": {
       "type": "string",
-      "description": "Ignored by the router, which takes this from the event's reference list instead: the citation is checked at admission and signed, a copy in the body is neither. Kept so events written before it was derived still validate.",
+      "description": "The report this answer is about.",
       "minLength": 1
     },
     "manualResolveId": {
       "type": "string",
-      "description": "Ignored by the router, which takes this from the event's reference list instead: the citation is checked at admission and signed, a copy in the body is neither. Kept so events written before it was derived still validate.",
+      "description": "The request being answered.",
       "minLength": 1
     },
     "status": {
@@ -25,7 +25,7 @@
     },
     "exceptionIds": {
       "type": "array",
-      "description": "Ignored by the router, which takes this from the event's reference list instead: the citation is checked at admission and signed, a copy in the body is neither. Kept so events written before it was derived still validate.",
+      "description": "The exceptions the request cited, carried here so a reader need not walk back through the request. Mirrors the event's own reference list.",
       "items": {
         "type": "string",
         "minLength": 1
@@ -37,6 +37,8 @@
     }
   },
   "required": [
+    "reportId",
+    "manualResolveId",
     "status"
   ],
   "additionalProperties": false

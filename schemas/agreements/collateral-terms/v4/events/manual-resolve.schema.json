@@ -2,12 +2,12 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/events/manual-resolve.schema.json",
   "title": "Manual Resolve",
-  "description": "manual-resolve/v1 — a party asking to discharge the report's obligation without any collateral moving, because it was settled between the parties outside the platform or the call no longer stands. Either party may ask; the counterparty answers, and the request is already the requester's own consent. Nothing closes until it is accepted, and a refusal ends nothing — the exceptions stay open, so the requester may ask again with new grounds or post after all. The exceptions it answers are the ones the event CITES in its reference list, and only those: a copy in the body is ignored.",
+  "description": "manual-resolve/v1 — a party asking to discharge the report's obligation without any collateral moving, because it was settled between the parties outside the platform or the call no longer stands. Either party may ask; the counterparty answers, and the request is already the requester's own consent. Nothing closes until it is accepted, and a refusal ends nothing — the exceptions stay open, so the requester may ask again with new grounds or post after all. The event cites every exception it answers in its reference list; `exceptionIds` is the readable mirror of that list and must agree with it.",
   "type": "object",
   "properties": {
     "manualResolveId": {
       "type": "string",
-      "description": "Identity of this request, minted by the facade and handed to clients, who answer it by id through the collateral API. On the log the answer cites this event instead.",
+      "description": "Identity of this request, minted by the facade. The answer names it, and so does the completion that follows an acceptance.",
       "minLength": 1
     },
     "reportId": {
@@ -17,7 +17,7 @@
     },
     "exceptionIds": {
       "type": "array",
-      "description": "Ignored by the router, which takes this from the event's reference list instead: the citation is checked at admission and signed, a copy in the body is neither. Kept so events written before it was derived still validate.",
+      "description": "The open exceptions this request answers. A multi-leg failure is ONE conversation, not one per leg, so a request may answer several at once. Mirrors the event's own reference list.",
       "minItems": 1,
       "items": {
         "type": "string",
@@ -33,6 +33,7 @@
   "required": [
     "manualResolveId",
     "reportId",
+    "exceptionIds",
     "reason"
   ],
   "additionalProperties": false
