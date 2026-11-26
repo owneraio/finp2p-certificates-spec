@@ -139,28 +139,6 @@
               "type": "string",
               "minLength": 1,
               "description": "FinP2P asset id of the cash this side settles on."
-            },
-            "networkAccount": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "network",
-                "address"
-              ],
-              "properties": {
-                "network": {
-                  "type": "string",
-                  "pattern": "^[-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32}$",
-                  "description": "CAIP-2 chain id, e.g. eip155:2026."
-                },
-                "address": {
-                  "type": "string",
-                  "minLength": 1,
-                  "maxLength": 128,
-                  "description": "The wallet address on that chain."
-                }
-              },
-              "description": "Optional. The wallet this side uses on the collateral platform, for this trade only. It is set once and never changed. On a booked trade the venue may name both sides' wallets. On a proposed trade each party names its own in its trade-affirmed instead, and the facade refuses one here unless the proposer holds both sides. When absent, the pair's address book applies, else there is none."
             }
           },
           "required": [
@@ -188,28 +166,6 @@
               "type": "string",
               "minLength": 1,
               "description": "FinP2P asset id of the cash this side settles on."
-            },
-            "networkAccount": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "network",
-                "address"
-              ],
-              "properties": {
-                "network": {
-                  "type": "string",
-                  "pattern": "^[-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32}$",
-                  "description": "CAIP-2 chain id, e.g. eip155:2026."
-                },
-                "address": {
-                  "type": "string",
-                  "minLength": 1,
-                  "maxLength": 128,
-                  "description": "The wallet address on that chain."
-                }
-              },
-              "description": "Optional. The wallet this side uses on the collateral platform, for this trade only. It is set once and never changed. On a booked trade the venue may name both sides' wallets. On a proposed trade each party names its own in its trade-affirmed instead, and the facade refuses one here unless the proposer holds both sides. When absent, the pair's address book applies, else there is none."
             }
           },
           "required": [
