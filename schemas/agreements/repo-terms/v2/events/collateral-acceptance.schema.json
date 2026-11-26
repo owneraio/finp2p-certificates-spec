@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v2/events/collateral-acceptance.schema.json",
+  "title": "Collateral Acceptance",
+  "description": "collateral-acceptance/v1: the receiver accepting the pledger's declaration that a trade's collateral is assembled. The event cites the trade-collateralised it accepts, and the open exceptions on the trade's earlier declarations it answers, which resolves them. The holdings and the coverage ratio are the receiver's own reading of what arrived, not the pledger's.",
+  "type": "object",
+  "properties": {
+    "holdings": {
+      "type": "array",
+      "description": "What the receiver found delivered into the container, per asset.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quantity": {
+            "type": "string",
+            "pattern": "^-?[0-9]+(\\.[0-9]+)?$"
+          }
+        },
+        "required": [
+          "assetId",
+          "quantity"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "coverageRatio": {
+      "type": "string",
+      "pattern": "^-?[0-9]+(\\.[0-9]+)?$",
+      "description": "The holdings' value at the booked prices over the margin call's nominal amount, when every booked line carries a price."
+    },
+    "note": {
+      "type": "string",
+      "description": "Free-text remark, such as the automatic check's own note."
+    },
+    "exceptionIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "The exceptions the acceptance answers, as the event cites them."
+    }
+  },
+  "required": [
+    "holdings"
+  ],
+  "additionalProperties": false
+}

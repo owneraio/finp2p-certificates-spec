@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v2/agreement.schema.json",
+  "title": "Repo Terms",
+  "description": "repo-terms/v2: the terms document carried in Agreement.terms for a per-pair repo agreement, base64 on the wire and identified by Agreement.termsType. Co-signed contract zone: fixed at proposal. Per-trade economics live on each trade-booked / trade-proposed event, not here.",
+  "type": "object",
+  "properties": {
+    "borrower": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The cash borrower (pledger role, A): the borrowing investor's finId, or the org id of the pledger. Every trade's pledger account must match it, by finId when this is a finId, by org when it is an org id; a trade whose accounts disagree is refused."
+    },
+    "lender": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The cash lender (receiver role, B; the agreement owner): the lending investor's finId, or the org id of the receiver. Every trade's receiver account must match it, as for borrower."
+    },
+    "cashAssetId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Optional. Informational only: the pair does not lock its trades to one cash asset. Each trade names its cash on its purchase and repurchase prices, and the receiver affirms it per trade."
+    },
+    "cashCurrency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$",
+      "description": "ISO 4217 code of the cash the pair settles in, consented with the terms. A venue checks a booking's currency against it, since it may not see the cash asset itself."
+    },
+    "eligibleAssets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "haircut": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Fraction (0.02 = 2%)."
+          }
+        },
+        "required": [
+          "assetId",
+          "haircut"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Securities the lender accepts as collateral, each with its haircut schedule."
+    },
+    "haircutConvention": {
+      "type": "string",
+      "enum": [
+        "fraction"
+      ]
+    },
+    "limits": {
+      "type": "object",
+      "properties": {
+        "maxOpenTrades": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Checked by the apps, not by a guard: guards cannot count open trades cheaply."
+        }
+      },
+      "required": [],
+      "additionalProperties": false,
+      "description": "Operational limits. There is no basket limit: each trade has its own basket."
+    },
+    "cutOffMinutes": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Minutes before leg 1 after which a trade may no longer be cancelled in the apps; the guard's own cut-off is the receiver's approval of an execution proposal."
+    },
+    "collateralMode": {
+      "type": "string",
+      "enum": [
+        "lender-account",
+        "segregated",
+        "controlled",
+        "external"
+      ],
+      "description": "The pair's default collateral mode; a booking may override it. lender-account when absent. An external pair (external) holds the collateral on the calculation agent's own platform: FinP2P sees only the basket token it registers and the cash."
+    },
+    "collateralPlatform": {
+      "type": "object",
+      "description": "The platform that holds a controlled trade's collateral, when it is not the container's own ledger accounts. The pair must settle in controlled mode. The bound agent's router opens each trade's account on it, else the pledger's. No ledger is named: the router that opens an account uses the ledger it binds the trade's lines on the platform's chain to.",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "network",
+        "standard"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "account"
+          ],
+          "description": "account: for each trade the bound agent's router (else the pledger's) opens a collateral account on the platform by creating the trade's basket token under the platform's ledger standard; the pledger moves the lines into that account, and the token's issue to the pledger has the platform count them."
+        },
+        "network": {
+          "type": "string",
+          "minLength": 1,
+          "description": "CAIP-2 chain of the platform's collateral accounts, e.g. eip155:2026041002."
+        },
+        "standard": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The ledger standard the basket asset is created under: the one the platform's plugin is installed as on that router's ledger adapter (e.g. a collateral platform plugin's account standard)."
+        },
+        "currency": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the account is valued in; the cash asset's denomination code when absent."
+        },
+        "collateralAgreementAddress": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The address of a collateral agreement created on the platform before the pair, e.g. one the platform operator has already whitelisted. When set, each trade's basket asset binds to this agreement instead of opening a new one, and the pair runs one platform trade at a time: a booking is refused while an earlier trade still holds the agreement. When absent, each trade opens its own."
+        },
+        "parameters": {
+          "type": "object",
+          "description": "The platform plugin's own settings (e.g. a grace buffer, price and haircut contexts), passed through untouched when the account is created."
+        }
+      }
+    },
+    "addressBook": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The parties' wallet addresses per chain, shared on the agreement like their finIds and consented with the terms. Address book data only: no custody is implied. On a platform pair the borrower's wallet owns the trade's collateral account and is bound to its basket asset so leg 2 pays it back; the lender's wallet is bound so leg 1 pays it.",
+      "properties": {
+        "borrower": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "network",
+              "address"
+            ],
+            "properties": {
+              "network": {
+                "type": "string",
+                "pattern": "^[-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32}$",
+                "description": "CAIP-2 chain id, e.g. eip155:2026."
+              },
+              "address": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "description": "The party's wallet address on that chain."
+              }
+            }
+          },
+          "description": "The borrower's (pledger's) wallets."
+        },
+        "lender": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "network",
+              "address"
+            ],
+            "properties": {
+              "network": {
+                "type": "string",
+                "pattern": "^[-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32}$",
+                "description": "CAIP-2 chain id, e.g. eip155:2026."
+              },
+              "address": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "description": "The party's wallet address on that chain."
+              }
+            }
+          },
+          "description": "The lender's (receiver's) wallets."
+        }
+      }
+    }
+  },
+  "required": [
+    "borrower",
+    "lender",
+    "eligibleAssets",
+    "haircutConvention"
+  ],
+  "additionalProperties": false
+}

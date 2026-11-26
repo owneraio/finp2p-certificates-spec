@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v2/events/execution-proposal.schema.json",
+  "title": "Execution Proposal",
+  "description": "execution-proposal/v1: the document an execution-proposal event carries. The pledger proposes how the trade settles: the instruments it created and the terms it built them from. Today that is one loan intent, whose plan carries its own await between the two legs; a later version may propose two DvP intents with an await the facade times between them. The receiver approves or rejects the proposal as a whole, and the pledger answers a rejection with a new proposal.",
+  "type": "object",
+  "definitions": {
+    "instrument": {
+      "type": "object",
+      "description": "One intent the pledger created to settle the trade.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "loanIntent",
+            "dvp"
+          ],
+          "description": "The kind of intent. Only loanIntent is executed today."
+        },
+        "intentId": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "type",
+        "intentId"
+      ],
+      "additionalProperties": false
+    },
+    "terms": {
+      "type": "object",
+      "description": "What the intents were built from, read off the booked trade, so the receiver can check them against the booking.",
+      "properties": {
+        "cash": {
+          "type": "object",
+          "properties": {
+            "assetId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "amount": {
+              "type": "string",
+              "pattern": "^-?[0-9]+(\\.[0-9]+)?$"
+            }
+          },
+          "required": [
+            "assetId",
+            "amount"
+          ],
+          "additionalProperties": false,
+          "description": "The cash the receiver pays on the first leg."
+        },
+        "closeAmount": {
+          "type": "object",
+          "properties": {
+            "assetId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "amount": {
+              "type": "string",
+              "pattern": "^-?[0-9]+(\\.[0-9]+)?$"
+            }
+          },
+          "required": [
+            "assetId",
+            "amount"
+          ],
+          "additionalProperties": false,
+          "description": "The cash the pledger repays on the second leg."
+        },
+        "openTime": {
+          "type": "integer",
+          "description": "When the first leg runs, epoch ms."
+        },
+        "closeTime": {
+          "type": "integer",
+          "description": "When the second leg runs, epoch ms."
+        },
+        "collateral": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "assetId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "quantity": {
+                "type": "string",
+                "pattern": "^-?[0-9]+(\\.[0-9]+)?$"
+              }
+            },
+            "required": [
+              "assetId",
+              "quantity"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The collateral the intents deliver: the trade's lines, or its basket asset."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "proposalId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "This proposal. A later proposal on the same trade is a fresh one, not a revision of this one."
+    },
+    "round": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "1 on the trade's first proposal, incrementing after each rejection."
+    },
+    "instruments": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/instrument"
+      },
+      "description": "The intents that settle the trade, in the order they run."
+    },
+    "terms": {
+      "$ref": "#/definitions/terms"
+    }
+  },
+  "required": [
+    "proposalId",
+    "round",
+    "instruments"
+  ],
+  "additionalProperties": false
+}

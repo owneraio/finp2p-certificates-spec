@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ownera.io/certificates/agreements/repo-terms/v1/events/external-basket.schema.json",
   "title": "External Basket",
-  "description": "external-basket/v1: the document a basket-registered event carries: a quantity-1 FinP2P basket asset that stands for a trade's collateral, and the account behind it, created for the trade the event cites. It has three uses: a collateral platform's account, registered by the router that opened it; the basket token issued over a ledger container, where chainId is finp2p and account is the container's finId; and a calculation agent's external basket, filled off FinP2P.",
+  "description": "external-basket/v1: the document a basket-registered event carries: a quantity-1 FinP2P basket asset that stands for a trade's collateral, and the account behind it, created for the trade the event cites. It has three uses: a collateral platform's account, registered by the router that opened it; the token the pledger mints over a ledger container, where chainId is finp2p and account is the container's finId; and a calculation agent's external basket, filled off FinP2P.",
   "type": "object",
   "properties": {
     "basketKey": {
