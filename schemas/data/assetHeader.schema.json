@@ -57,6 +57,12 @@
           "type": "string",
           "enum": ["native", "wrapped", "twin"],
           "description": "How the asset is represented on this chain. \"native\": the token is the asset itself, primary issuance on this chain (e.g. BTC on Bitcoin, USDC on Ethereum, BUIDL where the on-chain token is the legal share record). \"wrapped\": represents the same asset that lives natively on another blockchain, with custody held on-chain in a bridge contract or vault (e.g. WBTC, USDC.e). \"twin\": represents an off-chain real-world asset with custody held off-chain by a depository or transfer agent (e.g. tokenised AAPL shares, tokenised T-bills)."
+        },
+        "decimals": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18,
+          "description": "Decimal places of the token on this chain, as the ledger itself reports them (e.g. 18 for a typical ERC-20, 0 for a depository book-entry position held in whole units). Optional. This is the precision of this representation; the asset-level `decimals` is the precision the asset is held to across its representations."
         }
       },
       "required": ["caip19", "issuanceMode"]
@@ -128,6 +134,12 @@
     "currency": {
       "type": "string",
       "description": "Denomination / settlement currency — an ISO 4217 code (`USD`) or a digital-asset code (`USDC`, `USDT`), so deliberately not constrained to three letters. Optional: not every asset class has a meaningful denomination, and catalog identity must not depend on valuation data — consumers that value holdings must treat a missing currency like a missing FX rate (exclude and surface, do not guess)."
+    },
+    "decimals": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 18,
+      "description": "Decimal places the asset is held and moved to, across its representations. 0 means whole units (e.g. a security whose depository position is in whole units, converted one unit to one whole token). Optional: a publisher that does not know it leaves it out, and a consumer must not assume a default. A representation may also state its own on-chain `decimals`, which can be finer than this."
     },
     "issuingOrg": {
       "type": "object",
