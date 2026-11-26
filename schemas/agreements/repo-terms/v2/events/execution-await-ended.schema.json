@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v2/events/execution-await-ended.schema.json",
+  "title": "Execution Await Ended",
+  "description": "execution-await-ended/v2: the document an execution-await-ended event carries. The wait between two legs is over and the next leg can run.",
+  "type": "object",
+  "properties": {
+    "endedAt": {
+      "type": "integer",
+      "description": "When the wait ended, epoch ms."
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "plan",
+        "facade"
+      ]
+    },
+    "orchestrationPlanId": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "endedAt",
+    "source"
+  ],
+  "additionalProperties": false
+}

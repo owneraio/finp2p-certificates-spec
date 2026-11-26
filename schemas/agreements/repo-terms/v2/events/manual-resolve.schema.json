@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v2/events/manual-resolve.schema.json",
+  "title": "Manual Resolve",
+  "description": "manual-resolve/v2: a party asking to resolve open exceptions on a trade without anything more moving on the platform, because the parties settled the matter between themselves or it no longer stands. The request is the requester's own consent; the counterparty answers it. Nothing is resolved until it is accepted, and a rejection leaves the exceptions open. The event cites every exception it answers; exceptionIds mirrors that list.",
+  "type": "object",
+  "properties": {
+    "manualResolveId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identity of this request, minted by the facade."
+    },
+    "tradeId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The trade whose exceptions the request answers."
+    },
+    "exceptionIds": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "The exception events the request answers, as the event cites them."
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Why resolving by hand is right: not a restatement of the finding, which the exception carries."
+    }
+  },
+  "required": ["manualResolveId", "tradeId", "exceptionIds", "reason"],
+  "additionalProperties": false
+}
