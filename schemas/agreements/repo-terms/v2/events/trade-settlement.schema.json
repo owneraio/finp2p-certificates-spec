@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v2/events/trade-settlement.schema.json",
+  "title": "Trade Settlement",
+  "description": "trade-settlement/v2: the document a trade-settled event carries, emitted by the receiver once the execution's last leg has run, or once the parties resolved the trade's execution exception by hand.",
+  "type": "object",
+  "properties": {
+    "orchestrationPlanId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "manualResolveId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The accepted manual resolve the trade settled by, when its execution did not complete on the platform."
+    }
+  },
+  "required": [
+    "orchestrationPlanId"
+  ],
+  "additionalProperties": false
+}

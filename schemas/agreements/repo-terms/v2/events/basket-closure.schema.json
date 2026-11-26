@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v2/events/basket-closure.schema.json",
+  "title": "Basket Closure",
+  "description": "basket-closure/v2: the document a basket-closed event carries: the final status of a trade's collateral account, basket or container once the trade ended, and the evidence of how it closed.",
+  "type": "object",
+  "properties": {
+    "accountStatus": {
+      "type": "string",
+      "description": "CLOSED when the collateral went back to the pledger, or the token was redeemed, at the end of the trade; DEFAULTED when it went to the receiver on a default.",
+      "enum": [
+        "CLOSED",
+        "DEFAULTED"
+      ]
+    },
+    "txHash": {
+      "type": "string",
+      "description": "Evidence of the close: a ledger transaction hash, the plan or operation the trade ended on, or trade-ended:<tradeId> when there is none.",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "accountStatus",
+    "txHash"
+  ],
+  "additionalProperties": false
+}

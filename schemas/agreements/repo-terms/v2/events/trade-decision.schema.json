@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ownera.io/certificates/agreements/repo-terms/v2/events/trade-decision.schema.json",
+  "title": "Trade Decision",
+  "description": "trade-decision/v2: the document a trade-affirmed or trade-rejected event carries, on a booked or a proposed trade. Which it is lives on the event type, so the guards can read it; the reason is an audit note.",
+  "type": "object",
+  "properties": {
+    "reason": {
+      "type": "string"
+    },
+    "networkAccount": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "network",
+        "address"
+      ],
+      "properties": {
+        "network": {
+          "type": "string",
+          "pattern": "^[-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32}$",
+          "description": "CAIP-2 chain id, e.g. eip155:2026."
+        },
+        "address": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "description": "The wallet address on that chain."
+        }
+      },
+      "description": "Optional, on a trade-affirmed only. The affirming party's own wallet on the collateral platform, for this trade only. Set once and never changed. Each party names its own; an organization holding both parties affirms once per party, each with its own wallet. When absent, the party's first wallet in the pair's address book on the platform's chain applies, else there is none."
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}
